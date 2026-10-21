@@ -48,7 +48,7 @@ description: ブログ編集部を動かして1日1記事を制作する。編�
 layout: post
 title: "<採用タイトル>"
 description: "<description>"
-date: <YYYY-MM-DD> 07:00:00 +0900
+date: <YYYY-MM-DD HH:MM:SS> +0900   # 必ず「今より前」の時刻にする（未来の時刻だと Jekyll が記事を出力しない）
 categories: [<カテゴリ>]
 tags: [<タグ>]
 ---

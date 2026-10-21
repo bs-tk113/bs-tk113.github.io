@@ -2,7 +2,7 @@
 layout: post
 title: "Claude Code サブエージェントの作り方｜呼ばれない時の直し方"
 description: "Claude Codeのサブエージェントは.claude/agents/にファイル1枚で作れます。作ったのに呼ばれない時は「読み込まれていない」か「選ばれていない」かを切り分けるチェックリストで確認。呼ばれやすいdescriptionの書き方とAI編集部の実例付き。"
-date: 2026-10-22 07:00:00 +0900
+date: 2026-10-22 00:00:00 +0900
 categories: ["Claude Code"]
 tags: [サブエージェント, トラブル対処, AI編集部]
 ---
