@@ -3,8 +3,8 @@ title: "（ブログ名・未定）"
 description: "（ブログの説明・未定）"
 author: "（運営者名）"
 lang: ja
-url: "https://example.github.io"   # 例: https://<ユーザー名>.github.io または独自ドメイン
-baseurl: ""                         # 例: /<リポジトリ名>（独自ドメインなら空）
+url: "https://bs-tk113.github.io"  # 例: https://<ユーザー名>.github.io または独自ドメイン
+baseurl: "/bs-tk"                   # 例: /<リポジトリ名>（独自ドメインなら空）
 timezone: Asia/Tokyo
 
 # ===== 計測・広告（空のままなら何も出力されない） =====

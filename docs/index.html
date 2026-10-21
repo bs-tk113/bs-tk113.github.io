@@ -2,7 +2,7 @@
 layout: default
 ---
 <section class="post-list">
-  {% if paginator.posts.size == 0 %}
+  {% if site.posts.size == 0 %}
   <p>まだ記事はありません。</p>
   {% endif %}
   {% for post in paginator.posts %}
