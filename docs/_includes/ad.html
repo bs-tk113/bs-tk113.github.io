@@ -1,0 +1,13 @@
+{% comment %}
+  使い方: {% include ad.html slot=site.adsense_slots.article_top %}
+  adsense_client と slot の両方が設定されている時だけ出力する。
+{% endcomment %}
+{% assign ads = site.adsense_client | default: "" %}
+{% assign slot = include.slot | default: "" %}
+{% if ads != "" and slot != "" %}
+<div class="ad-slot">
+  <span class="ad-label">スポンサーリンク</span>
+  <ins class="adsbygoogle" style="display:block" data-ad-client="{{ ads }}" data-ad-slot="{{ slot }}" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+{% endif %}

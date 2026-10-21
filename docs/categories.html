@@ -1,0 +1,15 @@
+---
+layout: page
+title: カテゴリ
+permalink: /categories/
+---
+{% assign cats = site.categories | sort %}
+{% if cats.size == 0 %}<p>まだ記事はありません。</p>{% endif %}
+{% for cat in cats %}
+<h2 id="{{ cat[0] | slugify }}">{{ cat[0] }}（{{ cat[1].size }}）</h2>
+<ul>
+  {% for p in cat[1] %}
+  <li><a href="{{ p.url | relative_url }}">{{ p.title }}</a> <small>{{ p.date | date: '%Y-%m-%d' }}</small></li>
+  {% endfor %}
+</ul>
+{% endfor %}

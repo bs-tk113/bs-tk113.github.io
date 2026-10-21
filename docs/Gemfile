@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+
+# GitHub Pages と同じ環境でローカル確認する場合のみ使用（bundle exec jekyll serve）
+gem "github-pages", group: :jekyll_plugins
+gem "webrick"

@@ -1,0 +1,42 @@
+# ===== サイト基本情報（公開前に書き換える） =====
+title: "（ブログ名・未定）"
+description: "（ブログの説明・未定）"
+author: "（運営者名）"
+lang: ja
+url: "https://example.github.io"   # 例: https://<ユーザー名>.github.io または独自ドメイン
+baseurl: ""                         # 例: /<リポジトリ名>（独自ドメインなら空）
+timezone: Asia/Tokyo
+
+# ===== 計測・広告（空のままなら何も出力されない） =====
+ga4_id: ""              # Google Analytics 4 の測定ID（G-XXXXXXX）
+adsense_client: ""      # AdSense パブリッシャーID（ca-pub-XXXXXXXXXXXXXXXX）。入れると自動広告と ads.txt が有効
+adsense_slots:
+  article_top: ""       # 記事上の手動広告ユニットID（任意）
+  article_bottom: ""    # 記事下の手動広告ユニットID（任意）
+
+# ===== 構成 =====
+permalink: /:year/:month/:day/:title/
+paginate: 10
+paginate_path: "/page:num/"
+markdown: kramdown
+kramdown:
+  input: GFM
+  auto_ids: true
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-paginate
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md

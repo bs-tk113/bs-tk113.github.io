@@ -1,0 +1,40 @@
+---
+layout: default
+---
+<article class="post">
+  <header>
+    <h1>{{ page.title }}</h1>
+    <p class="meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y年%-m月%-d日' }}</time>
+      {% if page.last_modified_at %} ・ 更新 {{ page.last_modified_at | date: '%Y年%-m月%-d日' }}{% endif %}
+      {% assign chars = content | strip_html | size %}
+      ・ 約{{ chars | divided_by: 500 | plus: 1 }}分で読めます
+      {% for c in page.categories %} ・ <a href="{{ '/categories/' | relative_url }}#{{ c | slugify }}">{{ c }}</a>{% endfor %}
+    </p>
+  </header>
+
+  {% include ad.html slot=site.adsense_slots.article_top %}
+
+  <div class="post-body">
+    {{ content }}
+  </div>
+
+  {% include share.html %}
+
+  {% include ad.html slot=site.adsense_slots.article_bottom %}
+
+  {% assign cat = page.categories | first %}
+  {% if cat %}
+  {% assign related = site.categories[cat] | where_exp: "p", "p.url != page.url" %}
+  {% if related.size > 0 %}
+  <section class="related">
+    <h2>次に読みたい記事</h2>
+    <ul>
+      {% for p in related limit: 5 %}
+      <li><a href="{{ p.url | relative_url }}">{{ p.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+  {% endif %}
+</article>

@@ -1,0 +1,69 @@
+:root {
+  --bg: #fdfcfa;
+  --fg: #222;
+  --muted: #6b6b6b;
+  --accent: #1f6feb;
+  --line: #e6e3de;
+  --card: #fff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181b;
+    --fg: #e8e6e3;
+    --muted: #9a9a9a;
+    --accent: #6ea8ff;
+    --line: #2c2f33;
+    --card: #1d2024;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", sans-serif;
+  line-height: 1.85;
+  font-size: 17px;
+}
+a { color: var(--accent); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+
+.site-header { border-bottom: 1px solid var(--line); padding: 14px 0; }
+.site-header .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.site-title { font-weight: 700; font-size: 1.15rem; color: var(--fg); text-decoration: none; }
+.site-header nav a, .site-footer nav a { margin-left: 14px; color: var(--muted); text-decoration: none; font-size: .9rem; }
+.site-footer nav a { margin: 0 14px 0 0; }
+
+main { padding: 24px 16px 48px; }
+.meta { color: var(--muted); font-size: .85rem; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; margin-bottom: 16px; }
+.card h2 { font-size: 1.2rem; margin: 0 0 4px; line-height: 1.5; }
+.card h2 a { color: var(--fg); text-decoration: none; }
+.card p { margin: 6px 0 0; }
+
+.post h1 { font-size: 1.7rem; line-height: 1.4; margin: 8px 0; }
+.post-body h2 { font-size: 1.35rem; border-left: 4px solid var(--accent); padding-left: 10px; margin-top: 2.2em; line-height: 1.5; }
+.post-body h3 { font-size: 1.15rem; margin-top: 1.8em; }
+.post-body img { max-width: 100%; height: auto; }
+.post-body table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
+.post-body th, .post-body td { border: 1px solid var(--line); padding: 6px 10px; }
+.post-body blockquote { margin: 1em 0; padding: 4px 16px; border-left: 3px solid var(--line); color: var(--muted); }
+.post-body pre { overflow-x: auto; background: var(--card); border: 1px solid var(--line); padding: 12px; border-radius: 8px; }
+
+.ad-slot { margin: 28px 0; text-align: center; min-height: 100px; }
+.ad-label { display: block; font-size: .75rem; color: var(--muted); }
+
+.share { margin: 32px 0; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: .9rem; }
+.share a { border: 1px solid var(--line); border-radius: 999px; padding: 4px 14px; text-decoration: none; }
+
+.related { border-top: 1px solid var(--line); margin-top: 32px; }
+.related h2 { font-size: 1.1rem; }
+
+.pager { display: flex; justify-content: space-between; margin-top: 24px; }
+.site-footer { border-top: 1px solid var(--line); padding: 20px 0; color: var(--muted); font-size: .85rem; }
+
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .post h1 { font-size: 1.4rem; }
+}

@@ -1,0 +1,23 @@
+---
+layout: default
+---
+<section class="post-list">
+  {% if paginator.posts.size == 0 %}
+  <p>まだ記事はありません。</p>
+  {% endif %}
+  {% for post in paginator.posts %}
+  <article class="card">
+    <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+    <p class="meta">{{ post.date | date: '%Y年%-m月%-d日' }}{% for c in post.categories %} ・ {{ c }}{% endfor %}</p>
+    <p>{{ post.description | default: post.excerpt | strip_html | truncate: 120 }}</p>
+  </article>
+  {% endfor %}
+
+  {% if paginator.total_pages > 1 %}
+  <nav class="pager">
+    {% if paginator.previous_page %}<a href="{{ paginator.previous_page_path | relative_url }}">&laquo; 新しい記事</a>{% endif %}
+    <span>{{ paginator.page }} / {{ paginator.total_pages }}</span>
+    {% if paginator.next_page %}<a href="{{ paginator.next_page_path | relative_url }}">古い記事 &raquo;</a>{% endif %}
+  </nav>
+  {% endif %}
+</section>

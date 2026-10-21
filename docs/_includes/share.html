@@ -1,0 +1,8 @@
+{% assign share_url = page.url | absolute_url | url_encode %}
+{% assign share_title = page.title | url_encode %}
+<div class="share">
+  <span>シェアする:</span>
+  <a href="https://x.com/intent/post?url={{ share_url }}&text={{ share_title }}" target="_blank" rel="noopener">X</a>
+  <a href="https://b.hatena.ne.jp/entry/panel/?url={{ share_url }}" target="_blank" rel="noopener">はてブ</a>
+  <a href="https://social-plugins.line.me/lineit/share?url={{ share_url }}" target="_blank" rel="noopener">LINE</a>
+</div>
