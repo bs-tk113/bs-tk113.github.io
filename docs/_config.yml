@@ -8,7 +8,7 @@ baseurl: "/bs-tk"                   # 例: /<リポジトリ名>（独自ドメ�
 timezone: Asia/Tokyo
 
 # ===== 計測・広告（空のままなら何も出力されない） =====
-ga4_id: ""              # Google Analytics 4 の測定ID（G-XXXXXXX）
+ga4_id: "G-DMBB4B3QG6"              # Google Analytics 4 の測定ID（G-XXXXXXX）
 webmaster_verifications:   # Search Console の所有権確認（jekyll-seo-tag が meta タグを出力）
   google: "h1Rgqdbyb0MsgJ55LXo_sYL28iloxwxW-gKUW-FIkpo"
 adsense_client: ""      # AdSense パブリッシャーID（ca-pub-XXXXXXXXXXXXXXXX）。入れると自動広告と ads.txt が有効
