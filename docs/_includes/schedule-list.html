@@ -9,6 +9,7 @@
   出力が空（該当なし）のときは何も出さない。呼び出し側は capture して空かどうかで枠ごと消す。
   結果（result）はネタバレ防止で <details> に折りたたむ。
   延期・中止は文字のバッジ（色だけに頼らない）。項目の説明は _data/matches.yml の先頭。
+  teams / team_names があれば、タイトルの上に対戦チームをバッジ付きで出す（_includes/team.html。リンクにしない）。
 {%- endcomment -%}
 {%- assign sc_items = "" | split: "" -%}
 {%- if include.items and include.items.size > 0 -%}{%- assign sc_items = include.items | sort: "date" -%}{%- endif -%}
@@ -44,6 +45,16 @@
 <p class="sched-badges"><span class="kind-tag kind-tag--{{ m.kind | default: 'other' }}">{{ m_kind }}</span>
 {%- if m_status == "postponed" %} <span class="status-tag status-tag--postponed">延期</span>{% elsif m_status == "cancelled" %} <span class="status-tag status-tag--cancelled">中止</span>{% endif -%}
 </p>
+{%- comment -%} 対戦チーム（任意）: teams（teams.yml のキー）→ team_names（teams.yml に無いチーム）の順。2チームなら vs で結ぶ {%- endcomment -%}
+{%- assign m_tk = "" | split: "" -%}{%- if m.teams -%}{%- assign m_tk = m.teams | join: "," | split: "," -%}{%- endif -%}
+{%- assign m_tx = "" | split: "" -%}{%- if m.team_names -%}{%- assign m_tx = m.team_names | join: "|" | split: "|" -%}{%- endif -%}
+{%- assign m_tn = m_tk.size | plus: m_tx.size -%}
+{%- if m_tn > 0 -%}{%- assign m_ti = 0 %}
+<p class="tm-row{% if m_tn == 2 %} tm-row--vs{% endif %}">
+{%- for k in m_tk -%}{%- if m_ti > 0 and m_tn == 2 %}<span class="tm-vs">vs</span>{% endif %}{% include team.html key=k size="md" %}{%- assign m_ti = m_ti | plus: 1 -%}{%- endfor -%}
+{%- for n in m_tx -%}{%- if m_ti > 0 and m_tn == 2 %}<span class="tm-vs">vs</span>{% endif %}{% include team.html name=n size="md" %}{%- assign m_ti = m_ti | plus: 1 -%}{%- endfor -%}
+</p>
+{%- endif %}
 <p class="sched-title">{% if m.event and m.event != "" %}<span class="sched-event">{{ m.event | escape }}</span>{% endif %}{{ m.title | escape }}</p>
 {%- if m_status == "postponed" %}
 <p class="sched-note">{% if m.new_date and m.new_date != "" %}新しい日時: <time datetime="{{ m.new_date | date_to_xmlschema }}">{{ m.new_date | date: '%-m月%-d日 %H:%M' }}</time>{% else %}新しい日時は主催者の発表待ち{% endif %}</p>

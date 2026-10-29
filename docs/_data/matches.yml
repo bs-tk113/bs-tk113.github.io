@@ -8,7 +8,10 @@
 #     kind: official                       # official（Riot・VCT の公式大会）/ streamer（配信者主催）/ community（コミュニティ大会）
 #     event: "VCT Pacific"                 # 大会名（文字だけ。ロゴは使わない）
 #     event_slug: ""                       # イベントハブで絞り込むキー（ハブの front matter の event: と同じ値）
-#     title: "チームA vs チームB"          # 試合・日程の名前（"Day 1" "グループA" など）
+#     title: "チームA vs チームB"          # 試合・日程の名前（"Day 1" "グループA" など）。teams を書くときは "Week 1 Day 2" などにして、チーム名を重ねない
+#     teams: [zeta, cr]                    # 対戦チーム（任意）。_data/teams.yml のキー（英小文字）。タイトルの上にバッジ付きで出る
+#     team_names: ["Team A"]               # teams.yml に無いチーム（任意）。頭文字の文字バッジで出る。teams の後ろに並ぶ
+#                                          #   合計2チームなら「A vs B」、1チームや3チーム以上は並べるだけ。どちらも無ければ出さない
 #     status: scheduled                    # scheduled（予定どおり）/ postponed（延期）/ cancelled（中止）
 #     new_date: ""                         # 延期で新しい日時が出たら（任意。"2027-01-22T18:00:00+09:00"）
 #     result: ""                           # 確定した結果（"2-1" や "優勝: チームA"）。ネタバレ防止で折りたたんで出す
@@ -21,5 +24,80 @@
 #
 # 過ぎた予定（結果が空で開始から3時間以上たったもの）はトップの枠では JS で隠す。/schedule/ には残る。
 
-updated: ""          # 例: "2026-11-09 21:00"
-items: []
+updated: "2026-10-30 01:10"
+items:
+  - date: "2026-10-31T03:00:00+09:00"
+    kind: official
+    event: "VALORANT Game Changers Championship 2026"
+    event_slug: ""
+    title: "決勝ウィークエンド 1日目"
+    status: scheduled
+    new_date: ""
+    result: ""
+    watch:
+      - label: "Twitch（VALORANT 公式）"
+        url: "https://www.twitch.tv/valorant"
+      - label: "YouTube（VALORANT Esports 公式）"
+        url: "https://www.youtube.com/VALORANTEsports"
+    source_type: official
+    source_url: "https://valorantesports.com/en-US/news/valorant-game-changers-championship-2026-everything-you-need-to-know"
+  - date: "2026-11-01T03:00:00+09:00"
+    kind: official
+    event: "VALORANT Game Changers Championship 2026"
+    event_slug: ""
+    title: "決勝ウィークエンド 2日目"
+    status: scheduled
+    new_date: ""
+    result: ""
+    watch:
+      - label: "Twitch（VALORANT 公式）"
+        url: "https://www.twitch.tv/valorant"
+      - label: "YouTube（VALORANT Esports 公式）"
+        url: "https://www.youtube.com/VALORANTEsports"
+    source_type: official
+    source_url: "https://valorantesports.com/en-US/news/valorant-game-changers-championship-2026-everything-you-need-to-know"
+  - date: "2026-11-02T03:00:00+09:00"
+    kind: official
+    event: "VALORANT Game Changers Championship 2026"
+    event_slug: ""
+    title: "グランドファイナル（決勝ウィークエンド 3日目）"
+    status: scheduled
+    new_date: ""
+    result: ""
+    watch:
+      - label: "Twitch（VALORANT 公式）"
+        url: "https://www.twitch.tv/valorant"
+      - label: "YouTube（VALORANT Esports 公式）"
+        url: "https://www.youtube.com/VALORANTEsports"
+    source_type: official
+    source_url: "https://valorantesports.com/en-US/news/valorant-game-changers-championship-2026-everything-you-need-to-know"
+  - date: "2026-11-07"
+    kind: community
+    event: "Predator League 2027 VALORANT Japan Round"
+    event_slug: ""
+    title: "予選 Day 1（オンライン・Acer 主催）"
+    status: scheduled
+    new_date: ""
+    result: ""
+    source_type: organizer
+    source_url: "https://prtimes.jp/main/html/rd/p/000001094.000000640.html"
+  - date: "2026-11-14"
+    kind: community
+    event: "Predator League 2027 VALORANT Japan Round"
+    event_slug: ""
+    title: "予選 Day 2（オンライン・Acer 主催）"
+    status: scheduled
+    new_date: ""
+    result: ""
+    source_type: organizer
+    source_url: "https://prtimes.jp/main/html/rd/p/000001094.000000640.html"
+  - date: "2026-11-15"
+    kind: community
+    event: "Predator League 2027 VALORANT Japan Round"
+    event_slug: ""
+    title: "予選 Day 3（オンライン・Acer 主催）"
+    status: scheduled
+    new_date: ""
+    result: ""
+    source_type: organizer
+    source_url: "https://prtimes.jp/main/html/rd/p/000001094.000000640.html"

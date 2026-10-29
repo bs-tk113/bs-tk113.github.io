@@ -1,0 +1,81 @@
+# チーム（キー: 英小文字）。ボード（所属（表明時）・加入先）・日程（matches.yml の teams）・いまの話題（now.yml の teams）でチーム名の横に出す。
+# 表示は _includes/team.html（{% include team.html key="zeta" %}）。イベントハブのチームカード（配信者チーム）には使わない。
+# ルール（data/topics.md「チームロゴ」）: ロゴは公式サイトから取得したものを改変せずに置く。表示はチーム名の横に小さく、チーム名の文字も必ず併記。
+#   サムネイル・サイトロゴ・SNS画像・広告の近くには使わない。削除を求められたら24時間以内に外す（logo: を消せば文字バッジに戻る）。
+# logo が無いチームは文字バッジ（short を color の背景に乗せる）。ロゴの形・マスコット・専用フォントを似せない。
+# logo_bg: ロゴが透過で黒い等、濃い背景で見えないときに敷く背景色（ロゴ自体の色は変えない）。
+# 取得元と取得日は data/team-logos.md に記録。
+
+zeta:
+  name: ZETA DIVISION
+  short: ZETA
+  color: "#1b1b1b"
+  logo: /assets/img/teams/zeta.png
+  logo_bg: "#ffffff"
+  url: https://zetadivision.com/
+cr:
+  name: Crazy Raccoon
+  short: CR
+  color: "#d7262a"
+  logo: /assets/img/teams/cr.jpg
+  logo_bg: "#ffffff"
+  url: https://crazyraccoon.jp/
+dfm:
+  name: DetonatioN FocusMe
+  short: DFM
+  color: "#1d3c8f"
+  logo: /assets/img/teams/dfm.png
+  logo_bg: "#ffffff"
+  url: https://team-detonation.net/
+fennel:
+  name: FENNEL
+  short: FL
+  color: "#2b2b2b"
+  logo: /assets/img/teams/fennel.png
+  logo_bg: "#2b2b2b"
+  url: https://fennel-esports.com/
+reject:
+  name: REJECT
+  short: RC
+  color: "#3a2a1a"
+  logo: /assets/img/teams/reject.png
+  logo_bg: "#ffffff"
+  url: https://reject.jp/
+northeption:
+  name: NORTHEPTION
+  short: NTH
+  color: "#1a1a1a"
+  logo: /assets/img/teams/northeption.png
+  logo_bg: "#1a1a1a"
+  url: https://northeption.com/
+igzist:
+  name: IGZIST
+  short: IGZ
+  color: "#111111"
+  logo: /assets/img/teams/igzist.png
+  logo_bg: "#111111"
+  url: https://igzist-gg.com/
+murash:
+  name: MURASH GAMING
+  short: MRS
+  color: "#c8102e"
+  url: https://murashgaming.co.jp/
+scarz:
+  name: SCARZ
+  short: SZ
+  color: "#e60012"
+  url: https://www.scarz.net/
+varrel:
+  name: VARREL
+  short: VRL
+  color: "#2d2d6b"
+  url: https://varrel.jp/
+sengoku:
+  name: Sengoku Gaming
+  short: SG
+  color: "#8b0000"
+  url: https://sengokugaming.com/
+riddle:
+  name: RIDDLE ORDER
+  short: RDL
+  color: "#3d3d3d"

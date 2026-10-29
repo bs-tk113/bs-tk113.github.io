@@ -1,9 +1,10 @@
 {%- comment -%}
   ボード（状態が変わる一覧: LFT・FA ボード、引退・休止一覧など）。hub.html が page.board のあるときだけ読み込む。
   ハブの front matter:  board: lft-board   → データは docs/_data/boards/lft-board.yml（項目の説明はそのファイルの先頭）
-  列: 選手（活動名）・前所属・ロール・表明日・条件・状態・出典・最終確認日
+  列: 選手（活動名）・所属（表明時）・ロール・表明日・条件・状態・出典・最終確認日
   スマホ（600px 未満）では1行を1枚のカードに組み替える（横スクロールさせない）。PC は表。
   状態の絞り込みボタンは JS（site.js）。JS が無くても全部の行が読める。
+  所属（表明時）・加入先: teams.yml のキーか name と同じ文字（大文字小文字は問わない）ならチームバッジ付き、それ以外は文字のまま（_includes/team.html plain_unknown=true）。
   安全装置:
     - joined / retired は self と team の両方の出典（削除されていないもの）がそろうまで「確定」の表記にしない（ルール3）
     - 出典がすべて削除済みの行は出さない（ルール4）
@@ -40,11 +41,11 @@
     {%- endcase %}
     <tr data-filter-item data-status="{{ r.status | default: 'other' }}">
       <td data-label="選手"><strong>{{ r.player | escape }}</strong></td>
-      <td data-label="前所属">{{ r.prev_team | default: "—" | escape }}</td>
+      <td data-label="所属（表明時）">{% if r.prev_team and r.prev_team != "" %}{% include team.html key=r.prev_team plain_unknown=true %}{% else %}—{% endif %}</td>
       <td data-label="ロール">{{ r.role | default: "—" | escape }}</td>
       <td data-label="表明日">{% if r.declared %}<time datetime="{{ r.declared | date: '%Y-%m-%d' }}">{{ r.declared | date: '%Y/%-m/%-d' }}</time>{% else %}—{% endif %}</td>
       <td data-label="条件">{{ r.terms | default: "—" | escape }}</td>
-      <td data-label="状態"><span class="status-tag status-tag--{{ r.status | default: 'other' }}">{{ r_st }}</span>{% if r.status == "joined" and r.new_team and r.new_team != "" %}<br><span class="meta">加入先: {{ r.new_team | escape }}</span>{% endif %}</td>
+      <td data-label="状態"><span class="status-tag status-tag--{{ r.status | default: 'other' }}">{{ r_st }}</span>{% if r.status == "joined" and r.new_team and r.new_team != "" %}<br><span class="meta">加入先: {% include team.html key=r.new_team plain_unknown=true %}</span>{% endif %}</td>
       <td data-label="出典"><span class="src-stack">{% include source-list.html sources=r.sources %}</span></td>
       <td data-label="最終確認日">{% if r.checked %}<time datetime="{{ r.checked | date: '%Y-%m-%d' }}">{{ r.checked | date: '%Y/%-m/%-d' }}</time>{% else %}—{% endif %}</td>
     </tr>
@@ -62,7 +63,7 @@
   </div>
   <div class="table-scroll board-table" role="region" aria-label="{{ bd.title | default: '一覧' | escape }}" tabindex="0">
     <table>
-      <thead><tr><th scope="col">選手（活動名）</th><th scope="col">前所属</th><th scope="col">ロール</th><th scope="col">表明日</th><th scope="col">条件</th><th scope="col">状態</th><th scope="col">出典</th><th scope="col">最終確認日</th></tr></thead>
+      <thead><tr><th scope="col">選手（活動名）</th><th scope="col">所属（表明時）</th><th scope="col">ロール</th><th scope="col">表明日</th><th scope="col">条件</th><th scope="col">状態</th><th scope="col">出典</th><th scope="col">最終確認日</th></tr></thead>
       <tbody>{{ bd_body }}</tbody>
     </table>
   </div>

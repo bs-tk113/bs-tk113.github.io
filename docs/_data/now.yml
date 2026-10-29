@@ -11,6 +11,8 @@
 #     context: "背景（任意。冗談・配信中のノリなど文脈が要るときに1行）"
 #     checked: "2026-10-30 13:00"          # 編集部が出典を確認した日時（必須。表示する）
 #     url: /hub/roster-tracker/            # サイト内の詳しいページ（任意。あれば「詳しく」リンク）
+#     teams: [dfm]                         # 関係するチーム（任意）。_data/teams.yml のキー。見出しの下にバッジ＋チーム名で出る
+#                                          #   話題の主役のチームだけ（名前が出てくるだけのチームは書かない）
 #     sources:                             # 出典（必須。1件以上）
 #       - type: team                       # official（Riot・VCT 公式）/ team（チーム公式）/ self（本人）/ organizer（主催者）
 #         name: "表示名（活動名・チーム名）"
@@ -24,5 +26,157 @@
 #   公式発表で裏付けがあれば、その発表を sources に足すと「削除済み」の注記つきで残る。
 # 書かないもの（ルール5・6）: 鍵アカウント・リプライ欄・掲示板の書き込み・炎上・私生活。スクショ・顔・アバター・ロゴ。
 
-updated: ""        # 例: "2026-10-30 13:00"（ページ上部に出す）
-items: []
+updated: "2026-10-30 01:30"
+items:
+  - date: "2026-10-19"
+    kind: roster
+    title: "ZETA DIVISION がRiotとのパートナーシップを再び結び、2027年もPacificで戦う"
+    teams: [zeta]
+    summary: "ZETA DIVISION が、Riot Games とのパートナーシップを再び結んだと公式サイトで発表した。2027年はPacificから参戦し、新シーズン最初の大会Kickoffから出場する。"
+    context: "同じお知らせでは、新しい形式のもとでチームとして4年ぶりに日本国内で戦う予定があること、ファンイベントなどを準備中であることにも触れている。なお、Pacific の Cup 2 は東京で開かれると VCT 公式が発表している。"
+    checked: "2026-10-30 01:10"
+    sources:
+      - type: team
+        name: "ZETA DIVISION"
+        url: "https://zetadivision.com/news/2026/10/19/47797"
+      - type: official
+        name: "VALORANT Esports"
+        url: "https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer"
+  - date: "2026-10-22"
+    kind: tournaments
+    title: "VCT 公式が2027年からのパートナー32チームを発表。各地域8チーム"
+    url: /hub/vct-2027/
+    summary: "VCT 公式が、2027年シーズンからのパートナー32チーム（4地域に8チームずつ。2年単位で、更新もできる）を発表した。パートナーに出場が約束されているのは年始のKickoffで、Cups・Masters・Championsには成績で出場権を得る必要がある。"
+    context: "公式ページには各地域のチーム名は載っていない。日本のチームでは、ZETA DIVISION と Crazy Raccoon がパートナー入りを発表している。"
+    checked: "2026-10-30 01:10"
+    sources:
+      - type: official
+        name: "VALORANT Esports"
+        url: "https://valorantesports.com/en-US/news/introducing-the-vct-2027-partner-teams"
+      - type: team
+        name: "ZETA DIVISION"
+        url: "https://zetadivision.com/news/2026/10/19/47797"
+  - date: "2026-10-28"
+    kind: tournaments
+    title: "VCT Pacific 2027の形式が公開。日本のCups出場枠は3"
+    url: /hub/vct-2027/
+    summary: "VCT 公式が、Pacific 2027の仕組みを公開した。Stage 1・2は2つのCupsに置き換わり、KickoffとCupsは12チームのオフライン開催（Kickoffはバンコク、Cup 1はマニラ、Cup 2は東京）。Cupsの出場枠は地域ごとに、韓国と日本が各3、東南アジアが2、タイ・インドネシア・ベトナムが各1、LCQが1。"
+    context: "Kickoffはパートナー8チームとオープン予選を勝ち抜いた4チームで行う。日本の3枠は、オープン予選（複数回挑戦できる）とプレイインを経た8チームの地域Playoffで争う。Mastersに進めなかったパートナーもプレイインから出る。"
+    checked: "2026-10-30 01:10"
+    sources:
+      - type: official
+        name: "VALORANT Esports"
+        url: "https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer"
+  - date: "2026-10-29"
+    kind: roster
+    title: "DFM がVCT 2027に向けてVALORANT部門の選手・コーチ・アナリストを募集"
+    teams: [dfm]
+    summary: "DetonatioN FocusMe が、VCT 2027に向けたVALORANT部門の選手・コーチ・アナリストの募集を公式サイトで告知した。選手は応募時点で17歳以上（未成年は保護者の同意が必要）、ランクはレディアントで、都内のゲーミングオフィスで活動できることなどが条件。締め切りは決めず、応募が集まりしだい終えるとしている。"
+    context: "募集のお知らせでは、日本の予選を勝ち上がって世界大会を目指す方針を示している。"
+    checked: "2026-10-30 01:10"
+    sources:
+      - type: team
+        name: "DetonatioN FocusMe"
+        url: "https://team-detonation.net/news/52622"
+  - date: "2026-10-19T17:10:00+09:00"
+    kind: roster
+    title: "DFM、2027年からのVCTパートナーに選ばれず。VALORANT部門は続ける"
+    summary: "DetonatioN FocusMe が、2027年シーズンからのVCTパートナーに選ばれなかったと公式Xで報告した。部門の活動は続け、2027年の体制は決まりしだい知らせるとしている。"
+    checked: "2026-10-30 01:30"
+    teams: [dfm]
+    sources:
+      - type: team
+        name: "DetonatioN FocusMe VALORANT"
+        url: "https://x.com/DFM_VALORANT/status/2112093915297784227"
+        handle: "@DFM_VALORANT"
+        posted_at: "2026-10-19T17:10:00+09:00"
+  - date: "2026-10-19T19:00:00+09:00"
+    kind: roster
+    title: "RIDDLE ORDER がVALORANT部門を休止。JoxJo と gyen は契約満了で退団"
+    summary: "RIDDLE ORDER が、JoxJo と gyen の契約満了による退団と、あわせてVALORANT部門の活動休止を公式Xで発表した。"
+    checked: "2026-10-30 01:30"
+    teams: [riddle]
+    sources:
+      - type: team
+        name: "RIDDLE"
+        url: "https://x.com/RIDDLEORDER/status/2112121584861245717"
+        handle: "@RIDDLEORDER"
+        posted_at: "2026-10-19T19:00:00+09:00"
+  - date: "2026-10-20T23:15:00+09:00"
+    kind: roster
+    title: "Crazy Raccoon がVCT 2027のパートナーチームに選ばれたと発表"
+    summary: "Crazy Raccoon が、VCT 2027のパートナーチームに選ばれたと公式Xで発表した。"
+    context: "日本のチームでは、ZETA DIVISION と Crazy Raccoon がパートナー入りを発表している。"
+    checked: "2026-10-30 01:30"
+    teams: [cr]
+    sources:
+      - type: team
+        name: "Crazy Raccoon"
+        url: "https://x.com/crazyraccoon406/status/2112548170773520557"
+        handle: "@crazyraccoon406"
+        posted_at: "2026-10-20T23:15:00+09:00"
+  - date: "2026-10-22T17:50:00+09:00"
+    kind: roster
+    title: "DFM の yatsuka が条件付きで移籍先を探していると告知（LFT）"
+    summary: "DFM 所属の yatsuka が、条件付きで移籍先を探していると自分のXで知らせた。ロールはすべて対応できるとしている。"
+    checked: "2026-10-30 01:30"
+    teams: [dfm]
+    sources:
+      - type: self
+        name: "yatsuka"
+        url: "https://x.com/yatsuka_07/status/2113191282822791427"
+        handle: "@yatsuka_07"
+        posted_at: "2026-10-22T17:50:00+09:00"
+  - date: "2026-10-25T20:49:00+09:00"
+    kind: roster
+    title: "FENNEL の Anthem が日本・中国のチームを対象に移籍先を探す（LFT）"
+    summary: "FENNEL 所属の Anthem が、2027年に向けて日本・中国のチームに限った移籍先探しを自分のXで告知した。IGL、イニシエーター、コントローラー、センチネルに対応するとしている。"
+    checked: "2026-10-30 01:30"
+    teams: [fennel]
+    sources:
+      - type: self
+        name: "Anthem"
+        url: "https://x.com/AnthemFps/status/2114323398910505285"
+        handle: "@AnthemFps"
+        posted_at: "2026-10-25T20:49:00+09:00"
+  - date: "2026-10-25T23:34:00+09:00"
+    kind: roster
+    title: "DFM の Caedye も条件付きで移籍先を探していると告知（LFT）"
+    summary: "DFM 所属の Caedye が、条件付きで移籍先を探していると自分のXで知らせた。連絡先はチームの窓口にしている。"
+    checked: "2026-10-30 01:30"
+    teams: [dfm]
+    sources:
+      - type: self
+        name: "Caedye"
+        url: "https://x.com/CaedyeuS/status/2114365102971613218"
+        handle: "@CaedyeuS"
+        posted_at: "2026-10-25T23:34:00+09:00"
+  - date: "2026-10-26T18:54:00+09:00"
+    kind: roster
+    title: "元 MURASH GAMING の TENNN がサブデュエリストとして移籍先を探す（LFT）"
+    summary: "元 MURASH GAMING の TENNN が、サブデュエリストとして移籍先を探していると自分のXで告知した。"
+    checked: "2026-10-30 01:30"
+    teams: [murash]
+    sources:
+      - type: self
+        name: "TENNN"
+        url: "https://x.com/tenhakyou/status/2114656964668264905"
+        handle: "@tenhakyou"
+        posted_at: "2026-10-26T18:54:00+09:00"
+  - date: "2026-10-26T19:00:00+09:00"
+    kind: roster
+    title: "IGZIST のVALORANT部門、選手4人とスタッフ3人が契約満了で離れる"
+    summary: "IGZIST が、popogachi、Frxeez、kAyle、SID の4選手と、sitimentyo、gainpe、yukufuru のコーチ・アナリスト3人の契約満了による退団を公式Xで発表した。"
+    checked: "2026-10-30 01:30"
+    teams: [igzist]
+    sources:
+      - type: team
+        name: "IGZIST"
+        url: "https://x.com/IGZIST_GG/status/2114658298687627501"
+        handle: "@IGZIST_GG"
+        posted_at: "2026-10-26T19:00:00+09:00"
+      - type: team
+        name: "IGZIST"
+        url: "https://x.com/IGZIST_GG/status/2114658545647997123"
+        handle: "@IGZIST_GG"
+        posted_at: "2026-10-26T19:01:00+09:00"

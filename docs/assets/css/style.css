@@ -528,6 +528,23 @@ main{display:block}
 .board-table td::before{content:attr(data-label); font-weight:700; color:var(--muted)}
 .board-table tr:last-child td{border-bottom:0}
 
+/* チームバッジ（_includes/team.html）。識別用の小さな表示。押せる要素ではない（リンク・hover なし）
+   ロゴは logo_bg の枠に入れて object-fit: contain だけ。filter・切り抜き・重ね合わせはしない */
+.tm{display:inline-flex; align-items:center; gap:6px; max-width:100%; vertical-align:middle; font-weight:700; line-height:1.4}
+.tm-mark{flex:none; display:inline-grid; place-items:center; height:20px; min-width:20px; border:1px solid var(--line); border-radius:5px; overflow:hidden}
+.tm--md .tm-mark{height:28px; min-width:28px; border-radius:7px}
+.tm-mark--logo{width:20px; background:var(--tm-bg, #ffffff)}
+.tm--md .tm-mark--logo{width:28px}
+.tm-mark img{display:block; width:16px; height:16px; object-fit:contain}
+.tm--md .tm-mark img{width:22px; height:22px}
+.tm-mark--logo .tm-mark-txt{display:none}
+.tm-mark--text{padding:0 4px; background:var(--tm-c, #4a4b63); color:#fff; font-size:1rem; font-weight:800; line-height:1; white-space:nowrap}
+.tm--md .tm-mark--text{padding:0 7px}
+.tm-label{min-width:0; overflow-wrap:anywhere; color:var(--fg)}
+.tm-row{display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; margin:0 0 6px}
+.tm-vs{color:var(--muted); font-weight:800}
+.meta .tm-label{color:inherit}
+
 /* 公開予定（_data/roadmap.yml） */
 .roadmap{list-style:none; margin:0; padding:0; display:grid; gap:8px}
 .roadmap li{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:4px 12px; padding:10px 14px; background:var(--surface); border:1px dashed var(--line); border-radius:12px}

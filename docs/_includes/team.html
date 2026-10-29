@@ -1,0 +1,55 @@
+{%- comment -%}
+  チームバッジ＋チーム名（データは _data/teams.yml）。チームを見分けるための小さな表示だけに使う（data/topics.md「チームロゴ」）。
+  使い方:
+    {% include team.html key="zeta" %}        teams.yml のキー（大文字小文字は区別しない。teams.yml の name と同じ文字でも見つかる）
+    {% include team.html name="Team A" %}     teams.yml に無いチーム → 名前の頭文字（単語2つまで）の文字バッジ
+  任意:
+    size="md"            既定は sm（枠 20px）。md は枠 28px
+    plain_unknown=true   teams.yml に無いときはバッジを付けず、文字だけ出す（ボード用。既存データの書き方を壊さない）
+  ルール:
+    - チーム名の文字を必ず併記する（バッジだけの表示はしない。nolabel のようなオプションは作らない）
+    - リンクにしない。チーム公式サイトへのリンクも付けない（teams.yml の url は記録用）
+    - 置かない場所: サムネイル（thumb.html）・ヒーロー・ヘッダー/ナビ・OGP・カテゴリタイル・広告の近く
+    - ロゴは改変しない。CSS の filter・切り抜き・重ね合わせを使わず、object-fit: contain で縦横比を保つだけ
+  画像が無いとき: ビルド時に site.static_files で存在を確認し、無ければ文字バッジ。読み込みに失敗したら onerror で文字バッジに切り替える。
+  変数は tm_ で始まる名前だけ使う（include 内の assign は呼び出し元にも残るため、毎回すべて初期化する）。
+{%- endcomment -%}
+{%- assign tm = nil -%}
+{%- assign tm_found = false -%}
+{%- assign tm_k = include.key | default: "" | strip -%}
+{%- assign tm_kd = tm_k | downcase -%}
+{%- if tm_kd != "" -%}
+  {%- assign tm = site.data.teams[tm_kd] -%}
+  {%- if tm -%}{%- assign tm_found = true -%}{%- else -%}
+    {%- for tm_pair in site.data.teams -%}
+      {%- assign tm_pn = tm_pair[1].name | default: "" | downcase -%}
+      {%- if tm_pn == tm_kd -%}{%- assign tm = tm_pair[1] -%}{%- assign tm_found = true -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if tm_found -%}
+  {%- assign tm_name = tm.name | default: tm_k -%}
+  {%- assign tm_short = tm.short | default: "" -%}
+  {%- assign tm_c = tm.color | default: "" -%}
+  {%- assign tm_logo = tm.logo | default: "" -%}
+  {%- assign tm_bg = tm.logo_bg | default: "#ffffff" -%}
+{%- else -%}
+  {%- assign tm_name = include.name | default: tm_k | strip -%}
+  {%- assign tm_short = "" -%}{%- assign tm_c = "" -%}{%- assign tm_logo = "" -%}{%- assign tm_bg = "" -%}
+{%- endif -%}
+{%- if tm_short == "" -%}
+  {%- assign tm_words = tm_name | split: " " -%}
+  {%- for tm_w in tm_words limit: 2 -%}{%- assign tm_ch = tm_w | slice: 0 | upcase -%}{%- assign tm_short = tm_short | append: tm_ch -%}{%- endfor -%}
+{%- endif -%}
+{%- assign tm_has_logo = false -%}
+{%- if tm_logo != "" -%}
+  {%- assign tm_lf = site.static_files | where: "path", tm_logo | size -%}
+  {%- if tm_lf > 0 -%}{%- assign tm_has_logo = true -%}{%- endif -%}
+{%- endif -%}
+{%- if include.size == "md" -%}{%- assign tm_sz = "md" -%}{%- assign tm_px = 22 -%}{%- else -%}{%- assign tm_sz = "sm" -%}{%- assign tm_px = 16 -%}{%- endif -%}
+{%- if tm_name != "" -%}
+{%- if include.plain_unknown and tm_found == false -%}{{ tm_name | escape }}
+{%- else -%}
+<span class="tm tm--{{ tm_sz }}"><span class="tm-mark {% if tm_has_logo %}tm-mark--logo{% else %}tm-mark--text{% endif %}" style="{% if tm_c != '' %}--tm-c:{{ tm_c | escape }};{% endif %}{% if tm_has_logo %}--tm-bg:{{ tm_bg | escape }};{% endif %}" aria-hidden="true">{% if tm_has_logo %}<img src="{{ tm_logo | relative_url }}" alt="" width="{{ tm_px }}" height="{{ tm_px }}" loading="lazy" decoding="async" onerror="this.parentNode.className='tm-mark tm-mark--text';this.remove()">{% endif %}<span class="tm-mark-txt">{{ tm_short | escape }}</span></span><span class="tm-label">{{ tm_name | escape }}</span></span>
+{%- endif -%}
+{%- endif -%}

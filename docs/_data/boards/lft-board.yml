@@ -3,12 +3,13 @@
 #
 # 1行の書き方:
 #   - player: "活動名"                 # 本名・顔写真・アバターは載せない
-#     prev_team: "前所属"              # なければ ""（「—」と出る）
+#     prev_team: "所属（表明時）"              # なければ ""（「—」と出る）。_data/teams.yml のキー（zeta）か name（ZETA DIVISION）と
+#                                      #   同じ文字ならチームバッジ付き（大文字小文字は問わない。"ZETA" も可）。それ以外は文字のまま出る
 #     role: "デュエリスト"             # 本人・チームが公表しているロール（推測で書かない）
 #     declared: 2026-10-30             # 表明日（本人またはチームが発表した日）
 #     terms: "条件の要約"              # 本人が書いた条件を編集部の言葉で短く（国内のみ・フルタイム希望 など）。元の言い回しを残さない
 #     status: lft                      # lft（チーム募集中）/ joined（加入）/ retired（引退）/ hiatus（休止）/ returned（復帰）/ other
-#     new_team: ""                     # joined のとき加入先
+#     new_team: ""                     # joined のとき加入先（prev_team と同じく、キーか name ならバッジ付き）
 #     checked: 2026-10-30              # 最終確認日（行ごと）
 #     sources:                         # 出典（本人またはチームの公式。1件以上）
 #       - type: self                   # self（本人）/ team（チーム公式）/ organizer / official
@@ -21,6 +22,54 @@
 #   - 出典がすべて deleted になった行は表示しない
 
 title: LFT・FA ボード
-updated: ""        # 表全体の最終更新日時（例 "2026-11-02 21:00"）
-note: ""           # 表の下に出す注記（任意）
-items: []
+updated: "2026-10-30 01:30"
+note: "VCT 2027 のパートナー発表（2026年10月）のあとに出た表明をまとめています。表明日は投稿の日付です。"
+items:
+  - player: "yatsuka"
+    prev_team: "dfm"
+    role: "全ロール対応"
+    declared: 2026-10-22
+    terms: "条件あり（中身は投稿に記載なし）"
+    status: lft
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: self
+        label: "本人の X 投稿"
+        url: "https://x.com/yatsuka_07/status/2113191282822791427"
+  - player: "Anthem"
+    prev_team: "fennel"
+    role: "IGL・イニシエーター・コントローラー・センチネル"
+    declared: 2026-10-25
+    terms: "日本・中国のチームに限る"
+    status: lft
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: self
+        label: "本人の X 投稿"
+        url: "https://x.com/AnthemFps/status/2114323398910505285"
+  - player: "Caedye"
+    prev_team: "dfm"
+    role: "（告知に記載なし）"
+    declared: 2026-10-25
+    terms: "条件あり（中身は投稿に記載なし）。連絡はチームの窓口へ"
+    status: lft
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: self
+        label: "本人の X 投稿"
+        url: "https://x.com/CaedyeuS/status/2114365102971613218"
+  - player: "TENNN"
+    prev_team: "murash"
+    role: "サブデュエリスト志望"
+    declared: 2026-10-26
+    terms: "（記載なし）"
+    status: lft
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: self
+        label: "本人の X 投稿"
+        url: "https://x.com/tenhakyou/status/2114656964668264905"

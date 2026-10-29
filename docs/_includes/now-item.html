@@ -2,7 +2,7 @@
   「いまの話題」の1件（/now/ とトップで共用）。<li> ごと出力する。
   使い方: {% include now-item.html it=item %}   任意: compact=true（トップ用。要約を短く、X カードは出さず出典バッジだけ）
   出典がすべて削除済み（deleted）の話題は何も出力しない（ルール4。呼び出し側は出力が空かで数える）。
-  項目の説明は _data/now.yml の先頭。
+  項目の説明は _data/now.yml の先頭。teams（teams.yml のキー）があれば見出しの下にチームバッジを並べる（_includes/team.html）。
 {%- endcomment -%}
 {%- assign ni = include.it -%}
 {%- assign ni_live = 0 -%}
@@ -18,6 +18,11 @@
 <span class="kind-badge"><span class="dot" aria-hidden="true"></span>{{ ni_kind.short | default: "話題" }}</span>
 </p>
 <h3 class="tl-title">{% if ni.url and ni.url != "" %}<a href="{{ ni.url | relative_url }}">{{ ni.title | escape }}</a>{% else %}{{ ni.title | escape }}{% endif %}</h3>
+{%- comment -%} 関係するチーム（任意。teams.yml のキー）。見出しの下に並べるだけ（リンクにしない） {%- endcomment -%}
+{%- assign ni_tk = "" | split: "" -%}{%- if ni.teams -%}{%- assign ni_tk = ni.teams | join: "," | split: "," -%}{%- endif -%}
+{%- if ni_tk.size > 0 %}
+<p class="tm-row">{% for k in ni_tk %}{% include team.html key=k %}{% endfor %}</p>
+{%- endif %}
 {%- if include.compact %}
 {%- if ni.summary %}<p class="tl-summary">{{ ni.summary | strip_html | truncate: 70 | escape }}</p>{% endif %}
 <p class="tl-sources">{% include source-list.html sources=ni.sources %}</p>
