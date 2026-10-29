@@ -25,9 +25,17 @@ permalink: /tools/
       {%- endfor %}
     </ul>
     {%- else %}
-    <p class="empty">ツールは準備中です。</p>
+    <p class="empty">ツールは準備中です。計算式と出典をページ内に明記して公開します。</p>
     {%- endif %}
   </section>
+  {%- capture tl_rm %}{% include roadmap.html type="tool" %}{% endcapture -%}
+  {%- assign tl_rm_s = tl_rm | strip -%}
+  {%- if tl_rm_s != "" %}
+  <section aria-labelledby="h-tool-rm">
+    <div class="sec-head"><h2 id="h-tool-rm">公開予定のツール</h2></div>
+    {{ tl_rm }}
+  </section>
+  {%- endif %}
   {%- if site.categories.tools and site.categories.tools.size > 0 %}
   <p><a class="more" href="{{ '/category/tools/' | relative_url }}">ツールの使い方・関連記事を見る</a></p>
   {%- endif %}

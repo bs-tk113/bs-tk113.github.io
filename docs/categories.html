@@ -1,17 +1,18 @@
 ---
 layout: default
 title: カテゴリ一覧
-description: 大会ハブ・ロスター・移籍・パッチ履歴・週まとめ・ツール・用語解説の6つのカテゴリから記事を探せます。
+description: 大会ハブ・配信者・コミュニティ大会・ロスター・移籍・パッチ履歴・週まとめ・ツール・用語解説の7つのカテゴリから記事を探せます。
 permalink: /categories/
 ---
 {%- comment -%}
-  カテゴリ索引。6つのカテゴリ（_data/categories.yml）＋どれにも当たらない記事（旧カテゴリ）を「その他」に出して、迷子の記事を作らない。
+  カテゴリ索引。7つのカテゴリ（_data/categories.yml）＋どれにも当たらない記事（旧カテゴリ）を「その他」に出して、迷子の記事を作らない。
+  記事が0件のカテゴリは、_data/roadmap.yml の公開予定を出す。
 {%- endcomment -%}
 <div class="cat-hero">
   <div class="wrap">
     {% include breadcrumb.html title=page.title %}
     <h1>カテゴリ一覧</h1>
-    <p>6つのカテゴリから探せます。記事の数は公開済みのものだけを数えています。</p>
+    <p>7つのカテゴリから探せます。記事の数は公開済みのものだけを数えています。</p>
   </div>
 </div>
 
@@ -25,12 +26,14 @@ permalink: /categories/
       {%- assign c_n = c_posts | size -%}
       {%- assign c_hubtools = site.hubs | concat: site.tools | where: "category", c.slug | size -%}
       {%- assign c_total = c_n | plus: c_hubtools -%}
+      {%- include roadmap.html cat=c.slug count_only=true -%}
+      {%- include cat-url.html catd=c %}
       <li class="cat-index-item" id="{{ c.slug }}">
-        <a class="cat" href="{{ '/category/' | append: c.slug | append: '/' | relative_url }}" style="--c:var(--c-{{ c.slug }})">
+        <a class="cat" href="{{ cu_url | relative_url }}" style="--c:var(--c-{{ c.slug }})">
           {%- if c_img_ok > 0 %}<img src="{{ c_map.banner | relative_url }}" alt="" width="640" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'">{% endif %}
           <span class="cat-name">{{ c.name }}</span>
           <span class="cat-desc">{{ c.desc }}</span>
-          <span class="cat-count">{% if c_total > 0 %}{{ c_total }}件{% else %}準備中{% endif %}</span>
+          <span class="cat-count">{% if c_total > 0 %}{{ c_total }}件{% elsif rm_count > 0 %}公開予定 {{ rm_count }}本{% else %}準備中{% endif %}</span>
         </a>
         {%- if c_n > 0 %}
         <ul>
@@ -38,13 +41,15 @@ permalink: /categories/
           <li><a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></li>
           {%- endfor %}
         </ul>
+        {%- elsif rm_count > 0 %}
+        <div class="cat-index-rm">{% include roadmap.html cat=c.slug limit=3 %}</div>
         {%- endif %}
       </li>
       {%- endfor %}
     </ul>
   </section>
 
-  {%- comment -%} 6つのどれにも当たらない記事 {%- endcomment -%}
+  {%- comment -%} 7つのどれにも当たらない記事 {%- endcomment -%}
   {%- assign known = site.data.categories | map: "slug" -%}
   {%- capture others -%}
     {%- for p in site.posts -%}

@@ -1,0 +1,15 @@
+{%- comment -%}
+  カテゴリのリンク先を決める（categories.yml の url: があればそれ、無ければ /category/<slug>/）。
+  使い方: {% include cat-url.html catd=c %} または {% include cat-url.html slug="tools" %} のあと {{ cu_url }}（baseurl なし）
+  カテゴリが見つからなければ cu_url は空文字。
+{%- endcomment -%}
+{%- assign cu_url = "" -%}
+{%- assign cu_d = include.catd -%}
+{%- unless cu_d -%}{%- if include.slug and include.slug != "" -%}{%- assign cu_d = site.data.categories | where: "slug", include.slug | first -%}{%- endif -%}{%- endunless -%}
+{%- if cu_d -%}
+  {%- if cu_d.url and cu_d.url != "" -%}
+    {%- assign cu_url = cu_d.url -%}
+  {%- else -%}
+    {%- assign cu_url = "/category/" | append: cu_d.slug | append: "/" -%}
+  {%- endif -%}
+{%- endif -%}

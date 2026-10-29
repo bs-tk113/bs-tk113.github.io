@@ -1,0 +1,48 @@
+---
+layout: default
+title: 大会カレンダー
+description: 公式大会・配信者主催の大会・コミュニティ大会の日程と結果を、主催者・公式の発表を出典に日ごとにまとめています。延期・中止も表示。結果はネタバレ防止で折りたたみ。
+permalink: /schedule/
+noindex_if_empty: matches
+---
+{%- comment -%}
+  大会カレンダー（P1-c）。データは _data/matches.yml（項目の説明はそのファイルの先頭）。
+  公式／配信者／コミュニティを文字のバッジで区別し、ボタンで絞り込める（JS。無くても全部読める）。
+  「今日」の印と、過ぎた日の薄い表示は JS（ビルドした日ではなく、見ている日で判定するため）。
+{%- endcomment -%}
+{%- assign sm = site.data.matches -%}
+<div class="cat-hero" style="--c:var(--c-tournaments)">
+  <div class="wrap">
+    {% include breadcrumb.html title=page.title %}
+    <h1>大会カレンダー</h1>
+    <p>公式大会と、配信者・コミュニティが主催する大会の日程と結果です。日時はすべて日本時間。結果は「結果を見る」を押すと開きます。</p>
+  </div>
+</div>
+
+<div class="wrap list-page sched-page" data-filter-scope>
+  {%- capture sm_list %}{% include schedule-list.html items=sm.items hl=2 %}{% endcapture -%}
+  {%- assign sm_list_s = sm_list | strip -%}
+  {%- if sm_list_s != "" %}
+  <p class="updated-at">{% if sm.updated and sm.updated != "" %}<span>最終更新 <strong>{{ sm.updated | escape }}</strong></span>{% endif %}<span>日程の出典は主催者・公式の発表</span></p>
+  <div class="filter" role="group" aria-label="大会の種類で絞り込む" data-filter-key="kind" hidden>
+    <button type="button" class="filter-btn" data-filter-value="" aria-pressed="true">すべて</button>
+    <button type="button" class="filter-btn" data-filter-value="official" aria-pressed="false">公式大会</button>
+    <button type="button" class="filter-btn" data-filter-value="streamer" aria-pressed="false">配信者大会</button>
+    <button type="button" class="filter-btn" data-filter-value="community" aria-pressed="false">コミュニティ大会</button>
+  </div>
+  <p class="sched-jump" hidden><a href="#" data-sched-jump>今日の日程へ移動</a></p>
+  {{ sm_list }}
+  {%- else %}
+  <p class="empty">いまは掲載している日程がありません。主催者・公式の発表を確認したものから載せます。大会の仕組みは<a href="{{ '/category/tournaments/' | relative_url }}">大会ハブ</a>、配信者・コミュニティ大会は<a href="{{ '/category/community/' | relative_url }}">こちら</a>から。</p>
+  {%- endif %}
+
+  <aside class="box" aria-labelledby="h-sched-legend">
+    <h2 class="box-title" id="h-sched-legend">表示の見方</h2>
+    <ul>
+      <li><span class="kind-tag kind-tag--official">公式大会</span> Riot Games・VCT の公式大会</li>
+      <li><span class="kind-tag kind-tag--streamer">配信者大会</span> 配信者が主催する大会（Riot の公式大会ではありません）</li>
+      <li><span class="kind-tag kind-tag--community">コミュニティ大会</span> コミュニティ・有志が主催する大会（Riot の公式大会ではありません）</li>
+      <li><span class="status-tag status-tag--postponed">延期</span> <span class="status-tag status-tag--cancelled">中止</span> 主催者が発表した変更</li>
+    </ul>
+  </aside>
+</div>

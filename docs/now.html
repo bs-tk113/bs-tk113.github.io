@@ -1,0 +1,73 @@
+---
+layout: default
+title: いまの話題
+description: 大会・移籍・パッチ・配信者大会の最新の動きを、公式・チーム・本人・主催者の発表だけを出典に、編集部の要約で時系列にまとめています。
+permalink: /now/
+noindex_if_empty: now
+---
+{%- comment -%}
+  「いまの話題」タイムライン（P1-b）。データは _data/now.yml（項目の説明はそのファイルの先頭）。
+  新しい順・日ごと。種類（カテゴリ）で絞り込める（JS。無くても全部読める）。
+  広告はタイムラインの途中に入れない（編集長の決定）。
+{%- endcomment -%}
+{%- assign nw = site.data.now -%}
+{%- assign nw_items = "" | split: "" -%}
+{%- if nw.items and nw.items.size > 0 -%}{%- assign nw_items = nw.items | sort: "date" | reverse -%}{%- endif -%}
+{%- assign nw_wd = "日,月,火,水,木,金,土" | split: "," -%}
+<div class="cat-hero">
+  <div class="wrap">
+    {% include breadcrumb.html title=page.title %}
+    <h1>いまの話題</h1>
+    <p>公式・チーム・本人・主催者の発表だけを出典に、編集部の言葉で要約しています。どの話題にも出典の種類と確認日時を付けています。</p>
+  </div>
+</div>
+
+<div class="wrap list-page now-page" data-filter-scope>
+  {%- assign nw_day = "" -%}
+  {%- capture nw_body -%}
+  {%- for it in nw_items -%}
+    {%- capture nw_one %}{% include now-item.html it=it %}{% endcapture -%}
+    {%- assign nw_one_s = nw_one | strip -%}
+    {%- if nw_one_s == "" -%}{%- continue -%}{%- endif -%}
+    {%- assign it_day = it.date | date: '%Y-%m-%d' -%}
+    {%- if it_day != nw_day -%}
+      {%- unless nw_day == "" %}</ol></section>{% endunless %}
+      {%- assign it_wi = it.date | date: '%w' | plus: 0 %}
+  <section class="tl-day" data-day="{{ it_day }}">
+    <h2 class="tl-date"><time datetime="{{ it_day }}">{{ it.date | date: '%Y年%-m月%-d日' }}（{{ nw_wd[it_wi] }}）</time></h2>
+    <ol class="tl">
+      {%- assign nw_day = it_day -%}
+    {%- endif -%}
+    {{ nw_one }}
+  {%- endfor -%}
+  {%- unless nw_day == "" %}</ol></section>{% endunless -%}
+  {%- endcapture -%}
+  {%- assign nw_body_s = nw_body | strip -%}
+
+  {%- if nw_body_s != "" %}
+  <p class="updated-at">{% if nw.updated and nw.updated != "" %}<span>最終更新 <strong>{{ nw.updated | escape }}</strong></span>{% endif %}<span>出典の種類: Riot・VCT 公式／チーム公式／本人／主催者</span></p>
+  <div class="filter" role="group" aria-label="話題の種類で絞り込む" data-filter-key="kind" hidden>
+    <button type="button" class="filter-btn" data-filter-value="" aria-pressed="true">すべて</button>
+    {%- for c in site.data.categories %}
+    {%- assign c_has = nw_items | where: "kind", c.slug | size -%}
+    {%- if c_has > 0 %}
+    <button type="button" class="filter-btn" data-filter-value="{{ c.slug }}" aria-pressed="false" style="--c:var(--c-{{ c.slug }})"><span class="dot" aria-hidden="true"></span>{{ c.short }}</button>
+    {%- endif %}
+    {%- endfor %}
+  </div>
+  {{ nw_body }}
+  {%- else %}
+  <p class="empty">いまはまだ掲載している話題がありません。出典（公式・チーム・本人・主催者の発表）を確認したものから載せます。日程は<a href="{{ '/schedule/' | relative_url }}">大会カレンダー</a>、全体像は<a href="{{ '/hub/' | relative_url }}">まとめハブ</a>をご覧ください。</p>
+  {%- endif %}
+
+  <aside class="box" aria-labelledby="h-now-policy">
+    <h2 class="box-title" id="h-now-policy">このページの決まり</h2>
+    <ul>
+      <li>SNS の投稿は転載・翻訳せず、編集部の言葉で事実だけを要約し、元の投稿へのリンクを付けます。</li>
+      <li>移籍・引退は、本人の投稿とチームの公式発表がそろうまで「確定」と書きません。噂・リークは載せません。</li>
+      <li>元の投稿が削除されたら24時間以内に要約を外します。公式発表で裏付けがある場合は出典を差し替え、「元の投稿は削除済み」と書きます。</li>
+      <li>スクリーンショット・顔写真・アバター・大会ロゴは載せません。</li>
+    </ul>
+    <p class="meta"><a href="{{ '/about/' | relative_url }}#source-policy">出典ポリシーの全文</a></p>
+  </aside>
+</div>

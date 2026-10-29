@@ -5,9 +5,18 @@
 #   fallback: doc がまだ公開されていない間の行き先（無ければタブ自体を出さない）
 #   fallback_label: fallback に飛ぶ間の表示名（行き先と名前をずらさないため）
 #   url: 固定の行き先（doc を使わない場合）
+#   data: そのデータ（_data/<名前>.yml）の items が空のあいだはタブを出さない（いまの話題・大会カレンダー用）
 # URL は baseurl なしで書く（テンプレート側で付ける）。
 # 同じ fallback を2つのタブに書かない（同じページへのタブが並ぶと迷う）。
 tabs:
+  - label: いまの話題
+    cat: default
+    url: /now/
+    data: now
+  - label: 大会カレンダー
+    cat: tournaments
+    url: /schedule/
+    data: matches
   - label: VCT 2027
     cat: tournaments
     doc: /hub/vct-2027/
@@ -19,6 +28,11 @@ tabs:
   - label: Pacific 日本勢
     cat: tournaments
     doc: /hub/vct-pacific-japan-teams/
+  - label: 配信者大会
+    cat: community
+    doc: /hub/streamer-tournaments-2026/
+    fallback: /category/community/
+    fallback_label: 配信者・コミュニティ大会
   - label: 移籍トラッカー
     cat: roster
     doc: /hub/roster-tracker/
@@ -28,7 +42,10 @@ tabs:
     cat: patch
     doc: /hub/patch-history/
     fallback: /category/patch/
-  - label: 5分まとめ
+  - label: LFT ボード
+    cat: roster
+    doc: /hub/lft-board/
+  - label: 週まとめ
     cat: weekly
     url: /category/weekly/
   - label: 感度変換
@@ -45,8 +62,14 @@ tabs:
     fallback: /category/glossary/
     fallback_label: 用語・仕組み解説
 
-# メニュー（カテゴリ6つは categories.yml から自動で出る。ここはその下に並ぶ固定リンク）
+# メニュー（カテゴリ7つは categories.yml から自動で出る。ここはその下に並ぶ固定リンク。data: はタブと同じ）
 menu:
+  - label: いまの話題
+    url: /now/
+    data: now
+  - label: 大会カレンダー
+    url: /schedule/
+    data: matches
   - label: まとめハブ一覧
     url: /hub/
   - label: ツール一覧

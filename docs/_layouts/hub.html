@@ -19,6 +19,8 @@ layout: default
     tag: vct-2027                                  # このタグの記事を「関連記事」に最大10件
     sources: [{title, url, note}] / history: [{date, note}]
     thumb_map / thumb_agent / order（一覧での並び順。小さいほど先）
+    board: lft-board        # ボード（LFT・FA、引退・休止など状態が変わる一覧）。データは _data/boards/<名前>.yml
+    event: xxx-cup-2026     # イベントハブ（配信者・コミュニティ大会）。データは _data/events/<名前>.yml、日程は matches.yml の event_slug
 {%- endcomment -%}
 {%- assign h_cat = page.category -%}
 {%- assign h_catd = site.data.categories | where: "slug", h_cat | first -%}
@@ -58,6 +60,16 @@ layout: default
     <div class="prose">
       {{ content }}
     </div>
+
+    {%- comment -%} ボード（状態が変わる一覧。page.board があるときだけ） {%- endcomment -%}
+    {%- if page.board and page.board != "" %}
+    {% include board.html %}
+    {%- endif %}
+
+    {%- comment -%} イベントハブ（配信者・コミュニティ大会。page.event があるときだけ） {%- endcomment -%}
+    {%- if page.event and page.event != "" %}
+    {% include event-blocks.html %}
+    {%- endif %}
 
     {%- for tb in h_tables %}
     <section aria-labelledby="t-{{ tb.id | default: forloop.index }}">
@@ -119,7 +131,7 @@ layout: default
   {%- endcapture -%}
   {%- if hr_shown > 0 %}
   <section class="related" aria-labelledby="h-related">
-    <div class="sec-head"><h2 id="h-related">関連記事</h2>{% if h_catd %}<a class="more" href="{{ '/category/' | append: h_catd.slug | append: '/' | relative_url }}">{{ h_catd.name }}の記事一覧</a>{% endif %}</div>
+    <div class="sec-head"><h2 id="h-related">関連記事</h2>{% if h_catd %}{% include cat-url.html catd=h_catd %}<a class="more" href="{{ cu_url | relative_url }}">{{ h_catd.name }}の記事一覧</a>{% endif %}</div>
     <ul class="grid grid--2">{{ hr_list }}</ul>
   </section>
   {%- endif %}

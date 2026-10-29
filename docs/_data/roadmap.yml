@@ -1,0 +1,77 @@
+# 公開予定のページ（空の状態を「何がいつ来るか」に変える。P1-a）
+# 使われる場所:
+#   - トップ／カテゴリ一覧のカテゴリカード: 記事が0件のとき「公開予定 n本」
+#   - カテゴリページ・まとめハブ一覧・ツール一覧: 中身が0件のとき「準備中のページ」の一覧
+# 項目:
+#   title:    予定しているページの名前（記事タイトル案。確定でなくてよい）
+#   category: categories.yml の slug
+#   type:     hub（まとめハブ・一覧表）/ tool（ツール）/ post（記事）
+#   status:   企画中 / 制作中 / 確認中（白石の校閲待ち）  ← 文字のまま表示する
+#   doc:      公開後の URL（/hub/<name>/ や /tools/<name>/）。そのページが公開されると自動で一覧から消える。
+#             記事（post）は URL に日付が入るので doc は書かず、公開したらこの行を消す。
+# 日付は書かない（約束できない日付を読者に見せない）。
+
+items:
+  - title: VCT 2027 とは？日程・形式・日本チームの道筋
+    category: tournaments
+    type: hub
+    status: 企画中
+    doc: /hub/vct-2027/
+  - title: VCT 2027 オープン予選 日本まとめ
+    category: tournaments
+    type: hub
+    status: 企画中
+    doc: /hub/vct-2027-open-qualifier-japan/
+  - title: 2027 国内チーム ロスター・移籍トラッカー
+    category: roster
+    type: hub
+    status: 企画中
+    doc: /hub/roster-tracker/
+  - title: VCT Pacific 日本のチーム一覧
+    category: tournaments
+    type: hub
+    status: 企画中
+    doc: /hub/vct-pacific-japan-teams/
+  - title: 感度変換ツール
+    category: tools
+    type: tool
+    status: 企画中
+    doc: /tools/sensitivity/
+  - title: eDPI 計算ツール
+    category: tools
+    type: tool
+    status: 企画中
+    doc: /tools/edpi/
+  - title: パッチ変更履歴（パッチ別）
+    category: patch
+    type: hub
+    status: 企画中
+    doc: /hub/patch-history/
+  - title: エージェント別 調整履歴
+    category: patch
+    type: hub
+    status: 企画中
+    doc: /hub/agent-history/
+  - title: 週まとめ #1（以後、毎週月曜）
+    category: weekly
+    type: post
+    status: 企画中
+  - title: 競技シーン用語集
+    category: glossary
+    type: hub
+    status: 企画中
+    doc: /hub/glossary/
+  - title: ヴァロラント ストリーマー大会 2026 一覧
+    category: community
+    type: hub
+    status: 企画中
+    doc: /hub/streamer-tournaments-2026/
+  - title: ヴァロラント LFT 一覧（VCT 2027 オフシーズン）
+    category: roster
+    type: hub
+    status: 企画中
+    doc: /hub/lft-board/
+  - title: 大会日程 今月（公式＋配信者）
+    category: tournaments
+    type: post
+    status: 企画中

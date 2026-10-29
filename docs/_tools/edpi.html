@@ -1,45 +1,47 @@
 ---
-# サンプル（非公開）。公開するときは白石の確認（計算式・出典）を通してから published: false を消す。
-# ローカルで見るとき: bundle exec jekyll serve --unpublished
-published: false
+# 2026-10-30 公開（白石 5r で RED 解除 → 指定どおり修正 → 編集長が公開判定）
+published: true
 title: eDPI 計算ツール（マウスの DPI × ゲーム内感度）
 short_title: eDPI 計算
 description: マウスの DPI とゲーム内感度を入れると eDPI（実効感度）を計算します。結果は URL で共有できます。
 order: 20
-checked: 2026-10-28
+checked: 2026-10-30
 tool_script: edpi.js
 formula_short: "eDPI = DPI × ゲーム内感度"
 formulas:
   - name: eDPI（実効感度）
     expr: "eDPI = マウスの DPI × ゲーム内感度"
-    note: DPI が違う人同士でも、同じゲームの中なら eDPI が同じなら振り向きの速さは同じになります。別のゲームとは比べられません（ゲームごとに感度の倍率が違うため）。
+    note: "eDPI はゲーム会社の公式用語ではなく、マウスメーカーや攻略サイトで広く使われている一般的な指標です。同じゲームの中なら、DPI が違っても eDPI が同じであれば、振り向くのに必要なマウスの移動距離は同じになります（マウス加速オフで、ゲームが Windows のポインター速度の影響を受けない設定の場合）。別のゲームとは比べられません（ゲームごとに感度の倍率が違うため）。"
 sources:
-  - title: "（白石確認待ち）eDPI の定義の出典を入れる"
-    note: 公開前に一次情報を確認して差し替える
+  - title: "CORSAIR「eDPI 計算機」（マウスメーカーによる eDPI の解説）"
+    url: https://www.corsair.com/explorer/tools/edpi/edpi-calculator/
+    note: eDPI = DPI × ゲーム内感度。eDPI で比べられるのは同じゲームの中だけ、という説明も同じページにあります
 usage: |
   1. マウスの設定ソフトなどで、今の **DPI**（CPI と書かれていることもあります）を確かめます。
   2. ゲームの設定画面で、今の **感度** を確かめます。
   3. 2つを入れると eDPI が出ます。数字を変えるたびに計算し直します。
-  4. 「結果の URL をコピー」を押すと、入れた数字ごとリンクを共有できます。
+  4. 「結果の URL をコピー」を押すと、入れた数字ごとリンクを共有できます（数字が入るのはコピーしたリンクだけで、表示中のページの URL は変わりません）。
 faq:
   - q: DPI を変えたら、ゲーム内感度はどう直せばいいですか？
-    a: "今の eDPI を新しい DPI で割った値が、同じ振り向きになるゲーム内感度です（例: eDPI 320 で DPI を 1600 にするなら 320 ÷ 1600 = 0.2）。"
+    a: "今の eDPI を新しい DPI で割った値が、同じ振り向きになるゲーム内感度です（例: eDPI 320 で DPI を 1600 にするなら 320 ÷ 1600 = 0.2）。ゲームによっては入れられる桁数に限りがあるので、近い値に丸めてください。"
   - q: 入れた数字はどこかに送られますか？
-    a: 送られません。計算はすべてお使いのブラウザの中で行っています。
+    a: "計算はお使いのブラウザの中で行い、当サイトのサーバーに送ったり保存したりはしません。ただし「結果の URL をコピー」で作ったリンクには数値が入るため、そのリンクを開くとアクセス解析（Google アナリティクス）にページの URL として記録されることがあります。"
 tag: sensitivity
 history:
   - date: 2026-10-28
     note: サンプルとして作成（非公開）
+  - date: 2026-10-30
+    note: 出典を追加・FAQ を修正
 ---
 <form class="tool-form" id="edpi-form" novalidate>
 <div class="field">
 <label for="edpi-dpi">マウスの DPI</label>
-<input id="edpi-dpi" name="dpi" type="number" inputmode="decimal" min="1" step="1" value="800" required>
+<input id="edpi-dpi" name="dpi" type="number" inputmode="decimal" min="1" max="100000" step="1" value="800" required>
 <p class="field-help">例: 400 / 800 / 1600</p>
 </div>
 <div class="field">
 <label for="edpi-sens">ゲーム内感度</label>
-<input id="edpi-sens" name="sens" type="number" inputmode="decimal" min="0.001" step="0.001" value="0.4" required>
+<input id="edpi-sens" name="sens" type="number" inputmode="decimal" min="0.001" max="1000" step="0.001" value="0.4" required>
 <p class="field-help">例: 0.35 / 0.4 / 0.5</p>
 </div>
 </form>

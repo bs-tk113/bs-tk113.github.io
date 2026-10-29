@@ -24,4 +24,12 @@ permalink: /hub/
     <p class="empty">まとめハブは準備中です。<a href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a>から記事を探せます。</p>
     {%- endif %}
   </section>
+  {%- capture hb_rm %}{% include roadmap.html type="hub" %}{% endcapture -%}
+  {%- assign hb_rm_s = hb_rm | strip -%}
+  {%- if hb_rm_s != "" %}
+  <section aria-labelledby="h-hub-rm">
+    <div class="sec-head"><h2 id="h-hub-rm">公開予定のまとめハブ</h2></div>
+    {{ hb_rm }}
+  </section>
+  {%- endif %}
 </div>

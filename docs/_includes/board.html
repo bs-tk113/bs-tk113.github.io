@@ -1,0 +1,74 @@
+{%- comment -%}
+  ボード（状態が変わる一覧: LFT・FA ボード、引退・休止一覧など）。hub.html が page.board のあるときだけ読み込む。
+  ハブの front matter:  board: lft-board   → データは docs/_data/boards/lft-board.yml（項目の説明はそのファイルの先頭）
+  列: 選手（活動名）・前所属・ロール・表明日・条件・状態・出典・最終確認日
+  スマホ（600px 未満）では1行を1枚のカードに組み替える（横スクロールさせない）。PC は表。
+  状態の絞り込みボタンは JS（site.js）。JS が無くても全部の行が読める。
+  安全装置:
+    - joined / retired は self と team の両方の出典（削除されていないもの）がそろうまで「確定」の表記にしない（ルール3）
+    - 出典がすべて削除済みの行は出さない（ルール4）
+{%- endcomment -%}
+{%- assign bd_slug = page.board -%}
+{%- assign bd = site.data.boards[bd_slug] -%}
+{%- assign bd_rows = "" | split: "" -%}
+{%- if bd.items and bd.items.size > 0 -%}{%- assign bd_rows = bd.items | sort: "declared", "first" | reverse -%}{%- endif -%}
+<section class="board" aria-labelledby="bd-title" data-filter-scope>
+  <div class="prose"><h2 id="bd-title">{{ bd.title | default: "一覧" | escape }}</h2></div>
+  <p class="updated-at">{% if bd.updated and bd.updated != "" %}<span>表の最終更新 <strong>{{ bd.updated | escape }}</strong></span>{% else %}<span>表の最終更新 <strong>未掲載</strong></span>{% endif %}<span>出典は本人またはチームの公式だけ</span></p>
+
+  {%- capture bd_body -%}
+  {%- for r in bd_rows -%}
+    {%- assign r_live = 0 -%}{%- assign r_self = false -%}{%- assign r_team = false -%}
+    {%- for s in r.sources -%}
+      {%- unless s.deleted and s.deleted != "" -%}
+        {%- assign r_live = r_live | plus: 1 -%}
+        {%- if s.type == "self" -%}{%- assign r_self = true -%}{%- endif -%}
+        {%- if s.type == "team" -%}{%- assign r_team = true -%}{%- endif -%}
+      {%- endunless -%}
+    {%- endfor -%}
+    {%- if r_live == 0 -%}{%- continue -%}{%- endif -%}
+    {%- assign r_both = false -%}{%- if r_self and r_team -%}{%- assign r_both = true -%}{%- endif -%}
+    {%- case r.status -%}
+      {%- when "lft" -%}{%- assign r_st = "チーム募集中（LFT）" -%}
+      {%- when "joined" -%}
+        {%- if r_both -%}{%- assign r_st = "加入決定" -%}{%- elsif r_team -%}{%- assign r_st = "加入発表（本人の発表待ち）" -%}{%- else -%}{%- assign r_st = "加入表明（チーム公式の発表待ち）" -%}{%- endif -%}
+      {%- when "retired" -%}
+        {%- if r_both -%}{%- assign r_st = "引退" -%}{%- elsif r_team -%}{%- assign r_st = "引退発表（本人の発表待ち）" -%}{%- else -%}{%- assign r_st = "引退表明（チーム公式の発表待ち）" -%}{%- endif -%}
+      {%- when "hiatus" -%}{%- assign r_st = "休止" -%}
+      {%- when "returned" -%}{%- assign r_st = "復帰" -%}
+      {%- else -%}{%- assign r_st = "その他" -%}
+    {%- endcase %}
+    <tr data-filter-item data-status="{{ r.status | default: 'other' }}">
+      <td data-label="選手"><strong>{{ r.player | escape }}</strong></td>
+      <td data-label="前所属">{{ r.prev_team | default: "—" | escape }}</td>
+      <td data-label="ロール">{{ r.role | default: "—" | escape }}</td>
+      <td data-label="表明日">{% if r.declared %}<time datetime="{{ r.declared | date: '%Y-%m-%d' }}">{{ r.declared | date: '%Y/%-m/%-d' }}</time>{% else %}—{% endif %}</td>
+      <td data-label="条件">{{ r.terms | default: "—" | escape }}</td>
+      <td data-label="状態"><span class="status-tag status-tag--{{ r.status | default: 'other' }}">{{ r_st }}</span>{% if r.status == "joined" and r.new_team and r.new_team != "" %}<br><span class="meta">加入先: {{ r.new_team | escape }}</span>{% endif %}</td>
+      <td data-label="出典"><span class="src-stack">{% include source-list.html sources=r.sources %}</span></td>
+      <td data-label="最終確認日">{% if r.checked %}<time datetime="{{ r.checked | date: '%Y-%m-%d' }}">{{ r.checked | date: '%Y/%-m/%-d' }}</time>{% else %}—{% endif %}</td>
+    </tr>
+  {%- endfor -%}
+  {%- endcapture -%}
+  {%- assign bd_body_s = bd_body | strip -%}
+
+  {%- if bd_body_s != "" %}
+  <div class="filter" role="group" aria-label="状態で絞り込む" data-filter-key="status" hidden>
+    <button type="button" class="filter-btn" data-filter-value="" aria-pressed="true">すべて</button>
+    <button type="button" class="filter-btn" data-filter-value="lft" aria-pressed="false">LFT</button>
+    <button type="button" class="filter-btn" data-filter-value="joined" aria-pressed="false">加入</button>
+    <button type="button" class="filter-btn" data-filter-value="retired" aria-pressed="false">引退</button>
+    <button type="button" class="filter-btn" data-filter-value="hiatus" aria-pressed="false">休止</button>
+  </div>
+  <div class="table-scroll board-table" role="region" aria-label="{{ bd.title | default: '一覧' | escape }}" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">選手（活動名）</th><th scope="col">前所属</th><th scope="col">ロール</th><th scope="col">表明日</th><th scope="col">条件</th><th scope="col">状態</th><th scope="col">出典</th><th scope="col">最終確認日</th></tr></thead>
+      <tbody>{{ bd_body }}</tbody>
+    </table>
+  </div>
+  {%- if bd.note and bd.note != "" %}<p class="table-note">{{ bd.note | escape }}</p>{% endif %}
+  {%- else %}
+  <p class="empty">まだ掲載していません。本人またはチームの公式発表を確認したものから、表明日・出典・確認日つきで載せます。</p>
+  {%- endif %}
+  <p class="table-note">移籍・引退は、本人の発表とチームの公式発表の両方がそろってから「加入決定」「引退」と書きます。元の投稿が削除されたら24時間以内に表から外すか、公式発表に出典を差し替えて「元の投稿は削除済み」と書きます。</p>
+</section>

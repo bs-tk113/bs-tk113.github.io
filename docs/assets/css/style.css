@@ -16,7 +16,7 @@
   --on-night:#f1f0ff; --on-night-muted:#c9c7ea;
   --shadow:0 6px 20px rgba(20,18,58,.10);
   /* カテゴリ色（塗り専用。上に載せる文字は常に #14123a） */
-  --c-tournaments:#ffb020; --c-roster:#2dd4bf; --c-patch:#a78bfa; --c-weekly:#38bdf8; --c-tools:#a3e635; --c-glossary:#fb923c;
+  --c-tournaments:#ffb020; --c-community:#e879f9; --c-roster:#2dd4bf; --c-patch:#a78bfa; --c-weekly:#38bdf8; --c-tools:#a3e635; --c-glossary:#fb923c;
   --c-default:#94a3b8;
   --on-c:#14123a;
   --radius:14px;
@@ -87,16 +87,7 @@ main{display:block}
 .drawer .dot{flex:none; width:10px; height:10px; border-radius:3px; background:var(--c, var(--c-default))}
 .drawer-sep{grid-column:1 / -1; border-top:1px solid rgba(255,255,255,.14); margin:6px 0}
 
-/* ティッカー（データがあるときだけ出る） */
-.ticker{border-top:1px solid rgba(255,255,255,.1); background:rgba(0,0,0,.18)}
-.ticker-list{display:flex; gap:16px; overflow-x:auto; list-style:none; margin:0 auto; padding:6px 16px; max-width:1200px; scrollbar-width:none}
-.ticker-list::-webkit-scrollbar{display:none}
-.ticker-item{flex:none; white-space:nowrap}
-.ticker-item a{text-decoration:none; color:var(--on-night)}
-.ticker-item > *, .ticker-item a > *{margin-right:6px}
-.ticker-label{font-weight:700; color:var(--accent-fill)}
-.ticker-result{color:var(--accent-fill)}
-.ticker-updated{margin:0 auto; padding:0 16px 6px; max-width:1200px; color:var(--on-night-muted)}
+/* （旧ティッカーは 2026-10-30 に廃止。日程は /schedule/ の .sched に移した） */
 
 /* ===== ヒーロー（トップ） ===== */
 .hero{position:relative; overflow:hidden; background:var(--night); color:var(--on-night); isolation:isolate}
@@ -110,7 +101,13 @@ main{display:block}
 }
 .hero::after{content:""; position:absolute; inset:0; z-index:-1;
   background:linear-gradient(90deg, rgba(12,11,29,.92) 0%, rgba(12,11,29,.70) 45%, rgba(12,11,29,.05) 100%)}
-.hero-agent{position:absolute; z-index:-1; right:-34%; bottom:-6%; height:112%; width:auto; max-width:none; opacity:.55; pointer-events:none}
+/* 立ち絵は濃色背景の JPG（透過なし）。四角く浮かないよう、左右と下を楕円のマスクで透明にフェードする
+   （1枚のグラデーションだけで済ませ、mask-composite を使わない＝古いブラウザでも同じ見え方）。
+   マスク非対応のブラウザでも、下の .hero::after の暗いグラデーションで左端はなじむ */
+.hero-agent{position:absolute; z-index:-1; right:-34%; bottom:-6%; height:112%; width:auto; max-width:none; opacity:.55; pointer-events:none;
+  -webkit-mask-image:radial-gradient(ellipse 50% 70% at 50% 30%, #000 58%, transparent 100%);
+          mask-image:radial-gradient(ellipse 50% 70% at 50% 30%, #000 58%, transparent 100%);
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat}
 .hero-inner{position:relative; padding:36px 16px 52px; max-width:1200px; margin:0 auto}
 .kicker{display:inline-block; font-size:1rem; font-weight:700; color:var(--on-accent); background:var(--accent-fill); padding:2px 12px; border-radius:999px}
 .hero h1{font-size:clamp(1.75rem, 7vw, 3rem); line-height:1.25; margin:14px 0 8px; letter-spacing:.02em}
@@ -133,8 +130,13 @@ main{display:block}
 .empty{margin:0; padding:20px 16px; border:2px dashed var(--line); border-radius:var(--radius); color:var(--muted); background:var(--surface)}
 .empty a{color:var(--link)}
 
-/* ===== カテゴリタイル ===== */
+/* ===== カテゴリタイル =====
+   7枚。先頭（大会ハブ）を横いっぱいの大きいカードにして、残り6枚を 2列×3段（スマホ）／3列×2段（600px 以上）に並べる。
+   どの幅でも空きマスが出ない。カテゴリの数を変えたら、ここの span を見直す */
 .cats{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; list-style:none; margin:0; padding:0}
+.cats > li:first-child{grid-column:1 / -1}
+.cats > li:first-child .cat{min-height:132px}
+.cats > li:first-child .cat-name{font-size:1.25rem}
 .cat{position:relative; display:flex; flex-direction:column; justify-content:flex-end; min-height:112px; padding:12px; border-radius:var(--radius); overflow:hidden; text-decoration:none; color:#fff; isolation:isolate; box-shadow:var(--shadow);
   background:radial-gradient(120% 100% at 90% 0%, var(--c, var(--c-default)) 0%, transparent 60%), linear-gradient(160deg, var(--night-2), var(--night))}
 .cat img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; transition:transform .25s}
@@ -185,7 +187,7 @@ main{display:block}
   .card--compact .thumb-agent::before{font-size:1rem}
 }
 
-/* ===== 今週の5分まとめ ===== */
+/* ===== 最新の週まとめ（トップ） ===== */
 .weekly{display:grid; grid-template-columns:minmax(0,1fr); background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow)}
 .weekly > a{display:block}
 .weekly-body{padding:16px}
@@ -394,9 +396,164 @@ main{display:block}
 .search-results strong{display:block; line-height:1.5}
 .search-results span{color:var(--muted)}
 
+/* =========================================================
+   2026-10-30 追加: いまの話題・大会カレンダー・X 投稿カード・イベントハブ・ボード・公開予定・更新バッジ
+   どのバッジも「色＋文字」。色だけで意味を伝えない。文字は全部 1rem 以上
+   ========================================================= */
+
+/* 更新バッジ（カードの日付の前） */
+.fresh{display:inline-block; margin-right:8px; padding:0 8px; border-radius:6px; background:var(--accent-fill); color:var(--on-accent); font-weight:800; line-height:1.6; vertical-align:baseline}
+
+/* 案内の帯 */
+.notice{margin:0 0 20px; padding:12px 16px; background:var(--surface); border:1px solid var(--line); border-left:5px solid var(--accent-fill); border-radius:var(--radius)}
+.notice p{margin:0 0 6px}
+.notice p:last-child{margin:0}
+.notice a{color:var(--link)}
+.notice .more{color:var(--accent)}
+.notice--community{border-left-color:var(--c-community)}
+.prose + .notice, .page > .notice{margin-top:20px}
+
+/* 出典の種類（Riot・VCT 公式／チーム公式／本人／主催者） */
+.src{display:inline-flex; flex-wrap:wrap; align-items:center; gap:4px 6px; margin:0 12px 4px 0}
+.src a{color:var(--link)}
+.src--deleted{color:var(--muted)}
+.src-type{display:inline-flex; align-items:center; gap:6px; padding:0 8px; border-radius:6px; background:var(--surface-2); color:var(--fg); border:1px solid var(--line); font-size:1rem; font-weight:700; line-height:1.6; white-space:nowrap}
+.src-type::before{content:""; width:8px; height:8px; border-radius:2px; background:var(--st, var(--c-default))}
+.src-type--official{--st:var(--c-tournaments)}
+.src-type--team{--st:var(--c-roster)}
+.src-type--self{--st:var(--c-weekly)}
+.src-type--organizer{--st:var(--c-community)}
+.src-stack{display:flex; flex-direction:column; align-items:flex-start}
+
+/* 大会の種類・状態 */
+.kind-tag,.status-tag{display:inline-block; padding:0 8px; border-radius:6px; font-size:1rem; font-weight:800; line-height:1.6; white-space:nowrap}
+.kind-tag{background:var(--c-default); color:var(--on-c)}
+.kind-tag--official{background:var(--c-tournaments)}
+.kind-tag--streamer{background:var(--c-community)}
+.kind-tag--community{background:transparent; color:var(--fg); border:2px solid var(--c-community); line-height:1.45}
+.status-tag{background:var(--surface-2); color:var(--fg); border:1px solid var(--line)}
+.status-tag--postponed{border:2px solid var(--accent-fill); line-height:1.45}
+.status-tag--cancelled{background:var(--fg); color:var(--bg); border-color:var(--fg)}
+.status-tag--lft{background:var(--c-roster); color:var(--on-c); border-color:transparent}
+.status-tag--joined{background:var(--accent-fill); color:var(--on-accent); border-color:transparent}
+.status-tag--returned{background:var(--c-weekly); color:var(--on-c); border-color:transparent}
+
+/* 絞り込みボタン（JS があるときだけ出る） */
+.filter{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px}
+.filter-btn{display:inline-flex; align-items:center; gap:6px; min-height:44px; padding:0 14px; border-radius:999px; border:1px solid var(--line); background:var(--surface); color:var(--fg); font:inherit; font-size:1rem; font-weight:700; cursor:pointer}
+.filter-btn .dot{width:8px; height:8px; border-radius:50%; background:var(--c, var(--c-default))}
+.filter-btn[aria-pressed="true"]{background:var(--accent-fill); color:var(--on-accent); border-color:transparent}
+
+/* いまの話題（タイムライン） */
+.tl-day{margin:0 0 24px}
+.tl-date{font-size:1.125rem; margin:0 0 10px; padding-left:12px; border-left:5px solid var(--accent-fill)}
+.tl{list-style:none; margin:0; padding:0 0 0 14px; border-left:2px solid var(--line); display:grid; gap:12px}
+.tl-item{position:relative; padding:12px 14px; background:var(--surface); border:1px solid var(--line); border-radius:12px}
+.tl-item::before{content:""; position:absolute; left:-22px; top:18px; width:12px; height:12px; border-radius:50%; background:var(--c, var(--c-default)); border:2px solid var(--bg)}
+.tl-meta{display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; margin:0 0 4px; color:var(--muted)}
+.tl-meta time{font-weight:700; font-variant-numeric:tabular-nums}
+.kind-badge{display:inline-flex; align-items:center; gap:6px; font-weight:700; color:var(--fg)}
+.kind-badge .dot{width:10px; height:10px; border-radius:3px; background:var(--c, var(--c-default))}
+.tl-title{margin:0 0 6px; font-size:1.0625rem; line-height:1.5}
+.tl-title a{color:inherit; text-decoration:none}
+.tl-title a:hover{text-decoration:underline}
+.tl-summary{margin:0 0 8px}
+.tl-context{margin:0 0 8px; color:var(--muted)}
+.tl-context-label,.tl-sources-label{display:inline-block; margin-right:8px; font-weight:700; color:var(--muted)}
+.tl-sources{margin:0 0 4px}
+.tl-more{color:var(--link)}
+.tl--compact{border-left:0; padding:0}
+.tl--compact .tl-item::before{display:none}
+.tl--compact .tl-item{border-left:5px solid var(--c, var(--c-default))}
+
+/* X 投稿カード（埋め込みではない。アイコン画像なし・頭文字の丸） */
+.x-card{margin:0 0 10px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:var(--bg)}
+.x-card-head{display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px}
+.x-initial{flex:none; width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(160deg,var(--night-2),var(--night)); color:#fff; font-weight:800; font-size:1.125rem; line-height:1}
+.x-who{display:flex; flex-direction:column; min-width:0; flex:1; line-height:1.4}
+.x-name{overflow-wrap:anywhere}
+.x-handle{color:var(--muted); overflow-wrap:anywhere}
+.x-summary{margin:10px 0 8px}
+.x-summary-label{display:block; font-weight:700; color:var(--muted)}
+.x-foot{display:flex; flex-wrap:wrap; align-items:center; gap:4px 14px; color:var(--muted)}
+.x-link{display:inline-flex; align-items:center; min-height:44px; padding:0 14px; border-radius:999px; border:1px solid var(--line); background:var(--surface); color:var(--link); font-weight:700; text-decoration:none}
+.x-link:hover{border-color:var(--accent-fill)}
+.x-deleted{font-weight:700; color:var(--fg)}
+
+/* 大会カレンダー（/schedule/・トップ・イベントハブ共用） */
+.sched{list-style:none; margin:0; padding:0; display:grid; gap:18px}
+.sched-date{display:flex; align-items:center; gap:10px; margin:0 0 8px; font-size:1.125rem; line-height:1.4}
+.sched-today{display:inline-block; padding:0 8px; border-radius:6px; background:var(--accent-fill); color:var(--on-accent); font-weight:800}
+.sched-items{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.sched-item{display:grid; grid-template-columns:4.5em minmax(0,1fr); gap:10px; padding:10px 12px; background:var(--surface); border:1px solid var(--line); border-radius:12px}
+.sched-time{font-weight:800; font-variant-numeric:tabular-nums}
+.sched-badges{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 4px}
+.sched-title{margin:0; font-weight:700; line-height:1.5}
+.sched-event{display:block; color:var(--muted); font-weight:700}
+.sched-note{margin:4px 0 0; color:var(--muted)}
+.sched-links{display:flex; flex-wrap:wrap; align-items:center; gap:4px 14px; margin:6px 0 0}
+.sched-links > a{display:inline-flex; align-items:center; min-height:44px; color:var(--link)}
+.sched-item--cancelled .sched-title,.sched-item--cancelled .sched-time{color:var(--muted)}
+.sched-day.is-today .sched-item{border-color:var(--accent-fill)}
+.sched-day.is-past .sched-date{color:var(--muted)}
+.sched-jump{margin:0 0 12px}
+.sched-jump a{color:var(--link); font-weight:700}
+.spoiler{margin:8px 0 0; border:1px dashed var(--line); border-radius:10px; background:var(--surface-2)}
+.spoiler summary{cursor:pointer; display:flex; align-items:center; min-height:44px; padding:0 12px; font-weight:700}
+.spoiler > p,.spoiler > ol{margin:0; padding:0 12px 10px}
+.spoiler--block{margin:0 0 20px}
+
+/* イベントハブ: チーム分け（写真・ロゴなし）・最終結果・配信チャンネル */
+.team-cards{list-style:none; margin:0 0 20px; padding:0; display:grid; gap:10px; grid-template-columns:minmax(0,1fr)}
+.team-card{padding:12px 14px; background:var(--surface); border:1px solid var(--line); border-top:4px solid var(--c, var(--c-community)); border-radius:12px}
+.team-name{margin:0 0 6px; font-size:1.0625rem; line-height:1.5}
+.team-members{list-style:none; margin:0; padding:0}
+.team-members li{display:flex; flex-wrap:wrap; justify-content:space-between; gap:0 10px; padding:4px 0; border-top:1px solid var(--line)}
+.team-role{color:var(--muted)}
+.standings{list-style:none}
+.standings li{display:grid; grid-template-columns:5em minmax(0,1fr); gap:8px; padding:4px 0}
+.standings-rank{font-weight:800}
+.channel-list{list-style:none; margin:0 0 20px; padding:0}
+.channel-list li{border-bottom:1px solid var(--line)}
+.channel-list a{display:inline-flex; align-items:center; min-height:44px; color:var(--link)}
+
+/* ボード（LFT・FA など）。スマホは1行＝1枚のカード、600px 以上は表 */
+.board{margin:0 0 24px}
+.board-table{border:0; background:transparent; overflow:visible}
+.board-table table{min-width:0}
+.board-table thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+.board-table table,.board-table tbody,.board-table tr,.board-table td{display:block; width:100%}
+.board-table tr{margin:0 0 10px; padding:8px 12px; background:var(--surface); border:1px solid var(--line); border-radius:12px}
+.board-table td{display:grid; grid-template-columns:6.5em minmax(0,1fr); gap:8px; padding:4px 0; border:0}
+.board-table td::before{content:attr(data-label); font-weight:700; color:var(--muted)}
+.board-table tr:last-child td{border-bottom:0}
+
+/* 公開予定（_data/roadmap.yml） */
+.roadmap{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.roadmap li{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:4px 12px; padding:10px 14px; background:var(--surface); border:1px dashed var(--line); border-radius:12px}
+.rm-title{font-weight:700; line-height:1.5; min-width:0}
+.rm-meta{display:inline-flex; flex-wrap:wrap; gap:6px; align-items:center}
+.rm-type{color:var(--muted)}
+.rm-lead,.rm-more{margin:0 0 10px}
+.rm-more{margin-top:10px}
+.rm-more a{color:var(--link)}
+.empty + .roadmap{margin-top:10px}
+.cat-index-rm{padding:10px 12px 14px}
+.cat-index-rm .roadmap li{padding:8px 10px}
+
 /* ===== 広い画面 ===== */
 @media (min-width:600px){
   .cats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .team-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .channel-list{columns:2; column-gap:24px}
+  .channel-list li{break-inside:avoid}
+  .board-table{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
+  .board-table table{display:table; min-width:880px}
+  .board-table thead{position:static; width:auto; height:auto; overflow:visible; clip:auto; white-space:normal; display:table-header-group}
+  .board-table tbody{display:table-row-group}
+  .board-table tr{display:table-row; margin:0; padding:0; background:transparent; border:0; border-radius:0}
+  .board-table td{display:table-cell; width:auto; padding:8px 12px; border-bottom:1px solid var(--line)}
+  .board-table td::before{content:none}
   .grid--2,.grid--3,.grid--latest{grid-template-columns:repeat(2,minmax(0,1fr))}
   .hero-agent{right:-14%; opacity:.8}
   .hero-inner{padding:56px 24px 48px}
@@ -409,6 +566,7 @@ main{display:block}
   .weekly .thumb{aspect-ratio:auto; height:100%; min-height:260px}
   .grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
   .cat-index{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .team-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (min-width:1024px){
   .wrap{padding:0 24px}

@@ -4,12 +4,16 @@ layout: default
 {%- comment -%}
   カテゴリページ（docs/category/<slug>.html。front matter に cat: <slug>）
   静的サイトなのでカテゴリ別のページ送りはできない → 最新30件をカードで、それより古い記事は年別の一覧で全部出す。
+  中身が0件のときは、_data/roadmap.yml の「公開予定のページ」を出す（空のページで終わらせない）。
+  categories.yml に url: があるカテゴリ（ツール）は、本体のページへの案内を上に出す。
 {%- endcomment -%}
 {%- assign k_slug = page.cat -%}
 {%- assign k = site.data.categories | where: "slug", k_slug | first -%}
 {%- assign k_posts = site.categories[k_slug] -%}
 {%- assign k_hubs = site.hubs | where: "category", k_slug | sort: "order", "last" -%}
 {%- assign k_tools = site.tools | where: "category", k_slug | sort: "order", "last" -%}
+{%- assign k_n = k_posts | size -%}
+{%- assign k_total = k_n | plus: k_hubs.size | plus: k_tools.size -%}
 <div class="cat-hero" style="--c:var(--c-{{ k.slug | default: 'default' }})">
   <div class="wrap">
     {% include breadcrumb.html title=k.name %}
@@ -19,6 +23,14 @@ layout: default
 </div>
 
 <div class="wrap list-page">
+  {%- if k.url and k.url != "" %}
+  <p class="notice"><a class="more" href="{{ k.url | relative_url }}">{{ k.name }}の一覧はこちら（計算式と出典つき）</a><br><span class="meta">このページは、使い方の解説や関連記事の一覧です。</span></p>
+  {%- endif %}
+
+  {%- if k_slug == "community" %}
+  <p class="notice notice--community">ここで扱う大会は、配信者やコミュニティが主催するもので、Riot Games の公式大会ではありません。チーム分け・日程・結果は主催者の公式発表をもとにまとめます。</p>
+  {%- endif %}
+
   {%- if k_hubs.size > 0 %}
   <section aria-labelledby="h-k-hubs">
     <div class="sec-head"><h2 id="h-k-hubs">まとめハブ・一覧表</h2></div>
@@ -30,7 +42,7 @@ layout: default
   </section>
   {%- endif %}
 
-  {%- if k_tools.size > 0 %}
+  {%- if k_tools.size > 0 and k.url == nil %}
   <section aria-labelledby="h-k-tools">
     <div class="sec-head"><h2 id="h-k-tools">ツール</h2></div>
     <ul class="grid grid--2">
@@ -46,8 +58,8 @@ layout: default
   {%- endif %}
 
   <section aria-labelledby="h-k-posts">
-    <div class="sec-head"><h2 id="h-k-posts">記事{% if k_posts.size > 0 %}（{{ k_posts.size }}件）{% endif %}</h2></div>
-    {%- if k_posts and k_posts.size > 0 %}
+    <div class="sec-head"><h2 id="h-k-posts">記事{% if k_n > 0 %}（{{ k_n }}件）{% endif %}</h2></div>
+    {%- if k_n > 0 %}
     <ul class="grid grid--latest">
       {%- for p in k_posts limit: 30 %}
       {% include card.html doc=p class="card--compact" excerpt=true %}
@@ -58,7 +70,7 @@ layout: default
       {%- endif %}
       {%- endfor %}
     </ul>
-    {%- if k_posts.size > 30 %}
+    {%- if k_n > 30 %}
     <h2 class="year-title">それより前の記事</h2>
     {%- assign k_year = "" -%}
     {%- for p in k_posts offset: 30 %}
@@ -77,4 +89,15 @@ layout: default
     <p class="empty">このカテゴリの記事はまだありません。<a href="{{ '/categories/' | relative_url }}">ほかのカテゴリ</a>もご覧ください。</p>
     {%- endif %}
   </section>
+
+  {%- comment -%} 公開予定（中身が少ないうちは常に出す。公開されたものは自動で消える） {%- endcomment -%}
+  {%- capture k_rm %}{% include roadmap.html cat=k_slug %}{% endcapture -%}
+  {%- assign k_rm_s = k_rm | strip -%}
+  {%- if k_rm_s != "" %}
+  <section aria-labelledby="h-k-roadmap">
+    <div class="sec-head"><h2 id="h-k-roadmap">公開予定のページ</h2></div>
+    <p class="meta rm-lead">このカテゴリで準備しているページです。公式発表を出典に、確認がすんだものから公開します。</p>
+    {{ k_rm }}
+  </section>
+  {%- endif %}
 </div>

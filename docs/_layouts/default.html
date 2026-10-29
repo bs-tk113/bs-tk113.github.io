@@ -3,7 +3,10 @@
 <head>
 {% include head.html %}
 <meta name="theme-color" content="#14123a">
-{%- if page.noindex %}
+{%- comment -%} noindex: front matter の noindex か、noindex_if_empty: <データ名>（_data/<データ名>.yml の items が空のあいだ） {%- endcomment -%}
+{%- assign d_noindex = page.noindex -%}
+{%- if page.noindex_if_empty -%}{%- assign d_ni_n = site.data[page.noindex_if_empty].items | size -%}{%- if d_ni_n == 0 -%}{%- assign d_noindex = true -%}{%- endif -%}{%- endif -%}
+{%- if d_noindex %}
 <meta name="robots" content="noindex">
 {%- endif %}
 <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
@@ -29,9 +32,10 @@
     </button>
   </div>
 
-  {%- comment -%} 話題タブ（_data/nav.yml）。行き先の無いタブは出さない {%- endcomment -%}
+  {%- comment -%} 話題タブ（_data/nav.yml）。行き先の無いタブ・data: のデータが空のタブは出さない {%- endcomment -%}
   <nav class="tabs" aria-label="注目の話題">
   {%- for t in site.data.nav.tabs -%}
+    {%- if t.data -%}{%- assign t_dn = site.data[t.data].items | size -%}{%- if t_dn == 0 -%}{%- continue -%}{%- endif -%}{%- endif -%}
     {%- include resolve-link.html url=t.url doc=t.doc fallback=t.fallback label=t.label fallback_label=t.fallback_label -%}
     {%- if rl_url != "" %}
     <a class="tab" href="{{ rl_url | relative_url }}" style="--c:var(--c-{{ t.cat | default: 'default' }})"{% if page.url == rl_url %} aria-current="page"{% endif %}><span class="dot" aria-hidden="true"></span>{{ rl_label }}</a>
@@ -42,15 +46,17 @@
   <div class="drawer" id="drawer" hidden>
     <ul>
       {%- for c in site.data.categories %}
-      <li><a href="{{ '/category/' | append: c.slug | append: '/' | relative_url }}" style="--c:var(--c-{{ c.slug }})"><span class="dot" aria-hidden="true"></span>{{ c.name }}</a></li>
+      {%- include cat-url.html catd=c %}
+      <li><a href="{{ cu_url | relative_url }}" style="--c:var(--c-{{ c.slug }})"><span class="dot" aria-hidden="true"></span>{{ c.name }}</a></li>
       {%- endfor %}
       <li class="drawer-sep" aria-hidden="true"></li>
       {%- for m in site.data.nav.menu %}
+      {%- if m.data -%}{%- assign m_dn = site.data[m.data].items | size -%}{%- if m_dn == 0 -%}{%- continue -%}{%- endif -%}{%- endif %}
       <li><a href="{{ m.url | relative_url }}">{{ m.label }}</a></li>
       {%- endfor %}
     </ul>
   </div>
-  {% include ticker.html %}
+  {%- comment -%} 試合ティッカーは廃止（2026-10-30）。日程は /schedule/ に集約 {%- endcomment %}
 </header>
 
 <main id="main">
@@ -62,7 +68,8 @@
     <div class="foot-cols">
       <nav aria-labelledby="f-cat"><p class="foot-title" id="f-cat">カテゴリ</p><ul>
         {%- for c in site.data.categories %}
-        <li><a href="{{ '/category/' | append: c.slug | append: '/' | relative_url }}">{{ c.name }}</a></li>
+        {%- include cat-url.html catd=c %}
+        <li><a href="{{ cu_url | relative_url }}">{{ c.name }}</a></li>
         {%- endfor %}
       </ul></nav>
       <nav aria-labelledby="f-hub"><p class="foot-title" id="f-hub">まとめハブ</p><ul>

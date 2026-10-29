@@ -1,12 +1,25 @@
-# 試合ティッカー（部品だけ用意。編集長の判断で当面は出さない）
-# enabled: true にして items を書くと、ヘッダー3段目に出る。items が空なら出ない。
-# 予定と確定結果のみ（速報・途中経過は書かない）。過ぎた予定は JS で隠す。
-enabled: false
+# 大会カレンダー（/schedule/、トップの「直近の大会」、イベントハブの「日程・結果」）。P1-c
+# 旧ティッカー（ヘッダー3段目）は廃止。役目はカレンダーに移した。
+# items が空の間は、トップの枠・タブ・メニューのリンクを出さない。/schedule/ は noindex になる。
+# 予定と確定結果のみ（速報・途中経過は書かない）。
+#
+# 1件の書き方（順番は自由。表示は date の早い順に並べ替える）:
+#   - date: "2027-01-15T18:00:00+09:00"   # 開始日時（ISO 8601、必ず +09:00）。時刻未定なら "2027-01-15"
+#     kind: official                       # official（Riot・VCT の公式大会）/ streamer（配信者主催）/ community（コミュニティ大会）
+#     event: "VCT Pacific"                 # 大会名（文字だけ。ロゴは使わない）
+#     event_slug: ""                       # イベントハブで絞り込むキー（ハブの front matter の event: と同じ値）
+#     title: "チームA vs チームB"          # 試合・日程の名前（"Day 1" "グループA" など）
+#     status: scheduled                    # scheduled（予定どおり）/ postponed（延期）/ cancelled（中止）
+#     new_date: ""                         # 延期で新しい日時が出たら（任意。"2027-01-22T18:00:00+09:00"）
+#     result: ""                           # 確定した結果（"2-1" や "優勝: チームA"）。ネタバレ防止で折りたたんで出す
+#     watch:                               # 配信先（任意。主催者・公式のチャンネルだけ）
+#       - label: "YouTube（主催者）"
+#         url: "https://..."
+#     source_type: organizer               # 日程の出典の種類: official / team / self / organizer
+#     source_url: "https://..."            # 日程の出典（必須。主催者・公式の発表）
+#     url: /hub/vct-2027/                  # サイト内の詳しいページ（任意）
+#
+# 過ぎた予定（結果が空で開始から3時間以上たったもの）はトップの枠では JS で隠す。/schedule/ には残る。
+
 updated: ""          # 例: "2026-11-09 21:00"
 items: []
-# items:
-#   - date: "2027-01-15T18:00:00+09:00"   # ISO 8601（タイムゾーン付き）
-#     label: "VCT Pacific"
-#     text: "チームA vs チームB"
-#     result: ""                           # 確定したら "2-1" など
-#     url: /hub/vct-2027/

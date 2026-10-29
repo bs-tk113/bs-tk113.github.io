@@ -14,7 +14,8 @@
 {%- elsif include.section == "tool" -%}
   {%- assign bc_mid_name = "ツール" -%}{%- assign bc_mid_url = "/tools/" -%}
 {%- elsif bc_cat -%}
-  {%- assign bc_mid_name = bc_cat.name -%}{%- assign bc_mid_url = "/category/" | append: bc_cat.slug | append: "/" -%}
+  {%- include cat-url.html catd=bc_cat -%}
+  {%- assign bc_mid_name = bc_cat.name -%}{%- assign bc_mid_url = cu_url -%}
 {%- endif -%}
 <nav class="crumbs" aria-label="パンくずリスト">
 <ol>

@@ -1,0 +1,32 @@
+{%- comment -%}
+  公開予定のページ（_data/roadmap.yml）。公開済み（doc の URL が site.hubs / site.tools にある）ものは自動で外す。
+  使い方:
+    {% include roadmap.html cat="tournaments" %}            そのカテゴリの予定を <ul> で出す（0件なら何も出さない）
+    {% include roadmap.html type="hub" %}                   種類（hub / tool / post）で絞る。cat と併用可
+    {% include roadmap.html cat=c.slug count_only=true %}   数えるだけ（{{ rm_count }} に入る。何も出力しない）
+    任意: limit=6（出すのは最初の6件まで。rm_count は全件を数える）
+{%- endcomment -%}
+{%- assign rm_count = 0 -%}
+{%- assign rm_pub = site.hubs | concat: site.tools -%}
+{%- capture rm_list -%}
+{%- for it in site.data.roadmap.items -%}
+  {%- if include.cat and include.cat != "" and it.category != include.cat -%}{%- continue -%}{%- endif -%}
+  {%- if include.type and include.type != "" and it.type != include.type -%}{%- continue -%}{%- endif -%}
+  {%- if it.doc and it.doc != "" -%}
+    {%- assign rm_hit = rm_pub | where: "url", it.doc | size -%}
+    {%- if rm_hit > 0 -%}{%- continue -%}{%- endif -%}
+  {%- endif -%}
+  {%- assign rm_count = rm_count | plus: 1 -%}
+  {%- if include.limit and rm_count > include.limit -%}{%- continue -%}{%- endif -%}
+  {%- unless include.count_only -%}
+  {%- case it.type -%}{%- when "hub" -%}{%- assign rm_type = "まとめ・一覧表" -%}{%- when "tool" -%}{%- assign rm_type = "ツール" -%}{%- else -%}{%- assign rm_type = "記事" -%}{%- endcase %}
+<li><span class="rm-title">{{ it.title | escape }}</span><span class="rm-meta"><span class="rm-type">{{ rm_type }}</span><span class="status-tag status-tag--plan">{{ it.status | default: "企画中" | escape }}</span></span></li>
+  {%- endunless -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- unless include.count_only -%}
+{%- assign rm_list_s = rm_list | strip -%}
+{%- if rm_list_s != "" %}
+<ul class="roadmap">{{ rm_list }}</ul>
+{%- endif -%}
+{%- endunless -%}

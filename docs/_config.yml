@@ -24,6 +24,11 @@ adsense_slots:
   tool_bottom: ""       # ツール: FAQ の下（入力欄の近くには置かない）
   category_infeed: ""   # カテゴリページ: 記事一覧の途中
 
+# ===== SNS 投稿の扱い =====
+# X の投稿は公式埋め込みを使わず「X 投稿カード」（_includes/x-card.html: 表示名・@ハンドル・投稿日時・編集部の要約・リンク）で出す。
+# "off" だけ実装している（白石: 要約＋リンクが基本。埋め込みは本人の公式発表に限り1記事2件まで → 当面は使わない）。
+x_embed: "off"
+
 # ===== 構成 =====
 permalink: /:year/:month/:day/:title/
 paginate: 10

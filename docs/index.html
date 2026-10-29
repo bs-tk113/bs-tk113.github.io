@@ -3,9 +3,10 @@ layout: default
 ---
 {%- comment -%}
   トップページ。jekyll-paginate は index.html でだけ動くので、このファイルを移動しないこと。
-  1ページ目: ヒーロー → カテゴリ → 今週の5分まとめ → 人気ランキング → 広告 → 新着記事（ページ送り）→ まとめハブ → エージェント別 → ツール → 広告
+  1ページ目: ヒーロー → いまの話題 → 今週の大会 → カテゴリ → 最新の週まとめ → 人気ランキング → 広告 → 新着記事（ページ送り）→ まとめハブ → エージェント別 → ツール → 広告
   2ページ目以降（/page2/ など）: 新着記事の一覧だけ
-  記事・ハブ・ツールが0件でも崩れない（空の場合の案内を出す）。
+  記事・ハブ・ツールが0件でも崩れない（空の場合の案内と、_data/roadmap.yml の公開予定を出す）。
+  いまの話題（_data/now.yml）・今週の大会（_data/matches.yml）は、データが空なら枠ごと出さない。
 {%- endcomment -%}
 {%- assign all_docs = site.posts | concat: site.hubs | concat: site.tools -%}
 
@@ -21,7 +22,7 @@ layout: default
   <img class="hero-bg" src="{{ hero_map.banner | relative_url }}" alt="" width="640" height="360" decoding="async" onerror="this.style.display='none'">
   {%- endif %}
   {%- if hero_ag_ok > 0 %}
-  <img class="hero-agent" src="{{ hero_agent.portrait | relative_url }}" alt="" width="900" height="817" fetchpriority="high" decoding="async" onerror="this.style.display='none'">
+  <img class="hero-agent" src="{{ hero_agent.portrait | relative_url }}" alt="" width="{{ hero_agent.portrait_w | default: 616 }}" height="{{ hero_agent.portrait_h | default: 822 }}" fetchpriority="high" decoding="async" onerror="this.style.display='none'">
   {%- endif %}
   <div class="hero-inner">
     <span class="kicker">{{ hero.kicker | default: '非公式ファンサイト' }}</span>
@@ -50,7 +51,46 @@ layout: default
 <div class="wrap home{% if paginator.page and paginator.page > 1 %} home--sub{% endif %}">
 {%- if paginator.page == 1 or paginator.page == nil %}
 
-  {%- comment -%} カテゴリから探す（6つ。記事数つき） {%- endcomment -%}
+  {%- comment -%} いまの話題（_data/now.yml の新しい5件。空なら枠ごと出さない。途中に広告を入れない） {%- endcomment -%}
+  {%- assign hn_items = "" | split: "" -%}
+  {%- if site.data.now.items and site.data.now.items.size > 0 -%}{%- assign hn_items = site.data.now.items | sort: "date" | reverse -%}{%- endif -%}
+  {%- assign hn_shown = 0 -%}
+  {%- capture hn_list -%}
+    {%- for it in hn_items -%}
+      {%- if hn_shown >= 5 %}{% break %}{% endif -%}
+      {%- capture hn_one %}{% include now-item.html it=it compact=true %}{% endcapture -%}
+      {%- assign hn_one_s = hn_one | strip -%}
+      {%- if hn_one_s != "" -%}{%- assign hn_shown = hn_shown | plus: 1 -%}{{ hn_one }}{%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if hn_shown > 0 %}
+  <section class="a-now" aria-labelledby="h-now">
+    <div class="sec-head"><h2 id="h-now">いまの話題</h2><a class="more" href="{{ '/now/' | relative_url }}">すべて見る</a></div>
+    <ol class="tl tl--compact">{{ hn_list }}</ol>
+  </section>
+  {%- endif %}
+
+  {%- comment -%}
+    今週の大会（_data/matches.yml）。ビルド時に「3日前〜14日先」に絞り、見ている日の「今日〜7日先＋直近の結果」への絞り込みは JS。
+    空なら枠ごと出さない（JS で全部隠れたときも枠ごと隠す）。
+  {%- endcomment -%}
+  {%- assign hs_now = site.time | date: '%s' | plus: 0 -%}
+  {%- assign hs_from = hs_now | minus: 259200 -%}
+  {%- assign hs_to = hs_now | plus: 1209600 -%}
+  {%- capture hs_list %}{% include schedule-list.html items=site.data.matches.items from=hs_from to=hs_to home=true %}{% endcapture -%}
+  {%- assign hs_list_s = hs_list | strip -%}
+  {%- if hs_list_s != "" %}
+  <section class="a-sched" aria-labelledby="h-sched" data-sched-home>
+    <div class="sec-head"><h2 id="h-sched">今週の大会</h2><a class="more" href="{{ '/schedule/' | relative_url }}">カレンダー</a></div>
+    <p class="meta">今日から7日間の予定と、直近の結果（結果は折りたたみ）。日本時間。</p>
+    {{ hs_list }}
+  </section>
+  {%- endif %}
+
+  {%- comment -%}
+    カテゴリから探す（7つ。記事数つき。0件のカテゴリは roadmap.yml の「公開予定 n本」）
+    並び: 先頭のカードを大きく（2列なら横2マス）して、7枚でも空きマスが出ないようにしている（style.css .cats）
+  {%- endcomment -%}
   <section class="a-cat" id="cat" aria-labelledby="h-cat">
     <div class="sec-head"><h2 id="h-cat">カテゴリから探す</h2><a class="more" href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a></div>
     <ul class="cats">
@@ -60,20 +100,22 @@ layout: default
       {%- assign c_posts = site.categories[c.slug] | size -%}
       {%- assign c_hubtools = site.hubs | concat: site.tools | where: "category", c.slug | size -%}
       {%- assign c_total = c_posts | plus: c_hubtools -%}
-      <li><a class="cat" href="{{ '/category/' | append: c.slug | append: '/' | relative_url }}" style="--c:var(--c-{{ c.slug }})">
+      {%- include roadmap.html cat=c.slug count_only=true -%}
+      {%- include cat-url.html catd=c %}
+      <li><a class="cat" href="{{ cu_url | relative_url }}" style="--c:var(--c-{{ c.slug }})">
         {%- if c_img_ok > 0 %}<img src="{{ c_map.banner | relative_url }}" alt="" width="640" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'">{% endif %}
         <span class="cat-name">{{ c.name }}</span>
         <span class="cat-desc">{{ c.desc }}</span>
-        <span class="cat-count">{% if c_total > 0 %}{{ c_total }}件{% else %}準備中{% endif %}</span>
+        <span class="cat-count">{% if c_total > 0 %}{{ c_total }}件{% elsif rm_count > 0 %}公開予定 {{ rm_count }}本{% else %}準備中{% endif %}</span>
       </a></li>
       {%- endfor %}
     </ul>
   </section>
 
-  {%- comment -%} 今週の5分まとめ（weekly カテゴリの最新1本。front matter の points: で要点4行） {%- endcomment -%}
+  {%- comment -%} 最新の週まとめ（weekly カテゴリの最新1本。front matter の points: で要点4行） {%- endcomment -%}
   {%- assign wk = site.categories.weekly | first -%}
   <section class="a-weekly" aria-labelledby="h-weekly">
-    <div class="sec-head"><h2 id="h-weekly">今週の5分まとめ</h2>{% if wk %}<a class="more" href="{{ '/category/weekly/' | relative_url }}">過去のまとめ</a>{% endif %}</div>
+    <div class="sec-head"><h2 id="h-weekly">最新の週まとめ</h2>{% if wk %}<a class="more" href="{{ '/category/weekly/' | relative_url }}">過去の週まとめ</a>{% endif %}</div>
     {%- if wk %}
     <article class="weekly">
       <a href="{{ wk.url | relative_url }}" tabindex="-1" aria-hidden="true">{% include thumb.html cat="weekly" map=wk.thumb_map agent=wk.thumb_agent label=wk.thumb_label class="thumb--wide" %}</a>
@@ -89,11 +131,11 @@ layout: default
         {%- else %}
         <p>{{ wk.description | default: wk.excerpt | strip_html | strip_newlines | truncate: 120 }}</p>
         {%- endif %}
-        <a class="btn" href="{{ wk.url | relative_url }}">5分まとめを読む</a>
+        <a class="btn" href="{{ wk.url | relative_url }}">週まとめを読む</a>
       </div>
     </article>
     {%- else %}
-    <p class="empty">週まとめはまだありません。公開したらここに最新の1本が出ます。</p>
+    <p class="empty">週まとめはまだありません。第1回を準備中です（以後、毎週月曜に公開します）。公開したらここに最新の1本が出ます。</p>
     {%- endif %}
   </section>
 
@@ -164,7 +206,9 @@ layout: default
       {%- endfor %}
     </ul>
     {%- else %}
-    <p class="empty">大会・移籍・パッチのまとめハブを準備中です。</p>
+    <p class="empty">大会・移籍・パッチのまとめハブを準備中です。公開予定は次のとおりです。</p>
+    {% include roadmap.html type="hub" limit=5 %}
+    {%- if rm_count > 5 %}<p class="meta rm-more">ほか {{ rm_count | minus: 5 }}本。<a href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a>から、カテゴリごとの公開予定を見られます。</p>{% endif %}
     {%- endif %}
   </section>
 
@@ -201,6 +245,7 @@ layout: default
     </ul>
     {%- else %}
     <p class="empty">感度変換・eDPI 計算のツールを準備中です。計算式と出典はページ内に明記します。</p>
+    {% include roadmap.html type="tool" %}
     {%- endif %}
   </section>
 

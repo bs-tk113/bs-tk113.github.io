@@ -1,0 +1,94 @@
+{%- comment -%}
+  イベントハブ（配信者・コミュニティ大会）のブロック（P2-b）。hub.html が page.event のあるときだけ読み込む。
+  ハブの front matter:  event: xxx-cup-2026   → データは docs/_data/events/xxx-cup-2026.yml
+  データの項目（どれも無ければその欄を出さない）:
+    name: "大会名"                       # 文字だけ。大会ロゴ・キービジュアルは使わない（ルール6）
+    organizer: "主催者の活動名"
+    organizer_url: "https://..."         # 主催者の公式発表（大会の告知）
+    guideline_url: "https://..."         # 主催者の二次利用ガイドライン（ルール7: 記事化の前に確認して URL を記録）
+    guideline_checked: 2026-10-30        # ガイドラインを確認した日
+    checked: "2026-10-30 21:00"          # このページのデータを主催者の発表で確認した日時
+    teams:                               # チーム分け（カード。写真・ロゴなし、活動名のみ）
+      - name: "チーム名"
+        members:
+          - name: "活動名"
+            role: "IGL"                  # 任意。主催者の発表にあるときだけ
+        note: ""                         # 任意（コーチ・補欠など）
+    channels:                            # 配信チャンネル一覧（テキストリンク。五十音順に自動で並べる）
+      - name: "活動名"
+        kana: "かつどうめい"             # 並べ替え用のよみ（ひらがな）。必ず書く
+        platform: "YouTube"              # YouTube / Twitch など
+        url: "https://..."
+    standings:                           # 最終結果（ネタバレ防止で折りたたむ）
+      - rank: "優勝"
+        team: "チーム名"
+  日程・結果は _data/matches.yml に event_slug: <この slug> で書く（カレンダーと同じ部品で出る）。
+{%- endcomment -%}
+{%- assign ev_slug = page.event -%}
+{%- assign ev = site.data.events[ev_slug] -%}
+{%- if ev -%}
+<aside class="notice notice--community" aria-label="この大会について">
+  <p><strong>この大会は Riot Games の公式大会ではありません。</strong>{% if ev.organizer %}主催: {% if ev.organizer_url %}<a href="{{ ev.organizer_url }}" rel="noopener" target="_blank">{{ ev.organizer | escape }}</a>{% else %}{{ ev.organizer | escape }}{% endif %}。{% endif %}チーム分け・日程・結果は主催者の公式発表をもとに、編集部が表にまとめています。</p>
+  {%- if ev.checked or ev.guideline_url %}
+  <p class="meta">{% if ev.checked %}主催者の発表で確認: {{ ev.checked | escape }}{% endif %}{% if ev.guideline_url %}{% if ev.checked %} ・ {% endif %}<a href="{{ ev.guideline_url }}" rel="noopener" target="_blank">主催者の二次利用ガイドライン</a>{% if ev.guideline_checked %}（{{ ev.guideline_checked | date: '%Y年%-m月%-d日' }}確認）{% endif %}{% endif %}</p>
+  {%- endif %}
+</aside>
+
+{%- if ev.teams and ev.teams.size > 0 %}
+<section aria-labelledby="ev-teams">
+  <div class="prose"><h2 id="ev-teams">チーム分け</h2></div>
+  <ul class="team-cards">
+    {%- for tm in ev.teams %}
+    <li class="team-card">
+      <h3 class="team-name">{{ tm.name | escape }}</h3>
+      {%- if tm.members and tm.members.size > 0 %}
+      <ul class="team-members">
+        {%- for mb in tm.members %}
+        <li><span>{{ mb.name | escape }}</span>{% if mb.role and mb.role != "" %}<span class="team-role">{{ mb.role | escape }}</span>{% endif %}</li>
+        {%- endfor %}
+      </ul>
+      {%- endif %}
+      {%- if tm.note and tm.note != "" %}<p class="meta">{{ tm.note | escape }}</p>{% endif %}
+    </li>
+    {%- endfor %}
+  </ul>
+</section>
+{%- endif %}
+
+{%- capture ev_sched %}{% include schedule-list.html items=site.data.matches.items event=ev_slug %}{% endcapture -%}
+{%- assign ev_sched_s = ev_sched | strip -%}
+{%- if ev_sched_s != "" %}
+<section aria-labelledby="ev-schedule">
+  <div class="prose"><h2 id="ev-schedule">日程・結果</h2></div>
+  <p class="meta">結果は「結果を見る」を押すと開きます（ネタバレ防止）。</p>
+  {{ ev_sched }}
+</section>
+{%- endif %}
+
+{%- if ev.standings and ev.standings.size > 0 %}
+<section aria-labelledby="ev-standings">
+  <div class="prose"><h2 id="ev-standings">最終結果</h2></div>
+  <details class="spoiler spoiler--block">
+    <summary>最終結果を見る（ネタバレ注意）</summary>
+    <ol class="standings">
+      {%- for st in ev.standings %}
+      <li><span class="standings-rank">{{ st.rank | escape }}</span><span>{{ st.team | escape }}</span></li>
+      {%- endfor %}
+    </ol>
+  </details>
+</section>
+{%- endif %}
+
+{%- if ev.channels and ev.channels.size > 0 %}
+{%- assign ev_ch = ev.channels | sort: "kana", "last" -%}
+<section aria-labelledby="ev-channels">
+  <div class="prose"><h2 id="ev-channels">配信チャンネル一覧</h2></div>
+  <p class="meta">参加者の配信チャンネルです（五十音順）。リンク先は各配信者の公式チャンネルです。</p>
+  <ul class="channel-list">
+    {%- for ch in ev_ch %}
+    <li><a href="{{ ch.url }}" rel="noopener" target="_blank">{{ ch.name | escape }}</a>{% if ch.platform %}<span class="meta">（{{ ch.platform | escape }}）</span>{% endif %}</li>
+    {%- endfor %}
+  </ul>
+</section>
+{%- endif %}
+{%- endif -%}

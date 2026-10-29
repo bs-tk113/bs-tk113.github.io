@@ -5,12 +5,17 @@
 # 一覧と推奨サイズ: docs/assets/img/README.md
 #
 # icon:     96x96 WebP（8KB 以下）  カードのサムネ右下・ランキング・アイコン列
-# portrait: 幅900px 透過 WebP（80KB 以下） トップのヒーロー（hero.yml で指定したものだけ使う）
+# portrait: トップのヒーロー（hero.yml で指定したものだけ使う）。
+#           いまの jett-portrait.jpg は 616x822 の濃色背景（透過ではない）。四角く浮かないよう
+#           style.css の .hero-agent で mask-image（左右と下を透明にフェード）をかけている。
+#           portrait_w / portrait_h に画像の実寸を書く（レイアウトのずれ防止の width/height に使う）。
 
 jett:
   name: ジェット
   icon: /assets/img/agents/jett-icon.jpg
   portrait: /assets/img/agents/jett-portrait.jpg
+  portrait_w: 616
+  portrait_h: 822
   source: https://playvalorant.com/ja-jp/agents/jett/
 reyna:
   name: レイナ

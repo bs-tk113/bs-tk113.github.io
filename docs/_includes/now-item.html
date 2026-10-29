@@ -1,0 +1,47 @@
+{%- comment -%}
+  「いまの話題」の1件（/now/ とトップで共用）。<li> ごと出力する。
+  使い方: {% include now-item.html it=item %}   任意: compact=true（トップ用。要約を短く、X カードは出さず出典バッジだけ）
+  出典がすべて削除済み（deleted）の話題は何も出力しない（ルール4。呼び出し側は出力が空かで数える）。
+  項目の説明は _data/now.yml の先頭。
+{%- endcomment -%}
+{%- assign ni = include.it -%}
+{%- assign ni_live = 0 -%}
+{%- for s in ni.sources -%}{%- unless s.deleted and s.deleted != "" -%}{%- assign ni_live = ni_live | plus: 1 -%}{%- endunless -%}{%- endfor -%}
+{%- if ni_live > 0 -%}
+{%- assign ni_kind = site.data.categories | where: "slug", ni.kind | first -%}
+{%- assign ni_ds = ni.date | append: "" -%}{%- assign ni_dlen = ni_ds | size -%}
+<li class="tl-item" data-filter-item data-kind="{{ ni.kind | default: 'other' }}" style="--c:var(--c-{{ ni_kind.slug | default: 'default' }})">
+<p class="tl-meta">
+{%- if ni_dlen > 10 -%}<time datetime="{{ ni.date | date_to_xmlschema }}">{% if include.compact %}{{ ni.date | date: '%-m/%-d %H:%M' }}{% else %}{{ ni.date | date: '%H:%M' }}{% endif %}</time>
+{%- elsif include.compact -%}<time datetime="{{ ni.date | date: '%Y-%m-%d' }}">{{ ni.date | date: '%-m/%-d' }}</time>
+{%- endif -%}
+<span class="kind-badge"><span class="dot" aria-hidden="true"></span>{{ ni_kind.short | default: "話題" }}</span>
+</p>
+<h3 class="tl-title">{% if ni.url and ni.url != "" %}<a href="{{ ni.url | relative_url }}">{{ ni.title | escape }}</a>{% else %}{{ ni.title | escape }}{% endif %}</h3>
+{%- if include.compact %}
+{%- if ni.summary %}<p class="tl-summary">{{ ni.summary | strip_html | truncate: 70 | escape }}</p>{% endif %}
+<p class="tl-sources">{% include source-list.html sources=ni.sources %}</p>
+{%- else %}
+{%- comment -%} X の出典（削除されていないもの）は X 投稿カードで出す。最大2件。1件目に話題の要約を入れる {%- endcomment -%}
+{%- assign ni_xc = 0 -%}
+{%- capture ni_cards -%}
+{%- for s in ni.sources -%}
+  {%- if s.handle and s.handle != "" -%}{%- unless s.deleted and s.deleted != "" -%}
+  {%- if ni_xc < 2 -%}
+  {%- if ni_xc == 0 -%}{%- assign ni_xs = s.summary | default: ni.summary -%}{%- else -%}{%- assign ni_xs = s.summary | default: "" -%}{%- endif -%}
+  {% include x-card.html name=s.name handle=s.handle posted_at=s.posted_at summary=ni_xs url=s.url type=s.type %}
+  {%- assign ni_xc = ni_xc | plus: 1 -%}
+  {%- endif -%}
+  {%- endunless -%}{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- if ni_xc == 0 and ni.summary %}<p class="tl-summary">{{ ni.summary | escape }}</p>{% endif %}
+{{ ni_cards }}
+{%- if ni.context and ni.context != "" %}<p class="tl-context"><span class="tl-context-label">背景</span>{{ ni.context | escape }}</p>{% endif %}
+{%- capture ni_src %}{% include source-list.html sources=ni.sources skip_x=true %}{% endcapture -%}
+{%- assign ni_src_s = ni_src | strip -%}
+{%- if ni_src_s != "" %}<p class="tl-sources"><span class="tl-sources-label">出典</span>{{ ni_src }}</p>{% endif %}
+<p class="meta">{% if ni.checked %}編集部の確認 {{ ni.checked | escape }}{% endif %}{% if ni.url and ni.url != "" %} ・ <a class="tl-more" href="{{ ni.url | relative_url }}">詳しく</a>{% endif %}</p>
+{%- endif %}
+</li>
+{%- endif -%}

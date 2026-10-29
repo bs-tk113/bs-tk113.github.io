@@ -35,7 +35,8 @@ layout: default
   <header class="post-head">
     <p class="post-labels">
       {%- if p_catd %}
-      <a class="chip" href="{{ '/category/' | append: p_catd.slug | append: '/' | relative_url }}" style="--c:var(--c-{{ p_catd.slug }})">{{ p_catd.name }}</a>
+      {%- include cat-url.html catd=p_catd %}
+      <a class="chip" href="{{ cu_url | relative_url }}" style="--c:var(--c-{{ p_catd.slug }})">{{ p_catd.name }}</a>
       {%- elsif p_cat %}
       <span class="chip chip--line">{{ p_cat }}</span>
       {%- endif %}

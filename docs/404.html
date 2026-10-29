@@ -15,7 +15,8 @@ noindex: true
   </form>
   <ul class="cats">
     {%- for c in site.data.categories %}
-    <li><a class="cat" href="{{ '/category/' | append: c.slug | append: '/' | relative_url }}" style="--c:var(--c-{{ c.slug }})"><span class="cat-name">{{ c.name }}</span><span class="cat-desc">{{ c.desc }}</span></a></li>
+    {%- include cat-url.html catd=c %}
+    <li><a class="cat" href="{{ cu_url | relative_url }}" style="--c:var(--c-{{ c.slug }})"><span class="cat-name">{{ c.name }}</span><span class="cat-desc">{{ c.desc }}</span></a></li>
     {%- endfor %}
   </ul>
   <p><a class="btn" href="{{ '/' | relative_url }}">トップページへ</a></p>

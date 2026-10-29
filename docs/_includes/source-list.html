@@ -1,0 +1,27 @@
+{%- comment -%}
+  出典の一覧（出典の種類を文字バッジで必ず出す。data/topics.md ルール3・4）
+  使い方: {% include source-list.html sources=it.sources %}   任意: skip_x=true（X 投稿カードで出したものを飛ばす）
+  sources の各項目: type（official / team / self / organizer）, name または label, url, deleted（削除を確認した日）, handle
+  deleted がある出典はリンクを外して「元の投稿は削除済み（日付確認）」と出す（魚拓リンクは出さない）。
+{%- endcomment -%}
+{%- for s in include.sources -%}
+  {%- assign sl_del = false -%}{%- if s.deleted and s.deleted != "" -%}{%- assign sl_del = true -%}{%- endif -%}
+  {%- if include.skip_x and s.handle and s.handle != "" and sl_del == false -%}{%- continue -%}{%- endif -%}
+  {%- case s.type -%}
+    {%- when "official" -%}{%- assign sl_type = "Riot・VCT 公式" -%}
+    {%- when "team" -%}{%- assign sl_type = "チーム公式" -%}
+    {%- when "self" -%}{%- assign sl_type = "本人" -%}
+    {%- when "organizer" -%}{%- assign sl_type = "主催者" -%}
+    {%- else -%}{%- assign sl_type = "出典" -%}
+  {%- endcase -%}
+  {%- assign sl_name = s.name | default: s.label | default: s.url -%}
+<span class="src{% if sl_del %} src--deleted{% endif %}"><span class="src-type src-type--{{ s.type | default: 'other' }}">{{ sl_type }}</span>
+{%- if sl_del -%}
+{{ sl_name | escape }}: 元の投稿は削除済み（<time datetime="{{ s.deleted | date: '%Y-%m-%d' }}">{{ s.deleted | date: '%-m月%-d日' }}</time>確認）
+{%- elsif s.url and s.url != "" -%}
+<a href="{{ s.url }}" rel="noopener" target="_blank">{{ sl_name | escape }}</a>
+{%- else -%}
+{{ sl_name | escape }}
+{%- endif -%}
+</span>
+{%- endfor -%}

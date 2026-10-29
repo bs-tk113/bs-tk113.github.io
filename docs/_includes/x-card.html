@@ -1,0 +1,39 @@
+{%- comment -%}
+  X 投稿カード（P2-a）。X の公式埋め込みは使わず、編集部の要約＋元の投稿へのリンクで出す。
+  _config.yml の x_embed は "off" だけ実装している（ほかの値でも同じカードを出す。埋め込みモードは作っていない）。
+  アイコン画像・スクショは使わない（data/topics.md ルール1・6）。頭文字の丸だけ。
+  使い方（記事本文でも使える）:
+    {% include x-card.html name="表示名" handle="@xxxx" posted_at="2026-10-30T11:58:00+09:00" summary="編集部の要約1〜2行" url="https://x.com/..." type="self" %}
+  任意: deleted="2026-11-01"（削除を確認した日。リンクを外して注記を出す）  checked="2026-10-30 13:00"（確認日時）
+{%- endcomment -%}
+{%- assign xc_name = include.name | default: "（表示名）" -%}
+{%- assign xc_handle = include.handle | default: "" | strip -%}
+{%- if xc_handle != "" -%}{%- assign xc_first = xc_handle | slice: 0 -%}{%- if xc_first != "@" -%}{%- assign xc_handle = "@" | append: xc_handle -%}{%- endif -%}{%- endif -%}
+{%- case include.type -%}
+  {%- when "official" -%}{%- assign xc_type = "Riot・VCT 公式" -%}
+  {%- when "team" -%}{%- assign xc_type = "チーム公式" -%}
+  {%- when "self" -%}{%- assign xc_type = "本人" -%}
+  {%- when "organizer" -%}{%- assign xc_type = "主催者" -%}
+  {%- else -%}{%- assign xc_type = "" -%}
+{%- endcase -%}
+<figure class="x-card">
+<div class="x-card-head">
+<span class="x-initial" aria-hidden="true">{{ xc_name | slice: 0 }}</span>
+<span class="x-who"><strong class="x-name">{{ xc_name | escape }}</strong>{% if xc_handle != "" %}<span class="x-handle">{{ xc_handle | escape }}</span>{% endif %}</span>
+{%- if xc_type != "" %}<span class="src-type src-type--{{ include.type }}">{{ xc_type }}</span>{% endif %}
+</div>
+{%- if include.summary and include.summary != "" %}
+<p class="x-summary"><span class="x-summary-label">編集部の要約</span>{{ include.summary | escape }}</p>
+{%- endif %}
+<figcaption class="x-foot">
+{%- if include.posted_at and include.posted_at != "" -%}
+<span>投稿 <time datetime="{{ include.posted_at | date_to_xmlschema }}">{{ include.posted_at | date: '%Y年%-m月%-d日 %H:%M' }}</time></span>
+{%- endif -%}
+{%- if include.checked and include.checked != "" %}<span>確認 {{ include.checked | escape }}</span>{% endif -%}
+{%- if include.deleted and include.deleted != "" %}
+<span class="x-deleted">元の投稿は削除済み（<time datetime="{{ include.deleted | date: '%Y-%m-%d' }}">{{ include.deleted | date: '%-m月%-d日' }}</time>確認）</span>
+{%- elsif include.url and include.url != "" %}
+<a class="x-link" href="{{ include.url }}" rel="noopener" target="_blank">X で投稿を見る</a>
+{%- endif %}
+</figcaption>
+</figure>

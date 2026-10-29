@@ -2,7 +2,8 @@
    - テーマ切替（ライト／ダーク。localStorage に保存。初期値は <head> の小さな script が先に当てる）
    - メニューの開閉
    - 目次（記事・ハブ本文の h2/h3 から作る。2つ未満なら出さない）
-   - ティッカーの過ぎた予定を隠す
+   - 絞り込みボタン（いまの話題・大会カレンダー・ボード）
+   - 大会カレンダーの「今日」の印、トップの「今週の大会」の期間の絞り込み
    - サイト内検索（/search/ で search.json を読んで絞り込む）
    JS が動かなくても本文・リンクはすべて読める作りにしてある。 */
 (function () {
@@ -72,20 +73,81 @@
     }
   }
 
-  /* ---- ティッカー: 結果が無く、日時が過ぎた予定を隠す ---- */
-  var items = document.querySelectorAll('.ticker-item[data-date]');
-  if (items.length) {
-    var now = Date.now(), visible = 0;
-    for (var j = 0; j < items.length; j++) {
-      var it = items[j];
-      var d = Date.parse(it.getAttribute('data-date'));
-      var hasResult = (it.getAttribute('data-result') || '') !== '';
-      if (!hasResult && !isNaN(d) && d + 3 * 3600 * 1000 < now) it.setAttribute('hidden', '');
-      else visible++;
+  /* ---- 空になったまとまり（日付の見出しごと）を隠す ---- */
+  function hideEmptyGroups(scope) {
+    var groups = scope.querySelectorAll('.sched-day, .tl-day');
+    for (var g = 0; g < groups.length; g++) {
+      var vis = groups[g].querySelectorAll('[data-filter-item]:not([hidden]):not([data-out])');
+      if (vis.length) groups[g].removeAttribute('hidden'); else groups[g].setAttribute('hidden', '');
     }
-    if (!visible) {
-      var tk = document.querySelector('.ticker');
-      if (tk) tk.setAttribute('hidden', '');
+  }
+
+  /* ---- 絞り込みボタン（いまの話題・大会カレンダー・ボード）。JS が無いときはボタンごと出さない ---- */
+  var scopes = document.querySelectorAll('[data-filter-scope]');
+  for (var si = 0; si < scopes.length; si++) {
+    (function (scope) {
+      var bar = scope.querySelector('.filter[data-filter-key]');
+      if (!bar) return;
+      var key = bar.getAttribute('data-filter-key');
+      var btns = bar.querySelectorAll('.filter-btn');
+      bar.removeAttribute('hidden');
+      bar.addEventListener('click', function (e) {
+        var b = e.target.closest ? e.target.closest('.filter-btn') : null;
+        if (!b) return;
+        var val = b.getAttribute('data-filter-value') || '';
+        for (var k = 0; k < btns.length; k++) btns[k].setAttribute('aria-pressed', btns[k] === b ? 'true' : 'false');
+        var its = scope.querySelectorAll('[data-filter-item]');
+        for (var n = 0; n < its.length; n++) {
+          var v = its[n].getAttribute('data-' + key) || '';
+          if (val === '' || v === val) its[n].removeAttribute('hidden'); else its[n].setAttribute('hidden', '');
+        }
+        hideEmptyGroups(scope);
+      });
+    })(scopes[si]);
+  }
+
+  /* ---- 大会カレンダー: 「今日」の印・過ぎた日を薄く（日本時間で判定） ---- */
+  var DAY = 24 * 3600 * 1000;
+  var nowMs = Date.now();
+  var todayJst = new Date(nowMs + 9 * 3600 * 1000).toISOString().slice(0, 10);
+  var days = document.querySelectorAll('.sched-day[data-day]');
+  var firstUpcoming = null;
+  for (var di = 0; di < days.length; di++) {
+    var dd = days[di].getAttribute('data-day');
+    if (dd === todayJst) {
+      days[di].classList.add('is-today');
+      var tg = days[di].querySelector('.sched-today');
+      if (tg) tg.removeAttribute('hidden');
+    } else if (dd < todayJst) {
+      days[di].classList.add('is-past');
+    }
+    if (!firstUpcoming && dd >= todayJst) firstUpcoming = days[di];
+  }
+  var jump = document.querySelector('[data-sched-jump]');
+  if (jump && firstUpcoming && !firstUpcoming.closest('[data-sched-window]')) {
+    if (!firstUpcoming.id) firstUpcoming.id = 'day-' + firstUpcoming.getAttribute('data-day');
+    jump.setAttribute('href', '#' + firstUpcoming.id);
+    if (firstUpcoming.getAttribute('data-day') !== todayJst) jump.textContent = '次の日程へ移動';
+    jump.parentNode.removeAttribute('hidden');
+  }
+
+  /* ---- トップの「今週の大会」: 今日〜7日先の予定と、2日以内の結果だけ残す。何も残らなければ枠ごと隠す ---- */
+  var wins = document.querySelectorAll('[data-sched-window]');
+  for (var wi = 0; wi < wins.length; wi++) {
+    var wdays = parseInt(wins[wi].getAttribute('data-sched-window'), 10) || 7;
+    var wits = wins[wi].querySelectorAll('.sched-item[data-date]');
+    var shown = 0;
+    for (var x = 0; x < wits.length; x++) {
+      var t = Date.parse(wits[x].getAttribute('data-date'));
+      var hasRes = (wits[x].getAttribute('data-result') || '') !== '';
+      var keep = !isNaN(t) && t <= nowMs + wdays * DAY && (hasRes ? t >= nowMs - 2 * DAY : t + 3 * 3600 * 1000 >= nowMs);
+      if (keep) { wits[x].removeAttribute('data-out'); wits[x].removeAttribute('hidden'); shown++; }
+      else { wits[x].setAttribute('data-out', ''); wits[x].setAttribute('hidden', ''); }
+    }
+    hideEmptyGroups(wins[wi]);
+    if (!shown) {
+      var box = wins[wi].closest('[data-sched-home]');
+      if (box) box.setAttribute('hidden', '');
     }
   }
 

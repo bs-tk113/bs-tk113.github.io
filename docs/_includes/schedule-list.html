@@ -1,0 +1,76 @@
+{%- comment -%}
+  大会の日程・結果の一覧（日ごとにまとめる）。/schedule/・トップ・イベントハブで共用（P1-c）。
+  使い方: {% include schedule-list.html items=site.data.matches.items %}
+  任意:
+    event="xxx-cup-2026"   event_slug が一致するものだけ（イベントハブ用）
+    from=秒 / to=秒        開始日時（UNIX 秒）がこの範囲のものだけ（トップ用。ビルド時の絞り込み）
+    hl=2                   日付見出しのレベル（既定 3）
+    home=true              JS が「いまから7日先まで」に絞り込む印を付ける（トップ用）
+  出力が空（該当なし）のときは何も出さない。呼び出し側は capture して空かどうかで枠ごと消す。
+  結果（result）はネタバレ防止で <details> に折りたたむ。
+  延期・中止は文字のバッジ（色だけに頼らない）。項目の説明は _data/matches.yml の先頭。
+{%- endcomment -%}
+{%- assign sc_items = "" | split: "" -%}
+{%- if include.items and include.items.size > 0 -%}{%- assign sc_items = include.items | sort: "date" -%}{%- endif -%}
+{%- assign sc_hl = include.hl | default: 3 -%}
+{%- assign sc_wd = "日,月,火,水,木,金,土" | split: "," -%}
+{%- assign sc_day = "" -%}
+{%- capture sc_body -%}
+{%- for m in sc_items -%}
+  {%- if include.event and include.event != "" and m.event_slug != include.event -%}{%- continue -%}{%- endif -%}
+  {%- assign m_s = m.date | date: '%s' | plus: 0 -%}
+  {%- if include.from and m_s < include.from -%}{%- continue -%}{%- endif -%}
+  {%- if include.to and m_s > include.to -%}{%- continue -%}{%- endif -%}
+  {%- assign m_ds = m.date | append: "" -%}{%- assign m_dlen = m_ds | size -%}
+  {%- assign m_day = m.date | date: '%Y-%m-%d' -%}
+  {%- if m_day != sc_day -%}
+    {%- unless sc_day == "" %}</ul></li>{% endunless %}
+    {%- assign m_wi = m.date | date: '%w' | plus: 0 %}
+<li class="sched-day" data-day="{{ m_day }}"><h{{ sc_hl }} class="sched-date"><time datetime="{{ m_day }}">{{ m.date | date: '%-m月%-d日' }}（{{ sc_wd[m_wi] }}）</time><span class="sched-today" hidden>今日</span></h{{ sc_hl }}>
+<ul class="sched-items">
+    {%- assign sc_day = m_day -%}
+  {%- endif -%}
+  {%- case m.kind -%}
+    {%- when "official" -%}{%- assign m_kind = "公式大会" -%}
+    {%- when "streamer" -%}{%- assign m_kind = "配信者大会" -%}
+    {%- when "community" -%}{%- assign m_kind = "コミュニティ大会" -%}
+    {%- else -%}{%- assign m_kind = "大会" -%}
+  {%- endcase -%}
+  {%- assign m_status = m.status | default: "scheduled" -%}
+  {%- assign m_has_res = false -%}{%- if m.result and m.result != "" -%}{%- assign m_has_res = true -%}{%- endif %}
+<li class="sched-item sched-item--{{ m_status }}" data-filter-item data-kind="{{ m.kind | default: 'other' }}" data-date="{{ m.date | date_to_xmlschema }}" data-result="{% if m_has_res %}1{% endif %}">
+<span class="sched-time">{% if m_dlen > 10 %}<time datetime="{{ m.date | date_to_xmlschema }}">{{ m.date | date: '%H:%M' }}</time>{% else %}時刻未定{% endif %}</span>
+<div class="sched-body">
+<p class="sched-badges"><span class="kind-tag kind-tag--{{ m.kind | default: 'other' }}">{{ m_kind }}</span>
+{%- if m_status == "postponed" %} <span class="status-tag status-tag--postponed">延期</span>{% elsif m_status == "cancelled" %} <span class="status-tag status-tag--cancelled">中止</span>{% endif -%}
+</p>
+<p class="sched-title">{% if m.event and m.event != "" %}<span class="sched-event">{{ m.event | escape }}</span>{% endif %}{{ m.title | escape }}</p>
+{%- if m_status == "postponed" %}
+<p class="sched-note">{% if m.new_date and m.new_date != "" %}新しい日時: <time datetime="{{ m.new_date | date_to_xmlschema }}">{{ m.new_date | date: '%-m月%-d日 %H:%M' }}</time>{% else %}新しい日時は主催者の発表待ち{% endif %}</p>
+{%- elsif m_status == "cancelled" %}
+<p class="sched-note">主催者の発表により中止</p>
+{%- endif %}
+{%- if m_has_res %}
+<details class="spoiler"><summary>結果を見る（ネタバレ注意）</summary><p>{{ m.result | escape }}</p></details>
+{%- endif %}
+{%- capture m_links -%}
+{%- if m.url and m.url != "" %}<a href="{{ m.url | relative_url }}">詳しく</a>{% endif -%}
+{%- for w in m.watch %}<a href="{{ w.url }}" rel="noopener" target="_blank">{{ w.label | default: "配信" | escape }}</a>{% endfor -%}
+{%- if m.source_url and m.source_url != "" -%}
+{%- case m.source_type -%}{%- when "official" -%}{%- assign m_src = "Riot・VCT 公式" -%}{%- when "team" -%}{%- assign m_src = "チーム公式" -%}{%- when "self" -%}{%- assign m_src = "本人" -%}{%- when "organizer" -%}{%- assign m_src = "主催者" -%}{%- else -%}{%- assign m_src = "出典" -%}{%- endcase -%}
+<span class="src"><span class="src-type src-type--{{ m.source_type | default: 'other' }}">{{ m_src }}</span><a href="{{ m.source_url }}" rel="noopener" target="_blank">日程の発表</a></span>
+{%- endif -%}
+{%- endcapture -%}
+{%- assign m_links_s = m_links | strip -%}
+{%- if m_links_s != "" %}<p class="sched-links">{{ m_links }}</p>{% endif %}
+</div>
+</li>
+{%- endfor -%}
+{%- unless sc_day == "" %}</ul></li>{% endunless -%}
+{%- endcapture -%}
+{%- assign sc_body_s = sc_body | strip -%}
+{%- if sc_body_s != "" %}
+<ol class="sched"{% if include.home %} data-sched-window="7"{% endif %}>
+{{ sc_body }}
+</ol>
+{%- endif -%}
