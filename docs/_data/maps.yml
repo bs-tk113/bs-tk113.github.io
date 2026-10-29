@@ -5,37 +5,37 @@
 
 ascent:
   name: アセント
-  banner: /assets/img/maps/ascent-banner.webp
+  banner: /assets/img/maps/ascent-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/
 bind:
   name: バインド
-  banner: /assets/img/maps/bind-banner.webp
+  banner: /assets/img/maps/bind-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/
 breeze:
   name: ブリーズ
-  banner: /assets/img/maps/breeze-banner.webp
+  banner: /assets/img/maps/breeze-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/
 haven:
   name: ヘイヴン
-  banner: /assets/img/maps/haven-banner.webp
+  banner: /assets/img/maps/haven-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/
 icebox:
   name: アイスボックス
-  banner: /assets/img/maps/icebox-banner.webp
+  banner: /assets/img/maps/icebox-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/
 lotus:
   name: ロータス
-  banner: /assets/img/maps/lotus-banner.webp
+  banner: /assets/img/maps/lotus-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/
 pearl:
   name: パール
-  banner: /assets/img/maps/pearl-banner.webp
+  banner: /assets/img/maps/pearl-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/
 split:
   name: スプリット
-  banner: /assets/img/maps/split-banner.webp
+  banner: /assets/img/maps/split-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/
 sunset:
   name: サンセット
-  banner: /assets/img/maps/sunset-banner.webp
+  banner: /assets/img/maps/sunset-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/

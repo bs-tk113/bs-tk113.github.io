@@ -81,6 +81,15 @@
 
 公式ロゴ・公式風の書体・赤＋斜めカット（公式の告知に見える加工）は使わない。公式の画像を合成するなら © Riot Games を入れる。
 
+## 出典台帳（取得記録）
+2026-10-30 編集長が取得（運営者の許可あり）。形式は WebP ではなく JPEG（この PC に WebP 変換の道具がないため。サイズ目安は満たしている）。
+| ファイル | 元ページ | 元画像 | 加工 |
+|---|---|---|---|
+| agents/<12体>-icon.jpg | https://playvalorant.com/ja-jp/agents/ （各エージェントのカード画像 616x822） | cmsassets.rgpub.io の news/<id>-616x822.png | 308幅に縮小→顔まわりを正方形に切り抜き 96x96（2.6〜4.1KB） |
+| agents/jett-portrait.jpg | https://playvalorant.com/ja-jp/agents/ （ジェットのカード画像） | news/d41286dc9017bf79c0b4d907b7a260c27b0adb69-616x822.png | JPEG 化のみ 616x822（47KB）。背景は透過ではなく濃色 |
+| maps/<9枚>-banner.jpg | https://playvalorant.com/ja-jp/maps/ （各マップのギャラリー先頭の横長画像） | news/…-3840x2160.png ほか | 中央 60% を切り出し 640x360、透過部分は #14123a で塗る（22〜46KB） |
+ロゴ・© 表記・透かしの写り込みは目視で確認し、無し。
+
 ## 画像を置かない部品
 - サイトのマーク（ヘッダー左の角丸四角）は CSS だけで描いている（画像なし）。
 - 記事ごとのアイキャッチは作らなくてよい（front matter の `thumb_map:` `thumb_agent:` で合成サムネになる）。専用の画像を使うときだけ `image:` に `assets/img/posts/` のパスを書く（1200×675px、100KB 以下）。

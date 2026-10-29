@@ -20,7 +20,7 @@ layout: default
     tools: [edpi]                  # この記事のツール（_tools のファイル名）
 {%- endcomment -%}
 {%- assign p_cat = page.categories | first -%}
-{%- assign p_catd = site.data.categories | where: "slug", p_cat | first -%}
+{%- assign p_catd = nil -%}{%- if p_cat and p_cat != "" -%}{%- assign p_catd = site.data.categories | where: "slug", p_cat | first -%}{%- endif -%}
 {%- assign p_map_key = page.thumb_map | default: p_catd.thumb_map -%}
 {%- assign p_agent_key = page.thumb_agent | default: p_catd.thumb_agent -%}
 {%- assign p_map = site.data.maps[p_map_key] -%}

@@ -9,50 +9,50 @@
 
 jett:
   name: ジェット
-  icon: /assets/img/agents/jett-icon.webp
-  portrait: /assets/img/agents/jett-portrait.webp
+  icon: /assets/img/agents/jett-icon.jpg
+  portrait: /assets/img/agents/jett-portrait.jpg
   source: https://playvalorant.com/ja-jp/agents/jett/
 reyna:
   name: レイナ
-  icon: /assets/img/agents/reyna-icon.webp
+  icon: /assets/img/agents/reyna-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/reyna/
 raze:
   name: レイズ
-  icon: /assets/img/agents/raze-icon.webp
+  icon: /assets/img/agents/raze-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/raze/
 neon:
   name: ネオン
-  icon: /assets/img/agents/neon-icon.webp
+  icon: /assets/img/agents/neon-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/neon/
 sova:
   name: ソーヴァ
-  icon: /assets/img/agents/sova-icon.webp
+  icon: /assets/img/agents/sova-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/sova/
 fade:
   name: フェイド
-  icon: /assets/img/agents/fade-icon.webp
+  icon: /assets/img/agents/fade-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/fade/
 omen:
   name: オーメン
-  icon: /assets/img/agents/omen-icon.webp
+  icon: /assets/img/agents/omen-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/omen/
 viper:
   name: ヴァイパー
-  icon: /assets/img/agents/viper-icon.webp
+  icon: /assets/img/agents/viper-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/viper/
 astra:
   name: アストラ
-  icon: /assets/img/agents/astra-icon.webp
+  icon: /assets/img/agents/astra-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/astra/
 killjoy:
   name: キルジョイ
-  icon: /assets/img/agents/killjoy-icon.webp
+  icon: /assets/img/agents/killjoy-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/killjoy/
 cypher:
   name: サイファー
-  icon: /assets/img/agents/cypher-icon.webp
+  icon: /assets/img/agents/cypher-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/cypher/
 sage:
   name: セージ
-  icon: /assets/img/agents/sage-icon.webp
+  icon: /assets/img/agents/sage-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/sage/

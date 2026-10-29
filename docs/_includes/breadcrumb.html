@@ -3,7 +3,10 @@
   使い方: {% include breadcrumb.html cat=slug title=page.title %}
   任意: section="hub" / "tool"（カテゴリの代わりに一覧ページを中間に置く）
 {%- endcomment -%}
-{%- assign bc_cat = site.data.categories | where: "slug", include.cat | first -%}
+{%- assign bc_cat = nil -%}
+{%- if include.cat and include.cat != "" -%}
+  {%- assign bc_cat = site.data.categories | where: "slug", include.cat | first -%}
+{%- endif -%}
 {%- assign bc_mid_name = "" -%}
 {%- assign bc_mid_url = "" -%}
 {%- if include.section == "hub" -%}
