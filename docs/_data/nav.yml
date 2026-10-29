@@ -1,0 +1,74 @@
+# ヘッダー2段目の「話題タブ」とメニュー（ハンバーガー）の中身。
+# tabs:
+#   label: 表示名 / cat: 点の色（categories.yml の slug）
+#   doc: 公開されたら飛ばしたいハブ・ツールの URL（/hub/<name>/ や /tools/<name>/）
+#   fallback: doc がまだ公開されていない間の行き先（無ければタブ自体を出さない）
+#   fallback_label: fallback に飛ぶ間の表示名（行き先と名前をずらさないため）
+#   url: 固定の行き先（doc を使わない場合）
+# URL は baseurl なしで書く（テンプレート側で付ける）。
+# 同じ fallback を2つのタブに書かない（同じページへのタブが並ぶと迷う）。
+tabs:
+  - label: VCT 2027
+    cat: tournaments
+    doc: /hub/vct-2027/
+    fallback: /category/tournaments/
+    fallback_label: 大会ハブ
+  - label: オープン予選
+    cat: tournaments
+    doc: /hub/vct-2027-open-qualifier-japan/
+  - label: Pacific 日本勢
+    cat: tournaments
+    doc: /hub/vct-pacific-japan-teams/
+  - label: 移籍トラッカー
+    cat: roster
+    doc: /hub/roster-tracker/
+    fallback: /category/roster/
+    fallback_label: ロスター・移籍
+  - label: パッチ履歴
+    cat: patch
+    doc: /hub/patch-history/
+    fallback: /category/patch/
+  - label: 5分まとめ
+    cat: weekly
+    url: /category/weekly/
+  - label: 感度変換
+    cat: tools
+    doc: /tools/sensitivity/
+  - label: eDPI 計算
+    cat: tools
+    doc: /tools/edpi/
+    fallback: /tools/
+    fallback_label: ツール
+  - label: 用語集
+    cat: glossary
+    doc: /hub/glossary/
+    fallback: /category/glossary/
+    fallback_label: 用語・仕組み解説
+
+# メニュー（カテゴリ6つは categories.yml から自動で出る。ここはその下に並ぶ固定リンク）
+menu:
+  - label: まとめハブ一覧
+    url: /hub/
+  - label: ツール一覧
+    url: /tools/
+  - label: カテゴリ一覧
+    url: /categories/
+  - label: サイト内検索
+    url: /search/
+  - label: 運営者情報
+    url: /about/
+  - label: 出典ポリシー
+    url: /about/#source-policy
+
+# フッター「このサイトについて」
+footer:
+  - label: 運営者情報
+    url: /about/
+  - label: 出典ポリシー
+    url: /about/#source-policy
+  - label: プライバシーポリシー
+    url: /privacy/
+  - label: お問い合わせ
+    url: /contact/
+  - label: RSS
+    url: /feed.xml

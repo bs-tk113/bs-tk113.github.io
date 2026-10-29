@@ -1,0 +1,29 @@
+{%- comment -%}
+  合成サムネ: マップ画像（背景）＋カテゴリ色のグラデーション＋エージェントのアイコン（右下）＋カテゴリラベル（左上）
+  使い方: {% include thumb.html cat="tournaments" map="lotus" agent="jett" %}
+  任意: label="週まとめ #1"  class="thumb--wide"  nolabel=true  eager=true（ファーストビューのみ）
+  map / agent を省略するとカテゴリの既定値（_data/categories.yml）を使う。
+  画像ファイルが docs/ に無いときは <img> 自体を出さない（ビルド時に site.static_files で確認）。
+  置いてあっても読めなかったときは onerror で隠す。どちらでも背景のグラデーションと頭文字の輪が残る。
+{%- endcomment -%}
+{%- assign t_cat = site.data.categories | where: "slug", include.cat | first -%}
+{%- assign t_map_key = include.map | default: t_cat.thumb_map -%}
+{%- assign t_agent_key = include.agent | default: t_cat.thumb_agent -%}
+{%- assign t_map = site.data.maps[t_map_key] -%}
+{%- assign t_agent = site.data.agents[t_agent_key] -%}
+{%- assign t_slug = t_cat.slug | default: "default" -%}
+{%- assign t_bg_ok = 0 -%}{%- if t_map.banner -%}{%- assign t_bg_ok = site.static_files | where: "path", t_map.banner | size -%}{%- endif -%}
+{%- assign t_ic_ok = 0 -%}{%- if t_agent.icon -%}{%- assign t_ic_ok = site.static_files | where: "path", t_agent.icon | size -%}{%- endif -%}
+<span class="thumb{% if include.class %} {{ include.class }}{% endif %}" style="--c:var(--c-{{ t_slug }})">
+{%- if t_bg_ok > 0 -%}
+<img class="thumb-bg" src="{{ t_map.banner | relative_url }}" alt="" width="640" height="360" {% if include.eager %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async" onerror="this.style.display='none'">
+{%- endif -%}
+{%- if t_agent -%}
+<span class="thumb-agent" data-initial="{{ t_agent.name | slice: 0 }}" aria-hidden="true">
+{%- if t_ic_ok > 0 -%}<img src="{{ t_agent.icon | relative_url }}" alt="" width="96" height="96" loading="lazy" decoding="async" onerror="this.style.display='none'">{%- endif -%}
+</span>
+{%- endif -%}
+{%- unless include.nolabel -%}
+<span class="label">{{ include.label | default: t_cat.name | default: include.cat | default: "記事" }}</span>
+{%- endunless -%}
+</span>

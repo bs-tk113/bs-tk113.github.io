@@ -1,0 +1,55 @@
+---
+# サンプル（非公開）。公開するときは白石の確認（計算式・出典）を通してから published: false を消す。
+# ローカルで見るとき: bundle exec jekyll serve --unpublished
+published: false
+title: eDPI 計算ツール（マウスの DPI × ゲーム内感度）
+short_title: eDPI 計算
+description: マウスの DPI とゲーム内感度を入れると eDPI（実効感度）を計算します。結果は URL で共有できます。
+order: 20
+checked: 2026-10-28
+tool_script: edpi.js
+formula_short: "eDPI = DPI × ゲーム内感度"
+formulas:
+  - name: eDPI（実効感度）
+    expr: "eDPI = マウスの DPI × ゲーム内感度"
+    note: DPI が違う人同士でも、同じゲームの中なら eDPI が同じなら振り向きの速さは同じになります。別のゲームとは比べられません（ゲームごとに感度の倍率が違うため）。
+sources:
+  - title: "（白石確認待ち）eDPI の定義の出典を入れる"
+    note: 公開前に一次情報を確認して差し替える
+usage: |
+  1. マウスの設定ソフトなどで、今の **DPI**（CPI と書かれていることもあります）を確かめます。
+  2. ゲームの設定画面で、今の **感度** を確かめます。
+  3. 2つを入れると eDPI が出ます。数字を変えるたびに計算し直します。
+  4. 「結果の URL をコピー」を押すと、入れた数字ごとリンクを共有できます。
+faq:
+  - q: DPI を変えたら、ゲーム内感度はどう直せばいいですか？
+    a: "今の eDPI を新しい DPI で割った値が、同じ振り向きになるゲーム内感度です（例: eDPI 320 で DPI を 1600 にするなら 320 ÷ 1600 = 0.2）。"
+  - q: 入れた数字はどこかに送られますか？
+    a: 送られません。計算はすべてお使いのブラウザの中で行っています。
+tag: sensitivity
+history:
+  - date: 2026-10-28
+    note: サンプルとして作成（非公開）
+---
+<form class="tool-form" id="edpi-form" novalidate>
+<div class="field">
+<label for="edpi-dpi">マウスの DPI</label>
+<input id="edpi-dpi" name="dpi" type="number" inputmode="decimal" min="1" step="1" value="800" required>
+<p class="field-help">例: 400 / 800 / 1600</p>
+</div>
+<div class="field">
+<label for="edpi-sens">ゲーム内感度</label>
+<input id="edpi-sens" name="sens" type="number" inputmode="decimal" min="0.001" step="0.001" value="0.4" required>
+<p class="field-help">例: 0.35 / 0.4 / 0.5</p>
+</div>
+</form>
+<div class="result" aria-live="polite">
+<p class="result-label">あなたの eDPI</p>
+<p class="result-value" id="edpi-out">320</p>
+<p class="result-sub" id="edpi-sub">800 DPI × 0.4</p>
+</div>
+<p class="tool-error" id="edpi-error" hidden></p>
+<div class="tool-actions">
+<button class="btn" type="button" id="edpi-copy">結果の URL をコピー</button>
+<a class="btn btn--ghost" href="#formula">計算式と出典を見る</a>
+</div>

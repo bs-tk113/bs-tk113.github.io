@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>（仮）サイト名 | 見本（トップページ）</title>
+<!--
+  見本（モックアップ）2026-10-28 水瀬カナデ
+  - 非公開前提。docs/ には入れない。
+  - 画像は valorant-api.com が配信している Riot Games のアート（media.valorant-api.com）を直接参照（2026-10-28 に実在を確認）。
+    本番の入手元・使い方は白石の結論に従う。本番では自前で縮小・WebP 化して docs/assets/ に置く想定。
+  - ロゴ画像（ゲームロゴ・拳ロゴ・大会ロゴ・チームロゴ）と選手写真は使っていない。
+  - 記事の見出しは strategy.md の10本。日付・数字などの事実は「〇」でぼかしている。
+-->
+<style>
+/* ===== 配色トークン ===== */
+:root{
+  --bg:#f4f5fa; --surface:#ffffff; --surface-2:#eceef7; --fg:#16152b; --muted:#4a4b63; --line:#d9dbe8;
+  --accent:#8a4b00;         /* 文字として使う金（白地でコントラスト確保） */
+  --accent-fill:#ffb020;    /* 塗りとして使う金 */
+  --on-accent:#1a1300;
+  --night:#14123a;          /* ヘッダー・ヒーローの夜色（両モード共通） */
+  --night-2:#221f5c;
+  --on-night:#f1f0ff; --on-night-muted:#c9c7ea;
+  --shadow:0 6px 20px rgba(20,18,58,.10);
+  /* カテゴリ色（塗り用。上に載せる文字は常に暗色） */
+  --c-hub:#ffb020; --c-roster:#2dd4bf; --c-patch:#a78bfa; --c-weekly:#38bdf8; --c-tools:#a3e635; --c-glossary:#fb923c;
+  --radius:14px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c0b1d; --surface:#16152e; --surface-2:#1f1d3d; --fg:#ecebf7; --muted:#b3b2cc; --line:#2c2a50;
+    --accent:#ffc24d; --shadow:0 6px 24px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c0b1d; --surface:#16152e; --surface-2:#1f1d3d; --fg:#ecebf7; --muted:#b3b2cc; --line:#2c2a50;
+  --accent:#ffc24d; --shadow:0 6px 24px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+
+/* ===== 土台 ===== */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family: system-ui, -apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", Meiryo, sans-serif;
+  font-size:1rem; line-height:1.75; overflow-wrap:anywhere;
+}
+img{max-width:100%; display:block}
+a{color:inherit}
+.wrap{max-width:1200px; margin:0 auto; padding:0 16px}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+:focus-visible{outline:3px solid var(--accent-fill); outline-offset:2px}
+
+/* 見本であることの帯 */
+.mock-note{background:#fff3c4; color:#3b2a00; font-size:1rem; padding:8px 16px; text-align:center}
+
+/* ===== ヘッダー ===== */
+.site-header{position:sticky; top:0; z-index:20; background:var(--night); color:var(--on-night); box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.bar{display:flex; align-items:center; gap:8px; min-height:56px}
+.brand{display:flex; align-items:center; gap:10px; text-decoration:none; font-weight:800; font-size:1.125rem; margin-right:auto; min-width:0}
+.brand-mark{flex:none; width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,var(--c-hub),var(--c-roster)); display:grid; place-items:center; color:#14123a; font-size:1rem; font-weight:900}
+.icon-btn{flex:none; width:44px; height:44px; border-radius:10px; border:0; background:transparent; color:var(--on-night); display:grid; place-items:center; cursor:pointer}
+.icon-btn:hover{background:rgba(255,255,255,.08)}
+.icon-btn svg{width:22px; height:22px}
+.tabs{display:flex; gap:8px; overflow-x:auto; padding:0 16px 10px; scrollbar-width:none; scroll-snap-type:x proximity; max-width:1200px; margin:0 auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none; scroll-snap-align:start; display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:0 14px; border-radius:999px; background:rgba(255,255,255,.08); color:var(--on-night); text-decoration:none; font-size:1rem; white-space:nowrap; border:1px solid rgba(255,255,255,.12)}
+.tab[aria-current="page"]{background:var(--accent-fill); color:var(--on-accent); border-color:transparent; font-weight:700}
+.tab .dot{width:8px; height:8px; border-radius:50%; background:var(--c)}
+.drawer{display:none; background:var(--night-2); padding:8px 16px 16px}
+.drawer.open{display:block}
+.drawer ul{list-style:none; margin:0 auto; padding:0; max-width:1200px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px}
+.drawer a{display:block; padding:10px 8px; color:var(--on-night); text-decoration:none; border-radius:8px}
+.drawer a:hover{background:rgba(255,255,255,.08)}
+
+/* ===== ヒーロー ===== */
+.hero{position:relative; overflow:hidden; background:var(--night); color:var(--on-night); isolation:isolate}
+.hero-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:blur(6px) saturate(1.2); transform:scale(1.15); opacity:.5; z-index:-3}
+.hero::before{ /* 自作の光（夜色＋金と青緑のにじみ） */
+  content:""; position:absolute; inset:0; z-index:-2;
+  background:
+    radial-gradient(60% 80% at 85% 20%, rgba(45,212,191,.35), transparent 60%),
+    radial-gradient(50% 70% at 70% 100%, rgba(255,176,32,.30), transparent 60%),
+    linear-gradient(180deg, rgba(20,18,58,.35), rgba(20,18,58,.85));
+}
+.hero::after{ /* 文字側を暗くして読みやすく */
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(90deg, rgba(12,11,29,.92) 0%, rgba(12,11,29,.70) 45%, rgba(12,11,29,.05) 100%);
+}
+.hero-agent{position:absolute; z-index:-1; right:-34%; bottom:-6%; height:112%; width:auto; max-width:none; opacity:.55; pointer-events:none}
+.hero-inner{position:relative; padding:36px 16px 48px; max-width:1200px; margin:0 auto}
+.kicker{display:inline-block; font-size:1rem; font-weight:700; color:var(--on-accent); background:var(--accent-fill); padding:2px 12px; border-radius:999px}
+.hero h1{font-size:clamp(1.75rem, 7vw, 3rem); line-height:1.25; margin:14px 0 8px; letter-spacing:.02em}
+.hero .lead{font-size:1.0625rem; color:var(--on-night-muted); margin:0 0 18px; max-width:30em}
+.search{display:flex; gap:8px; max-width:520px}
+.search input{flex:1; min-width:0; height:48px; border-radius:12px; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.95); color:#16152b; padding:0 14px; font-size:1rem}
+.search button{flex:none; height:48px; padding:0 18px; border:0; border-radius:12px; background:var(--accent-fill); color:var(--on-accent); font-weight:800; font-size:1rem; cursor:pointer}
+.quick{display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 0; padding:0; list-style:none}
+.quick a{display:inline-flex; align-items:center; min-height:40px; padding:0 14px; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); text-decoration:none; font-size:1rem}
+.quick a:hover{background:rgba(255,255,255,.2)}
+.credit{position:absolute; right:12px; bottom:6px; margin:0; font-size:1rem; color:var(--on-night-muted); opacity:.85}
+
+/* ===== レイアウト ===== */
+.layout{display:grid; gap:36px; grid-template-columns:minmax(0,1fr); padding-top:28px; padding-bottom:48px;
+  grid-template-areas:"cat" "weekly" "rank" "ad1" "hubs" "agents" "tools" "ad2";}
+.a-cat{grid-area:cat} .a-weekly{grid-area:weekly} .a-rank{grid-area:rank} .a-ad1{grid-area:ad1}
+.a-hubs{grid-area:hubs} .a-agents{grid-area:agents} .a-tools{grid-area:tools} .a-ad2{grid-area:ad2}
+.sec-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin:0 0 14px}
+.sec-head h2{margin:0; font-size:1.375rem; line-height:1.4; padding-left:12px; border-left:5px solid var(--accent-fill)}
+.more{font-size:1rem; color:var(--accent); font-weight:700; text-decoration:none; white-space:nowrap}
+.more:hover{text-decoration:underline}
+
+/* ===== カテゴリ（6つ） ===== */
+.cats{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; list-style:none; margin:0; padding:0}
+.cat{position:relative; display:flex; flex-direction:column; justify-content:flex-end; min-height:112px; padding:12px; border-radius:var(--radius); overflow:hidden; text-decoration:none; color:#fff; background:var(--night); isolation:isolate; box-shadow:var(--shadow)}
+.cat img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; transition:transform .25s}
+.cat::after{content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--c) 35%, transparent) 0%, rgba(12,11,29,.88) 75%)}
+.cat:hover img{transform:scale(1.06)}
+.cat-name{font-weight:800; font-size:1.0625rem; line-height:1.4}
+.cat-name::before{content:""; display:inline-block; width:10px; height:10px; border-radius:3px; background:var(--c); margin-right:8px; vertical-align:middle}
+.cat-desc{font-size:1rem; color:#dedcf5; line-height:1.5}
+
+/* ===== サムネ（マップ帯画像＋エージェントアイコン＋カテゴリ色。記事ごとに画像を作らなくても絵になる） ===== */
+.thumb{position:relative; aspect-ratio:16/9; overflow:hidden; background:var(--night); isolation:isolate}
+.thumb-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; transition:transform .25s}
+.thumb::after{content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(135deg, color-mix(in srgb, var(--c) 45%, transparent) 0%, rgba(12,11,29,.15) 50%, rgba(12,11,29,.75) 100%)}
+.thumb-agent{position:absolute; right:10px; bottom:10px; width:30%; max-width:84px; aspect-ratio:1; border-radius:50%; background:rgba(12,11,29,.65); border:3px solid var(--c); padding:4px}
+.label{position:absolute; left:10px; top:10px; font-size:1rem; font-weight:800; line-height:1.5; padding:1px 10px; border-radius:999px; background:var(--c); color:#14123a}
+
+/* ===== カード ===== */
+.card{display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; text-decoration:none; box-shadow:var(--shadow); transition:transform .15s, box-shadow .15s}
+.card:hover{transform:translateY(-2px)}
+.card:hover .thumb-bg{transform:scale(1.05)}
+.card-body{padding:12px 14px 14px; display:flex; flex-direction:column; gap:6px; flex:1}
+.card-title{margin:0; font-size:1.0625rem; font-weight:800; line-height:1.5}
+.meta{font-size:1rem; color:var(--muted); margin:0}
+.badge{display:inline-block; font-size:1rem; font-weight:700; color:var(--accent); border:1px solid currentColor; border-radius:6px; padding:0 8px; line-height:1.6}
+.grid{display:grid; gap:14px; grid-template-columns:minmax(0,1fr); list-style:none; margin:0; padding:0}
+
+/* ===== 今週の5分まとめ ===== */
+.weekly{display:grid; grid-template-columns:minmax(0,1fr); background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow)}
+.weekly .thumb{aspect-ratio:21/9}
+.weekly-body{padding:16px}
+.weekly-body h3{margin:0 0 6px; font-size:1.25rem; line-height:1.45}
+.points{list-style:none; margin:12px 0 14px; padding:0; display:grid; gap:8px}
+.points li{display:grid; grid-template-columns:auto minmax(0,1fr); gap:10px; align-items:start; padding:10px 12px; background:var(--surface-2); border-radius:10px}
+.points .tag{font-size:1rem; font-weight:800; padding:0 8px; border-radius:6px; background:var(--c); color:#14123a; white-space:nowrap}
+.btn{display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 20px; border-radius:12px; background:var(--accent-fill); color:var(--on-accent); font-weight:800; text-decoration:none}
+.btn:hover{filter:brightness(1.05)}
+
+/* ===== ランキング ===== */
+.rank-box{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow)}
+.rank-list{list-style:none; margin:0; padding:0; counter-reset:r}
+.rank-list li + li{border-top:1px solid var(--line)}
+.rank-item{display:grid; grid-template-columns:88px minmax(0,1fr); gap:12px; align-items:center; padding:10px 0; text-decoration:none}
+.rank-thumb{position:relative; width:88px; aspect-ratio:1; border-radius:10px; overflow:hidden; background:var(--night)}
+.rank-thumb img.bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+.rank-thumb img.ag{position:absolute; right:4px; bottom:4px; width:44px; height:44px; border-radius:50%; background:rgba(12,11,29,.7); border:2px solid var(--c); padding:2px}
+.rank-no{position:absolute; left:0; top:0; min-width:30px; height:30px; display:grid; place-items:center; font-weight:900; font-size:1rem; background:var(--night); color:var(--on-night); border-bottom-right-radius:10px}
+.rank-list li:nth-child(1) .rank-no{background:var(--accent-fill); color:var(--on-accent)}
+.rank-list li:nth-child(2) .rank-no{background:#d6d9e8; color:#14123a}
+.rank-list li:nth-child(3) .rank-no{background:#e9b98a; color:#14123a}
+.rank-title{font-weight:700; line-height:1.5; font-size:1rem}
+.rank-note{font-size:1rem; color:var(--muted); margin:0 0 8px}
+
+/* ===== エージェント列 ===== */
+.agents{display:flex; gap:12px; overflow-x:auto; list-style:none; margin:0; padding:4px 2px 10px; scroll-snap-type:x proximity}
+.agents li{flex:none; scroll-snap-align:start}
+.agent{display:flex; flex-direction:column; align-items:center; gap:4px; width:84px; text-decoration:none; font-size:1rem; text-align:center; line-height:1.4}
+.agent img{width:72px; height:72px; border-radius:50%; background:linear-gradient(160deg,var(--night-2),var(--night)); border:2px solid var(--line); padding:3px; transition:border-color .15s, transform .15s}
+.agent:hover img{border-color:var(--accent-fill); transform:translateY(-2px)}
+.agents-hint{font-size:1rem; color:var(--muted); margin:6px 0 0}
+
+/* ===== ツール ===== */
+.tool{display:grid; gap:10px; padding:16px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); text-decoration:none; position:relative; overflow:hidden}
+.tool::before{content:""; position:absolute; inset:0 auto 0 0; width:6px; background:var(--c)}
+.tool h3{margin:0; font-size:1.125rem}
+.formula{font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size:1rem; background:var(--surface-2); border-radius:8px; padding:8px 10px}
+.fake-form{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
+.fake-field{border:1px solid var(--line); border-radius:8px; padding:6px 10px; font-size:1rem; color:var(--muted); background:var(--bg)}
+
+/* ===== 広告枠（本番では _includes/ad.html が入る位置） ===== */
+.ad{border:2px dashed var(--line); border-radius:var(--radius); min-height:120px; display:grid; place-items:center; color:var(--muted); font-size:1rem; text-align:center; padding:12px}
+.ad-label{display:block; font-size:1rem}
+
+/* ===== フッター ===== */
+.site-footer{background:var(--night); color:var(--on-night); padding:36px 0 24px}
+.foot-cols{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px}
+.site-footer h2{font-size:1.0625rem; margin:0 0 8px; color:var(--on-night)}
+.site-footer ul{list-style:none; margin:0; padding:0}
+.site-footer li a{display:inline-block; padding:4px 0; color:var(--on-night-muted); text-decoration:none}
+.site-footer li a:hover{color:var(--on-night); text-decoration:underline}
+.disclaimer{margin-top:28px; padding:14px 16px; border:1px solid rgba(255,255,255,.18); border-radius:12px; background:rgba(255,255,255,.04); color:var(--on-night-muted); font-size:1rem; line-height:1.8}
+.disclaimer strong{color:var(--on-night)}
+.copy{margin:16px 0 0; color:var(--on-night-muted); font-size:1rem}
+
+/* ===== 広い画面 ===== */
+@media (min-width:600px){
+  .cats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid.hubs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid.tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero-agent{right:-14%; opacity:.8}
+  .hero-inner{padding:56px 24px 44px}
+  .foot-cols{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (min-width:900px){
+  .weekly{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+  .weekly .thumb{aspect-ratio:auto; height:100%; min-height:260px}
+}
+@media (min-width:1024px){
+  .wrap{padding:0 24px}
+  .hero-agent{right:2%; height:125%; bottom:-14%; opacity:1}
+  .hero-inner{padding:72px 24px 64px}
+  .layout{grid-template-columns:minmax(0,1fr) 340px; column-gap:32px;
+    grid-template-areas:
+      "cat rank" "weekly rank" "ad1 rank" "hubs ad2" "agents ." "tools .";}
+  .a-rank{align-self:start}
+  .a-ad2{align-self:start; position:sticky; top:120px}
+  .grid.hubs{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<p class="mock-note">見本（モックアップ）・非公開。画像は外部（valorant-api.com）を直接参照しています。本番の画像の入手元は白石の確認待ち。</p>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">仮</span><span>（仮）サイト名</span></a>
+    <button class="icon-btn" type="button" aria-label="サイト内検索へ" onclick="document.getElementById('q').focus()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    </button>
+    <button class="icon-btn" type="button" id="theme-btn" aria-label="ライト／ダークの切り替え">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <button class="icon-btn" type="button" id="menu-btn" aria-label="メニュー" aria-expanded="false" aria-controls="drawer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+  <!-- 話題タブ（GameWith の大会タブに相当する導線。ロゴは使わず文字＋カテゴリ色の点） -->
+  <nav class="tabs" aria-label="注目の話題">
+    <a class="tab" href="#" aria-current="page" style="--c:var(--c-hub)"><span class="dot"></span>VCT 2027</a>
+    <a class="tab" href="#" style="--c:var(--c-hub)"><span class="dot"></span>オープン予選</a>
+    <a class="tab" href="#" style="--c:var(--c-hub)"><span class="dot"></span>Pacific 日本勢</a>
+    <a class="tab" href="#" style="--c:var(--c-roster)"><span class="dot"></span>移籍トラッカー</a>
+    <a class="tab" href="#" style="--c:var(--c-patch)"><span class="dot"></span>パッチ履歴</a>
+    <a class="tab" href="#" style="--c:var(--c-weekly)"><span class="dot"></span>5分まとめ</a>
+    <a class="tab" href="#" style="--c:var(--c-tools)"><span class="dot"></span>感度変換</a>
+  </nav>
+  <div class="drawer" id="drawer">
+    <ul>
+      <li><a href="#cat">大会ハブ</a></li>
+      <li><a href="#cat">ロスター・移籍</a></li>
+      <li><a href="#cat">パッチ履歴</a></li>
+      <li><a href="#cat">週まとめ</a></li>
+      <li><a href="#cat">ツール</a></li>
+      <li><a href="#cat">用語・仕組み解説</a></li>
+      <li><a href="#">運営者情報</a></li>
+      <li><a href="#">出典ポリシー</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="hero-title">
+  <!-- 背景: マップの帯画像（約62KB）をぼかして雰囲気だけ使う＋自作のグラデーション -->
+  <img class="hero-bg" src="https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png" alt="" width="456" height="100" fetchpriority="high">
+  <!-- 主役: エージェントの全身アート（透過PNG。本番は縮小WebPにする） -->
+  <img class="hero-agent" src="https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/fullportrait.png" alt="" width="2048" height="1860" fetchpriority="high">
+  <div class="hero-inner">
+    <span class="kicker">非公式ファンサイト</span>
+    <h1 id="hero-title">日本の競技シーンを、<br>5分で把握する。</h1>
+    <p class="lead">大会の形式、日本チームの道筋、移籍、パッチの数値変更を「表」と「まとめ」で。すべて公式発表を出典に、更新日つきで。</p>
+    <form class="search" role="search" onsubmit="return false">
+      <label class="sr-only" for="q">サイト内検索</label>
+      <input id="q" type="search" placeholder="チーム名・エージェント名・用語で検索">
+      <button type="submit">検索</button>
+    </form>
+    <ul class="quick">
+      <li><a href="#">VCT 2027 とは？</a></li>
+      <li><a href="#">移籍トラッカー</a></li>
+      <li><a href="#">eDPI 計算</a></li>
+    </ul>
+  </div>
+  <p class="credit">画像 © Riot Games, Inc.</p>
+</section>
+
+<main class="wrap layout">
+
+  <!-- カテゴリ6つ -->
+  <section class="a-cat" id="cat" aria-labelledby="h-cat">
+    <div class="sec-head"><h2 id="h-cat">カテゴリから探す</h2></div>
+    <ul class="cats">
+      <li><a class="cat" href="#" style="--c:var(--c-hub)">
+        <img src="https://media.valorant-api.com/maps/2fe4ed3a-450a-948b-6d6b-e89a78e680a9/listviewicon.png" alt="" width="456" height="100" loading="lazy">
+        <span class="cat-name">大会ハブ</span><span class="cat-desc">形式・日程・日本の道筋</span></a></li>
+      <li><a class="cat" href="#" style="--c:var(--c-roster)">
+        <img src="https://media.valorant-api.com/maps/2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba/listviewicon.png" alt="" width="456" height="100" loading="lazy">
+        <span class="cat-name">ロスター・移籍</span><span class="cat-desc">国内チームの一覧表</span></a></li>
+      <li><a class="cat" href="#" style="--c:var(--c-patch)">
+        <img src="https://media.valorant-api.com/maps/fd267378-4d1d-484f-ff52-77821ed10dc2/listviewicon.png" alt="" width="456" height="100" loading="lazy">
+        <span class="cat-name">パッチ履歴</span><span class="cat-desc">パッチ別・エージェント別</span></a></li>
+      <li><a class="cat" href="#" style="--c:var(--c-weekly)">
+        <img src="https://media.valorant-api.com/maps/e2ad5c54-4114-a870-9641-8ea21279579a/listviewicon.png" alt="" width="456" height="100" loading="lazy">
+        <span class="cat-name">週まとめ</span><span class="cat-desc">毎週月曜の5分まとめ</span></a></li>
+      <li><a class="cat" href="#" style="--c:var(--c-tools)">
+        <img src="https://media.valorant-api.com/maps/92584fbe-486a-b1b2-9faa-39b0f486b498/listviewicon.png" alt="" width="456" height="100" loading="lazy">
+        <span class="cat-name">ツール</span><span class="cat-desc">感度変換・eDPI 計算</span></a></li>
+      <li><a class="cat" href="#" style="--c:var(--c-glossary)">
+        <img src="https://media.valorant-api.com/maps/2bee0dc9-4ffe-519b-1cbd-7fbe763a6047/listviewicon.png" alt="" width="456" height="100" loading="lazy">
+        <span class="cat-name">用語・仕組み解説</span><span class="cat-desc">競技シーンの用語集</span></a></li>
+    </ul>
+  </section>
+
+  <!-- 今週の5分まとめ -->
+  <section class="a-weekly" aria-labelledby="h-weekly">
+    <div class="sec-head"><h2 id="h-weekly">今週の5分まとめ</h2><a class="more" href="#">過去のまとめ</a></div>
+    <article class="weekly">
+      <div class="thumb" style="--c:var(--c-weekly)">
+        <img class="thumb-bg" src="https://media.valorant-api.com/maps/2fe4ed3a-450a-948b-6d6b-e89a78e680a9/listviewicon.png" alt="" width="456" height="100" loading="lazy">
+        <img class="thumb-agent" src="https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/displayicon.png" alt="" width="128" height="128" loading="lazy">
+        <span class="label">週まとめ #1</span>
+      </div>
+      <div class="weekly-body">
+        <h3>週まとめ #1 〇月〇日〜〇月〇日の競技シーン</h3>
+        <p class="meta">〇月〇日（月）公開 ・ 読了 約5分</p>
+        <ul class="points">
+          <li style="--c:var(--c-hub)"><span class="tag">大会</span><span>VCT 2027 の新形式を受けて、日本チームの進出ルートを図で整理</span></li>
+          <li style="--c:var(--c-roster)"><span class="tag">移籍</span><span>国内チームの公式発表 〇件を移籍トラッカーに反映（差分つき）</span></li>
+          <li style="--c:var(--c-patch)"><span class="tag">パッチ</span><span>パッチ 〇.〇〇 の数値変更を履歴DBに追加</span></li>
+          <li style="--c:var(--c-hub)"><span class="tag">予定</span><span>来週は〇月〇日に〇〇の発表予定（公式の告知待ち）</span></li>
+        </ul>
+        <a class="btn" href="#">5分まとめを読む</a>
+      </div>
+    </article>
+  </section>
+
+  <!-- 人気ランキング（PC は右列、スマホは5分まとめの直後） -->
+  <aside class="a-rank" aria-labelledby="h-rank">
+    <div class="rank-box">
+      <div class="sec-head"><h2 id="h-rank">人気ランキング</h2></div>
+      <p class="rank-note">集計期間: 〇月〇日〜〇月〇日（週1回更新）</p>
+      <ol class="rank-list">
+        <li><a class="rank-item" href="#"><span class="rank-thumb" style="--c:var(--c-hub)"><img class="bg" src="https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png" alt="" loading="lazy"><img class="ag" src="https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/displayicon.png" alt="" loading="lazy"><span class="rank-no">1</span></span><span class="rank-title">VCT 2027 とは？日程・形式・日本チームの道筋</span></a></li>
+        <li><a class="rank-item" href="#"><span class="rank-thumb" style="--c:var(--c-roster)"><img class="bg" src="https://media.valorant-api.com/maps/2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba/listviewicon.png" alt="" loading="lazy"><img class="ag" src="https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/displayicon.png" alt="" loading="lazy"><span class="rank-no">2</span></span><span class="rank-title">2027 国内チーム ロスター・移籍トラッカー</span></a></li>
+        <li><a class="rank-item" href="#"><span class="rank-thumb" style="--c:var(--c-tools)"><img class="bg" src="https://media.valorant-api.com/maps/92584fbe-486a-b1b2-9faa-39b0f486b498/listviewicon.png" alt="" loading="lazy"><img class="ag" src="https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/displayicon.png" alt="" loading="lazy"><span class="rank-no">3</span></span><span class="rank-title">感度変換ツール（CS2 / Apex / OW2 ⇔ cm/360）</span></a></li>
+        <li><a class="rank-item" href="#"><span class="rank-thumb" style="--c:var(--c-hub)"><img class="bg" src="https://media.valorant-api.com/maps/fd267378-4d1d-484f-ff52-77821ed10dc2/listviewicon.png" alt="" loading="lazy"><img class="ag" src="https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/displayicon.png" alt="" loading="lazy"><span class="rank-no">4</span></span><span class="rank-title">VCT Pacific 日本のチーム一覧</span></a></li>
+        <li><a class="rank-item" href="#"><span class="rank-thumb" style="--c:var(--c-glossary)"><img class="bg" src="https://media.valorant-api.com/maps/2bee0dc9-4ffe-519b-1cbd-7fbe763a6047/listviewicon.png" alt="" loading="lazy"><img class="ag" src="https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/displayicon.png" alt="" loading="lazy"><span class="rank-no">5</span></span><span class="rank-title">競技シーン用語集</span></a></li>
+      </ol>
+    </div>
+  </aside>
+
+  <!-- 広告枠1（インフィード。本番は _includes/ad.html） -->
+  <div class="a-ad1 ad" role="complementary" aria-label="広告"><span><span class="ad-label">スポンサーリンク</span>（広告枠の位置。ID 未設定なら表示しない）</span></div>
+
+  <!-- まとめハブ -->
+  <section class="a-hubs" aria-labelledby="h-hubs">
+    <div class="sec-head"><h2 id="h-hubs">まとめハブ・一覧表</h2><a class="more" href="#">すべて見る</a></div>
+    <ul class="grid hubs">
+      <li><a class="card" href="#">
+        <div class="thumb" style="--c:var(--c-hub)"><img class="thumb-bg" src="https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/listviewicon.png" alt="" loading="lazy"><img class="thumb-agent" src="https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/displayicon.png" alt="" loading="lazy"><span class="label">大会ハブ</span></div>
+        <div class="card-body"><h3 class="card-title">VCT 2027 とは？日程・形式・日本チームの道筋</h3><p class="meta">〇月〇日更新</p><span><span class="badge">柱記事</span></span></div></a></li>
+      <li><a class="card" href="#">
+        <div class="thumb" style="--c:var(--c-hub)"><img class="thumb-bg" src="https://media.valorant-api.com/maps/2fb9a4fd-47b8-4e7d-a969-74b4046ebd53/listviewicon.png" alt="" loading="lazy"><img class="thumb-agent" src="https://media.valorant-api.com/agents/dade69b4-4f5a-8528-247b-219e5a1facd6/displayicon.png" alt="" loading="lazy"><span class="label">大会ハブ</span></div>
+        <div class="card-body"><h3 class="card-title">VCT 2027 オープン予選 日本まとめ</h3><p class="meta">〇月〇日更新 ・ 発表当日に更新予定</p></div></a></li>
+      <li><a class="card" href="#">
+        <div class="thumb" style="--c:var(--c-roster)"><img class="thumb-bg" src="https://media.valorant-api.com/maps/2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba/listviewicon.png" alt="" loading="lazy"><img class="thumb-agent" src="https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/displayicon.png" alt="" loading="lazy"><span class="label">ロスター・移籍</span></div>
+        <div class="card-body"><h3 class="card-title">2027 国内チーム ロスター・移籍トラッカー</h3><p class="meta">〇月〇日 〇時更新 ・ 全行に公式出典</p></div></a></li>
+      <li><a class="card" href="#">
+        <div class="thumb" style="--c:var(--c-hub)"><img class="thumb-bg" src="https://media.valorant-api.com/maps/fd267378-4d1d-484f-ff52-77821ed10dc2/listviewicon.png" alt="" loading="lazy"><img class="thumb-agent" src="https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/displayicon.png" alt="" loading="lazy"><span class="label">大会ハブ</span></div>
+        <div class="card-body"><h3 class="card-title">VCT Pacific 日本のチーム一覧</h3><p class="meta">〇月〇日更新</p></div></a></li>
+      <li><a class="card" href="#">
+        <div class="thumb" style="--c:var(--c-patch)"><img class="thumb-bg" src="https://media.valorant-api.com/maps/d960549e-485c-e861-8d71-aa9d1aed12a2/listviewicon.png" alt="" loading="lazy"><img class="thumb-agent" src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/displayicon.png" alt="" loading="lazy"><span class="label">パッチ履歴</span></div>
+        <div class="card-body"><h3 class="card-title">パッチ変更履歴（パッチ別）</h3><p class="meta">パッチ 〇.〇〇 まで反映</p></div></a></li>
+      <li><a class="card" href="#">
+        <div class="thumb" style="--c:var(--c-glossary)"><img class="thumb-bg" src="https://media.valorant-api.com/maps/2bee0dc9-4ffe-519b-1cbd-7fbe763a6047/listviewicon.png" alt="" loading="lazy"><img class="thumb-agent" src="https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/displayicon.png" alt="" loading="lazy"><span class="label">用語・仕組み解説</span></div>
+        <div class="card-body"><h3 class="card-title">競技シーン用語集</h3><p class="meta">〇語収録 ・ 〇月〇日更新</p></div></a></li>
+    </ul>
+  </section>
+
+  <!-- エージェントのアイコン列（エージェント別 調整履歴への入口） -->
+  <section class="a-agents" aria-labelledby="h-agents">
+    <div class="sec-head"><h2 id="h-agents">エージェント別 調整履歴</h2><a class="more" href="#">全エージェント</a></div>
+    <ul class="agents">
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/displayicon.png" alt="" width="72" height="72" loading="lazy">ジェット</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/displayicon.png" alt="" width="72" height="72" loading="lazy">レイナ</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/displayicon.png" alt="" width="72" height="72" loading="lazy">レイズ</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/bb2a4828-46eb-8cd1-e765-15848195d751/displayicon.png" alt="" width="72" height="72" loading="lazy">ネオン</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/displayicon.png" alt="" width="72" height="72" loading="lazy">ソーヴァ</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/dade69b4-4f5a-8528-247b-219e5a1facd6/displayicon.png" alt="" width="72" height="72" loading="lazy">フェイド</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/displayicon.png" alt="" width="72" height="72" loading="lazy">オーメン</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/displayicon.png" alt="" width="72" height="72" loading="lazy">ヴァイパー</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/41fb69c1-4189-7b37-f117-bcaf1e96f1bf/displayicon.png" alt="" width="72" height="72" loading="lazy">アストラ</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/displayicon.png" alt="" width="72" height="72" loading="lazy">キルジョイ</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/displayicon.png" alt="" width="72" height="72" loading="lazy">サイファー</a></li>
+      <li><a class="agent" href="#"><img src="https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/displayicon.png" alt="" width="72" height="72" loading="lazy">セージ</a></li>
+    </ul>
+    <p class="agents-hint">横にスワイプで続きを表示。アイコンを押すと、そのエージェントの数値変更をパッチ順に一覧できます。</p>
+  </section>
+
+  <!-- ツール -->
+  <section class="a-tools" aria-labelledby="h-tools">
+    <div class="sec-head"><h2 id="h-tools">ツール</h2><a class="more" href="#">ツール一覧</a></div>
+    <ul class="grid tools">
+      <li><a class="tool" href="#" style="--c:var(--c-tools)">
+        <h3>感度変換（CS2 / Apex / OW2 ⇔ cm/360）</h3>
+        <div class="fake-form" aria-hidden="true"><span class="fake-field">変換元: CS2</span><span class="fake-field">DPI: 800</span><span class="fake-field">感度: 〇.〇〇</span><span class="fake-field">→ 結果</span></div>
+        <p class="meta">各ゲームの換算係数と出典をページ内に明記（白石確認済みのみ掲載）</p></a></li>
+      <li><a class="tool" href="#" style="--c:var(--c-tools)">
+        <h3>eDPI 計算</h3>
+        <p class="formula">eDPI = マウスの DPI × ゲーム内感度</p>
+        <p class="meta">計算式・出典・よくある質問つき。結果は URL で共有できます</p></a></li>
+    </ul>
+  </section>
+
+  <!-- 広告枠2（PC は右列で追従、スマホは最後） -->
+  <div class="a-ad2 ad" role="complementary" aria-label="広告"><span><span class="ad-label">スポンサーリンク</span>（広告枠の位置）</span></div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-cols">
+      <nav aria-labelledby="f-cat"><h2 id="f-cat">カテゴリ</h2><ul>
+        <li><a href="#">大会ハブ</a></li><li><a href="#">ロスター・移籍</a></li><li><a href="#">パッチ履歴</a></li>
+        <li><a href="#">週まとめ</a></li><li><a href="#">ツール</a></li><li><a href="#">用語・仕組み解説</a></li></ul></nav>
+      <nav aria-labelledby="f-hub"><h2 id="f-hub">まとめ</h2><ul>
+        <li><a href="#">VCT 2027 とは？</a></li><li><a href="#">移籍トラッカー</a></li><li><a href="#">パッチ変更履歴</a></li><li><a href="#">用語集</a></li></ul></nav>
+      <nav aria-labelledby="f-tool"><h2 id="f-tool">ツール</h2><ul>
+        <li><a href="#">感度変換</a></li><li><a href="#">eDPI 計算</a></li></ul></nav>
+      <nav aria-labelledby="f-about"><h2 id="f-about">このサイトについて</h2><ul>
+        <li><a href="#">運営者情報</a></li><li><a href="#">出典ポリシー</a></li><li><a href="#">プライバシーポリシー</a></li><li><a href="#">お問い合わせ</a></li></ul></nav>
+    </div>
+    <div class="disclaimer">
+      <p style="margin:0"><strong>非公式ファンサイトです。</strong>当サイトは Riot Games, Inc. が承認・後援・関与しているものではありません。VALORANT および Riot Games は Riot Games, Inc. の商標または登録商標です。ゲームの画像・アートの著作権は Riot Games, Inc. に帰属します（© Riot Games, Inc.）。</p>
+      <p style="margin:8px 0 0">（見本用の仮文言。最終文言は白石が確定）</p>
+    </div>
+    <p class="copy">© 〇〇〇〇 （仮）サイト名</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement, KEY = 'theme';
+  try { var saved = localStorage.getItem(KEY); if (saved) root.setAttribute('data-theme', saved); } catch(e){}
+  document.getElementById('theme-btn').addEventListener('click', function(){
+    var cur = root.getAttribute('data-theme') ||
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem(KEY, next); } catch(e){}
+  });
+  var mb = document.getElementById('menu-btn'), dr = document.getElementById('drawer');
+  mb.addEventListener('click', function(){
+    var open = dr.classList.toggle('open');
+    mb.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{%- comment -%}
+  試合ティッカー（部品のみ。_data/matches.yml の enabled が true で items があるときだけ出す）
+  過ぎた予定（result が空で date が過去）は assets/js/site.js が隠す。
+{%- endcomment -%}
+{%- assign tk = site.data.matches -%}
+{%- if tk.enabled and tk.items and tk.items.size > 0 -%}
+<div class="ticker" aria-label="試合の予定と結果">
+<ul class="ticker-list">
+{%- for m in tk.items -%}
+{%- assign m_time = m.date | date: '%-m/%-d %H:%M' -%}
+<li class="ticker-item" data-date="{{ m.date }}" data-result="{{ m.result }}">
+{%- if m.url -%}<a href="{{ m.url | relative_url }}">{%- endif -%}
+<span class="ticker-label">{{ m.label | escape }}</span>
+<time datetime="{{ m.date }}">{{ m_time }}</time>
+<span>{{ m.text | escape }}</span>
+{%- if m.result and m.result != "" -%}<strong class="ticker-result">{{ m.result | escape }}</strong>{%- endif -%}
+{%- if m.url -%}</a>{%- endif -%}
+</li>
+{%- endfor -%}
+</ul>
+{%- if tk.updated and tk.updated != "" -%}<p class="ticker-updated">最終更新 {{ tk.updated }}</p>{%- endif -%}
+</div>
+{%- endif -%}

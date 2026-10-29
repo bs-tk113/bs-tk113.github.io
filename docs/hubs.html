@@ -1,0 +1,27 @@
+---
+layout: default
+title: まとめハブ一覧
+description: 大会の形式と日程、移籍トラッカー、パッチ変更履歴、用語集など、更新し続けるまとめページの一覧です。
+permalink: /hub/
+---
+{%- assign hub_list = site.hubs | sort: "order", "last" -%}
+<div class="cat-hero" style="--c:var(--c-tournaments)">
+  <div class="wrap">
+    {% include breadcrumb.html title=page.title %}
+    <h1>まとめハブ一覧</h1>
+    <p>大会・移籍・パッチなど、公式発表に合わせて更新し続けるまとめページです。各ページの一番上に最終更新日時を出しています。</p>
+  </div>
+</div>
+<div class="wrap list-page">
+  <section aria-label="まとめハブ">
+    {%- if hub_list.size > 0 %}
+    <ul class="grid grid--3">
+      {%- for h in hub_list %}
+      {% include card.html doc=h excerpt=true %}
+      {%- endfor %}
+    </ul>
+    {%- else %}
+    <p class="empty">まとめハブは準備中です。<a href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a>から記事を探せます。</p>
+    {%- endif %}
+  </section>
+</div>

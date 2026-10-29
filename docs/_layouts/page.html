@@ -1,9 +1,11 @@
 ---
 layout: default
 ---
-<article class="post">
-  <h1>{{ page.title }}</h1>
-  <div class="post-body">
+<article class="page">
+  {% include breadcrumb.html title=page.title %}
+  <h1 class="page-title">{{ page.title | escape }}</h1>
+  {%- if page.updated %}<p class="meta">最終更新 <time datetime="{{ page.updated | date: '%Y-%m-%d' }}">{{ page.updated | date: '%Y年%-m月%-d日' }}</time></p>{% endif %}
+  <div class="post-body prose">
     {{ content }}
   </div>
 </article>

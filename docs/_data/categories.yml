@@ -1,0 +1,53 @@
+# カテゴリ（1記事1カテゴリ。横断する軸はタグ）
+# 記事の front matter には slug を書く:  category: tournaments
+# color は style.css の --c-<slug> に対応（塗り専用。上に載せる文字は常に #14123a）
+# thumb_map / thumb_agent は合成サムネの既定値（_data/maps.yml / agents.yml のキー）
+# ページは docs/category/<slug>.html（URL: /category/<slug>/）
+
+- slug: tournaments
+  name: 大会ハブ
+  short: 大会
+  desc: 形式・日程・日本の道筋
+  lead: VCT の大会形式・日程・日本チームの進出ルートを、公式発表をもとに整理します。
+  thumb_map: lotus
+  thumb_agent: jett
+
+- slug: roster
+  name: ロスター・移籍
+  short: 移籍
+  desc: 国内チームの一覧表
+  lead: 国内チームのロスターと移籍を、公式発表だけを出典に一覧表で追います。
+  thumb_map: bind
+  thumb_agent: killjoy
+
+- slug: patch
+  name: パッチ履歴
+  short: パッチ
+  desc: パッチ別・エージェント別
+  lead: パッチごとの数値変更を、パッチ別とエージェント別の両方で引けるようにまとめます。
+  thumb_map: pearl
+  thumb_agent: viper
+
+- slug: weekly
+  name: 週まとめ
+  short: 週まとめ
+  desc: 毎週月曜の5分まとめ
+  lead: 1週間の競技シーンの動きを、5分で読める要点にまとめます。
+  thumb_map: icebox
+  thumb_agent: omen
+
+- slug: tools
+  name: ツール
+  short: ツール
+  desc: 感度変換・eDPI 計算
+  lead: 感度・eDPI などの計算ツール。計算式と出典をページ内に明記しています。
+  thumb_map: sunset
+  thumb_agent: sova
+
+- slug: glossary
+  name: 用語・仕組み解説
+  short: 用語
+  desc: 競技シーンの用語集
+  lead: 大会形式や競技シーンでよく出る用語・仕組みを、初めての人向けに解説します。
+  thumb_map: haven
+  thumb_agent: sage

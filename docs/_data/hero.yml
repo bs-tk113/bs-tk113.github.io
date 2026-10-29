@@ -1,0 +1,23 @@
+# トップページのヒーロー。エージェントを週ごとに替えるなら agent: を1行変えるだけ。
+# agent は agents.yml のキー（portrait: があるもの）、map は maps.yml のキー。
+agent: jett
+map: ascent
+kicker: 非公式ファンサイト
+title: "日本の競技シーンを、<br>5分で把握する。"
+lead: 大会の形式、日本チームの道筋、移籍、パッチの数値変更を「表」と「まとめ」で。すべて公式発表を出典に、更新日つきで。
+
+# よく使う導線（3つまで）。doc のページが公開済みならそこへ、未公開なら fallback へ。
+# どちらも無ければ表示しない（リンク切れを作らない）。fallback に飛ぶ間は fallback_label を表示する。
+quick:
+  - label: VCT 2027 とは？
+    doc: /hub/vct-2027/
+    fallback: /category/tournaments/
+    fallback_label: 大会ハブ
+  - label: 移籍トラッカー
+    doc: /hub/roster-tracker/
+    fallback: /category/roster/
+    fallback_label: ロスター・移籍
+  - label: eDPI 計算
+    doc: /tools/edpi/
+    fallback: /tools/
+    fallback_label: ツール一覧

@@ -1,15 +1,64 @@
 ---
-layout: page
-title: カテゴリ
+layout: default
+title: カテゴリ一覧
+description: 大会ハブ・ロスター・移籍・パッチ履歴・週まとめ・ツール・用語解説の6つのカテゴリから記事を探せます。
 permalink: /categories/
 ---
-{% assign cats = site.categories | sort %}
-{% if cats.size == 0 %}<p>まだ記事はありません。</p>{% endif %}
-{% for cat in cats %}
-<h2 id="{{ cat[0] | slugify }}">{{ cat[0] }}（{{ cat[1].size }}）</h2>
-<ul>
-  {% for p in cat[1] %}
-  <li><a href="{{ p.url | relative_url }}">{{ p.title }}</a> <small>{{ p.date | date: '%Y-%m-%d' }}</small></li>
-  {% endfor %}
-</ul>
-{% endfor %}
+{%- comment -%}
+  カテゴリ索引。6つのカテゴリ（_data/categories.yml）＋どれにも当たらない記事（旧カテゴリ）を「その他」に出して、迷子の記事を作らない。
+{%- endcomment -%}
+<div class="cat-hero">
+  <div class="wrap">
+    {% include breadcrumb.html title=page.title %}
+    <h1>カテゴリ一覧</h1>
+    <p>6つのカテゴリから探せます。記事の数は公開済みのものだけを数えています。</p>
+  </div>
+</div>
+
+<div class="wrap list-page">
+  <section aria-label="カテゴリ">
+    <ul class="cat-index">
+      {%- for c in site.data.categories %}
+      {%- assign c_map = site.data.maps[c.thumb_map] -%}
+      {%- assign c_img_ok = 0 -%}{%- if c_map.banner -%}{%- assign c_img_ok = site.static_files | where: "path", c_map.banner | size -%}{%- endif -%}
+      {%- assign c_posts = site.categories[c.slug] -%}
+      {%- assign c_n = c_posts | size -%}
+      {%- assign c_hubtools = site.hubs | concat: site.tools | where: "category", c.slug | size -%}
+      {%- assign c_total = c_n | plus: c_hubtools -%}
+      <li class="cat-index-item" id="{{ c.slug }}">
+        <a class="cat" href="{{ '/category/' | append: c.slug | append: '/' | relative_url }}" style="--c:var(--c-{{ c.slug }})">
+          {%- if c_img_ok > 0 %}<img src="{{ c_map.banner | relative_url }}" alt="" width="640" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'">{% endif %}
+          <span class="cat-name">{{ c.name }}</span>
+          <span class="cat-desc">{{ c.desc }}</span>
+          <span class="cat-count">{% if c_total > 0 %}{{ c_total }}件{% else %}準備中{% endif %}</span>
+        </a>
+        {%- if c_n > 0 %}
+        <ul>
+          {%- for p in c_posts limit: 3 %}
+          <li><a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></li>
+          {%- endfor %}
+        </ul>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </section>
+
+  {%- comment -%} 6つのどれにも当たらない記事 {%- endcomment -%}
+  {%- assign known = site.data.categories | map: "slug" -%}
+  {%- capture others -%}
+    {%- for p in site.posts -%}
+      {%- assign pc = p.categories | first -%}
+      {%- unless known contains pc -%}
+      <li><time datetime="{{ p.date | date: '%Y-%m-%d' }}">{{ p.date | date: '%Y/%-m/%-d' }}</time><a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></li>
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- assign others_s = others | strip -%}
+  {%- if others_s != "" %}
+  <section aria-labelledby="h-others">
+    <div class="sec-head"><h2 id="h-others">その他の記事</h2></div>
+    <ul class="archive">{{ others }}</ul>
+  </section>
+  {%- endif %}
+</div>

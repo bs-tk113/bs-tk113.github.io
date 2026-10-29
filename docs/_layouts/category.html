@@ -1,0 +1,80 @@
+---
+layout: default
+---
+{%- comment -%}
+  カテゴリページ（docs/category/<slug>.html。front matter に cat: <slug>）
+  静的サイトなのでカテゴリ別のページ送りはできない → 最新30件をカードで、それより古い記事は年別の一覧で全部出す。
+{%- endcomment -%}
+{%- assign k_slug = page.cat -%}
+{%- assign k = site.data.categories | where: "slug", k_slug | first -%}
+{%- assign k_posts = site.categories[k_slug] -%}
+{%- assign k_hubs = site.hubs | where: "category", k_slug | sort: "order", "last" -%}
+{%- assign k_tools = site.tools | where: "category", k_slug | sort: "order", "last" -%}
+<div class="cat-hero" style="--c:var(--c-{{ k.slug | default: 'default' }})">
+  <div class="wrap">
+    {% include breadcrumb.html title=k.name %}
+    <h1>{{ k.name | default: page.title }}</h1>
+    <p>{{ k.lead | default: page.description }}</p>
+  </div>
+</div>
+
+<div class="wrap list-page">
+  {%- if k_hubs.size > 0 %}
+  <section aria-labelledby="h-k-hubs">
+    <div class="sec-head"><h2 id="h-k-hubs">まとめハブ・一覧表</h2></div>
+    <ul class="grid grid--3">
+      {%- for d in k_hubs %}
+      {% include card.html doc=d %}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+  {%- if k_tools.size > 0 %}
+  <section aria-labelledby="h-k-tools">
+    <div class="sec-head"><h2 id="h-k-tools">ツール</h2></div>
+    <ul class="grid grid--2">
+      {%- for tl in k_tools %}
+      <li><a class="tool-card" href="{{ tl.url | relative_url }}">
+        <span class="tool-card-title">{{ tl.title | escape }}</span>
+        {%- if tl.formula_short %}<span class="formula">{{ tl.formula_short }}</span>{% endif %}
+        {%- if tl.description %}<span class="meta">{{ tl.description | truncate: 70 }}</span>{% endif %}
+      </a></li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+  <section aria-labelledby="h-k-posts">
+    <div class="sec-head"><h2 id="h-k-posts">記事{% if k_posts.size > 0 %}（{{ k_posts.size }}件）{% endif %}</h2></div>
+    {%- if k_posts and k_posts.size > 0 %}
+    <ul class="grid grid--latest">
+      {%- for p in k_posts limit: 30 %}
+      {% include card.html doc=p class="card--compact" excerpt=true %}
+      {%- if forloop.index == 6 %}
+      {%- capture k_ad %}{% include ad.html slot=site.adsense_slots.category_infeed %}{% endcapture -%}
+      {%- assign k_ad_s = k_ad | strip -%}
+      {%- if k_ad_s != "" %}<li style="grid-column:1 / -1">{{ k_ad }}</li>{% endif %}
+      {%- endif %}
+      {%- endfor %}
+    </ul>
+    {%- if k_posts.size > 30 %}
+    <h2 class="year-title">それより前の記事</h2>
+    {%- assign k_year = "" -%}
+    {%- for p in k_posts offset: 30 %}
+      {%- assign p_year = p.date | date: '%Y' -%}
+      {%- if p_year != k_year %}
+      {%- unless k_year == "" %}</ul>{% endunless %}
+      <h3 class="year-title">{{ p_year }}年</h3>
+      <ul class="archive">
+      {%- assign k_year = p_year -%}
+      {%- endif %}
+        <li><time datetime="{{ p.date | date: '%Y-%m-%d' }}">{{ p.date | date: '%-m月%-d日' }}</time><a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></li>
+    {%- endfor %}
+      </ul>
+    {%- endif %}
+    {%- else %}
+    <p class="empty">このカテゴリの記事はまだありません。<a href="{{ '/categories/' | relative_url }}">ほかのカテゴリ</a>もご覧ください。</p>
+    {%- endif %}
+  </section>
+</div>

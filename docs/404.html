@@ -1,0 +1,22 @@
+---
+layout: default
+title: ページが見つかりません
+permalink: /404.html
+sitemap: false
+noindex: true
+---
+<div class="page">
+  <h1 class="page-title">ページが見つかりません</h1>
+  <p>URL が変わったか、ページが削除された可能性があります。下のリンクから探してみてください。</p>
+  <form class="search search--page" role="search" action="{{ '/search/' | relative_url }}" method="get">
+    <label class="sr-only" for="nf-q">サイト内検索</label>
+    <input id="nf-q" name="q" type="search" placeholder="キーワードで検索">
+    <button type="submit">検索</button>
+  </form>
+  <ul class="cats">
+    {%- for c in site.data.categories %}
+    <li><a class="cat" href="{{ '/category/' | append: c.slug | append: '/' | relative_url }}" style="--c:var(--c-{{ c.slug }})"><span class="cat-name">{{ c.name }}</span><span class="cat-desc">{{ c.desc }}</span></a></li>
+    {%- endfor %}
+  </ul>
+  <p><a class="btn" href="{{ '/' | relative_url }}">トップページへ</a></p>
+</div>

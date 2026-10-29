@@ -1,0 +1,58 @@
+# エージェント（キー: 英小文字。front matter の thumb_agent: に書く値）
+# 画像は docs/assets/img/agents/ に自前で置く（外部への直リンク禁止）。
+# ファイルがまだ無くても表示は崩れない（輪と頭文字のフォールバックが出る）。
+# source は画像の取得元ページ（出典台帳。記事の出典欄にも使う）。
+# 一覧と推奨サイズ: docs/assets/img/README.md
+#
+# icon:     96x96 WebP（8KB 以下）  カードのサムネ右下・ランキング・アイコン列
+# portrait: 幅900px 透過 WebP（80KB 以下） トップのヒーロー（hero.yml で指定したものだけ使う）
+
+jett:
+  name: ジェット
+  icon: /assets/img/agents/jett-icon.webp
+  portrait: /assets/img/agents/jett-portrait.webp
+  source: https://playvalorant.com/ja-jp/agents/jett/
+reyna:
+  name: レイナ
+  icon: /assets/img/agents/reyna-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/reyna/
+raze:
+  name: レイズ
+  icon: /assets/img/agents/raze-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/raze/
+neon:
+  name: ネオン
+  icon: /assets/img/agents/neon-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/neon/
+sova:
+  name: ソーヴァ
+  icon: /assets/img/agents/sova-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/sova/
+fade:
+  name: フェイド
+  icon: /assets/img/agents/fade-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/fade/
+omen:
+  name: オーメン
+  icon: /assets/img/agents/omen-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/omen/
+viper:
+  name: ヴァイパー
+  icon: /assets/img/agents/viper-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/viper/
+astra:
+  name: アストラ
+  icon: /assets/img/agents/astra-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/astra/
+killjoy:
+  name: キルジョイ
+  icon: /assets/img/agents/killjoy-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/killjoy/
+cypher:
+  name: サイファー
+  icon: /assets/img/agents/cypher-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/cypher/
+sage:
+  name: セージ
+  icon: /assets/img/agents/sage-icon.webp
+  source: https://playvalorant.com/ja-jp/agents/sage/

@@ -1,23 +1,213 @@
 ---
 layout: default
 ---
-<section class="post-list">
-  {% if site.posts.size == 0 %}
-  <p>まだ記事はありません。</p>
-  {% endif %}
-  {% for post in paginator.posts %}
-  <article class="card">
-    <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
-    <p class="meta">{{ post.date | date: '%Y年%-m月%-d日' }}{% for c in post.categories %} ・ {{ c }}{% endfor %}</p>
-    <p>{{ post.description | default: post.excerpt | strip_html | truncate: 120 }}</p>
-  </article>
-  {% endfor %}
+{%- comment -%}
+  トップページ。jekyll-paginate は index.html でだけ動くので、このファイルを移動しないこと。
+  1ページ目: ヒーロー → カテゴリ → 今週の5分まとめ → 人気ランキング → 広告 → 新着記事（ページ送り）→ まとめハブ → エージェント別 → ツール → 広告
+  2ページ目以降（/page2/ など）: 新着記事の一覧だけ
+  記事・ハブ・ツールが0件でも崩れない（空の場合の案内を出す）。
+{%- endcomment -%}
+{%- assign all_docs = site.posts | concat: site.hubs | concat: site.tools -%}
 
-  {% if paginator.total_pages > 1 %}
-  <nav class="pager">
-    {% if paginator.previous_page %}<a href="{{ paginator.previous_page_path | relative_url }}">&laquo; 新しい記事</a>{% endif %}
-    <span>{{ paginator.page }} / {{ paginator.total_pages }}</span>
-    {% if paginator.next_page %}<a href="{{ paginator.next_page_path | relative_url }}">古い記事 &raquo;</a>{% endif %}
-  </nav>
-  {% endif %}
+{%- if paginator.page == 1 or paginator.page == nil %}
+{%- assign hero = site.data.hero -%}
+{%- assign hero_agent = site.data.agents[hero.agent] -%}
+{%- assign hero_map = site.data.maps[hero.map] -%}
+{%- comment -%} 画像ファイルが docs/ に無ければ img を出さない（自作のグラデーションだけで成立する） {%- endcomment -%}
+{%- assign hero_bg_ok = 0 -%}{%- if hero_map.banner -%}{%- assign hero_bg_ok = site.static_files | where: "path", hero_map.banner | size -%}{%- endif -%}
+{%- assign hero_ag_ok = 0 -%}{%- if hero_agent.portrait -%}{%- assign hero_ag_ok = site.static_files | where: "path", hero_agent.portrait | size -%}{%- endif -%}
+<section class="hero" aria-labelledby="hero-title">
+  {%- if hero_bg_ok > 0 %}
+  <img class="hero-bg" src="{{ hero_map.banner | relative_url }}" alt="" width="640" height="360" decoding="async" onerror="this.style.display='none'">
+  {%- endif %}
+  {%- if hero_ag_ok > 0 %}
+  <img class="hero-agent" src="{{ hero_agent.portrait | relative_url }}" alt="" width="900" height="817" fetchpriority="high" decoding="async" onerror="this.style.display='none'">
+  {%- endif %}
+  <div class="hero-inner">
+    <span class="kicker">{{ hero.kicker | default: '非公式ファンサイト' }}</span>
+    <h1 id="hero-title">{{ hero.title | default: site.title }}</h1>
+    {%- if hero.lead %}<p class="lead">{{ hero.lead }}</p>{% endif %}
+    <form class="search" role="search" action="{{ '/search/' | relative_url }}" method="get">
+      <label class="sr-only" for="q">サイト内検索</label>
+      <input id="q" name="q" type="search" placeholder="チーム名・エージェント名・用語で検索" autocomplete="off">
+      <button type="submit">検索</button>
+    </form>
+    {%- if hero.quick %}
+    <ul class="quick">
+      {%- for qk in hero.quick limit: 3 -%}
+        {%- include resolve-link.html url=qk.url doc=qk.doc fallback=qk.fallback label=qk.label fallback_label=qk.fallback_label -%}
+        {%- if rl_url != "" %}
+      <li><a href="{{ rl_url | relative_url }}">{{ rl_label }}</a></li>
+        {%- endif -%}
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+  </div>
+  {%- if hero_bg_ok > 0 or hero_ag_ok > 0 %}<p class="credit">画像 © Riot Games, Inc.</p>{% endif %}
 </section>
+{%- endif %}
+
+<div class="wrap home{% if paginator.page and paginator.page > 1 %} home--sub{% endif %}">
+{%- if paginator.page == 1 or paginator.page == nil %}
+
+  {%- comment -%} カテゴリから探す（6つ。記事数つき） {%- endcomment -%}
+  <section class="a-cat" id="cat" aria-labelledby="h-cat">
+    <div class="sec-head"><h2 id="h-cat">カテゴリから探す</h2><a class="more" href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a></div>
+    <ul class="cats">
+      {%- for c in site.data.categories %}
+      {%- assign c_map = site.data.maps[c.thumb_map] -%}
+      {%- assign c_img_ok = 0 -%}{%- if c_map.banner -%}{%- assign c_img_ok = site.static_files | where: "path", c_map.banner | size -%}{%- endif -%}
+      {%- assign c_posts = site.categories[c.slug] | size -%}
+      {%- assign c_hubtools = site.hubs | concat: site.tools | where: "category", c.slug | size -%}
+      {%- assign c_total = c_posts | plus: c_hubtools -%}
+      <li><a class="cat" href="{{ '/category/' | append: c.slug | append: '/' | relative_url }}" style="--c:var(--c-{{ c.slug }})">
+        {%- if c_img_ok > 0 %}<img src="{{ c_map.banner | relative_url }}" alt="" width="640" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'">{% endif %}
+        <span class="cat-name">{{ c.name }}</span>
+        <span class="cat-desc">{{ c.desc }}</span>
+        <span class="cat-count">{% if c_total > 0 %}{{ c_total }}件{% else %}準備中{% endif %}</span>
+      </a></li>
+      {%- endfor %}
+    </ul>
+  </section>
+
+  {%- comment -%} 今週の5分まとめ（weekly カテゴリの最新1本。front matter の points: で要点4行） {%- endcomment -%}
+  {%- assign wk = site.categories.weekly | first -%}
+  <section class="a-weekly" aria-labelledby="h-weekly">
+    <div class="sec-head"><h2 id="h-weekly">今週の5分まとめ</h2>{% if wk %}<a class="more" href="{{ '/category/weekly/' | relative_url }}">過去のまとめ</a>{% endif %}</div>
+    {%- if wk %}
+    <article class="weekly">
+      <a href="{{ wk.url | relative_url }}" tabindex="-1" aria-hidden="true">{% include thumb.html cat="weekly" map=wk.thumb_map agent=wk.thumb_agent label=wk.thumb_label class="thumb--wide" %}</a>
+      <div class="weekly-body">
+        <h3 class="weekly-title"><a href="{{ wk.url | relative_url }}">{{ wk.title | escape }}</a></h3>
+        <p class="meta"><time datetime="{{ wk.date | date_to_xmlschema }}">{{ wk.date | date: '%Y年%-m月%-d日' }}</time> 公開</p>
+        {%- if wk.points and wk.points.size > 0 %}
+        <ul class="points">
+          {%- for pt in wk.points limit: 4 %}
+          <li style="--c:var(--c-{{ pt.cat | default: 'default' }})"><span class="tag">{{ pt.tag }}</span><span>{{ pt.text }}</span></li>
+          {%- endfor %}
+        </ul>
+        {%- else %}
+        <p>{{ wk.description | default: wk.excerpt | strip_html | strip_newlines | truncate: 120 }}</p>
+        {%- endif %}
+        <a class="btn" href="{{ wk.url | relative_url }}">5分まとめを読む</a>
+      </div>
+    </article>
+    {%- else %}
+    <p class="empty">週まとめはまだありません。公開したらここに最新の1本が出ます。</p>
+    {%- endif %}
+  </section>
+
+  {%- comment -%} 人気ランキング（_data/popular.yml。集計期間を必ず表示。公開されていない URL は飛ばす） {%- endcomment -%}
+  {%- assign pop = site.data.popular -%}
+  <aside class="a-rank" aria-labelledby="h-rank">
+    <div class="rank-box">
+      <div class="sec-head"><h2 id="h-rank">人気ランキング</h2></div>
+      {%- assign pop_shown = 0 -%}
+      {%- if pop.period and pop.period != "" and pop.items and pop.items.size > 0 %}
+      <p class="rank-note">集計期間: {{ pop.period }}（週1回更新）</p>
+      <ol class="rank-list">
+        {%- for it in pop.items -%}
+          {%- if pop_shown >= 5 %}{% break %}{% endif -%}
+          {%- assign it_doc = all_docs | where: "url", it.url | first -%}
+          {%- if it_doc -%}
+          {%- assign pop_shown = pop_shown | plus: 1 -%}
+          {%- assign it_cat = it_doc.category -%}
+          {%- unless it_cat %}{% assign it_cat = it_doc.categories | first %}{% endunless %}
+        <li><a class="rank-item" href="{{ it_doc.url | relative_url }}"><span class="rank-thumb">{% include thumb.html cat=it_cat map=it_doc.thumb_map agent=it_doc.thumb_agent class="thumb--sq" nolabel=true %}<span class="rank-no">{{ pop_shown }}</span></span><span class="rank-title">{{ it.title | default: it_doc.title | escape }}</span></a></li>
+          {%- endif -%}
+        {%- endfor %}
+      </ol>
+      {%- endif %}
+      {%- if pop_shown == 0 %}
+      <p class="rank-note">集計を始めたら、閲覧数の多いページを週1回更新で表示します（集計期間を明記します）。</p>
+      {%- endif %}
+    </div>
+  </aside>
+
+  {%- capture ad_infeed %}{% include ad.html slot=site.adsense_slots.home_infeed %}{% endcapture -%}
+  {%- assign ad_infeed_s = ad_infeed | strip -%}
+  {%- if ad_infeed_s != "" %}
+  <div class="a-ad1">{{ ad_infeed }}</div>
+  {%- endif %}
+{%- endif %}
+
+  {%- comment -%} 新着記事（jekyll-paginate） {%- endcomment -%}
+  <section class="a-latest" aria-labelledby="h-latest">
+    <div class="sec-head"><h2 id="h-latest">{% if paginator.page and paginator.page > 1 %}新着記事（{{ paginator.page }}ページ目）{% else %}新着記事{% endif %}</h2></div>
+    {%- if paginator.posts and paginator.posts.size > 0 %}
+    <ul class="grid grid--latest">
+      {%- for post in paginator.posts %}
+      {% include card.html doc=post class="card--compact" excerpt=true %}
+      {%- endfor %}
+    </ul>
+    {%- if paginator.total_pages > 1 %}
+    <nav class="pager" aria-label="ページ送り">
+      {%- if paginator.previous_page %}<a href="{{ paginator.previous_page_path | relative_url }}" rel="prev">&laquo; 新しい記事</a>{% else %}<span></span>{% endif %}
+      <span class="pager-now">{{ paginator.page }} / {{ paginator.total_pages }}</span>
+      {%- if paginator.next_page %}<a href="{{ paginator.next_page_path | relative_url }}" rel="next">古い記事 &raquo;</a>{% else %}<span></span>{% endif %}
+    </nav>
+    {%- endif %}
+    {%- else %}
+    <p class="empty">まだ記事はありません。最初の記事を準備中です。</p>
+    {%- endif %}
+  </section>
+
+{%- if paginator.page == 1 or paginator.page == nil %}
+  {%- comment -%} まとめハブ・一覧表 {%- endcomment -%}
+  {%- assign hubs_sorted = site.hubs | sort: "order", "last" -%}
+  <section class="a-hubs" aria-labelledby="h-hubs">
+    <div class="sec-head"><h2 id="h-hubs">まとめハブ・一覧表</h2>{% if hubs_sorted.size > 0 %}<a class="more" href="{{ '/hub/' | relative_url }}">すべて見る</a>{% endif %}</div>
+    {%- if hubs_sorted.size > 0 %}
+    <ul class="grid grid--3">
+      {%- for h in hubs_sorted limit: 6 %}
+      {% include card.html doc=h %}
+      {%- endfor %}
+    </ul>
+    {%- else %}
+    <p class="empty">大会・移籍・パッチのまとめハブを準備中です。</p>
+    {%- endif %}
+  </section>
+
+  {%- comment -%}
+    エージェント別 調整履歴の入口（_data/agents.yml）。
+    行き先のハブ（/hub/agent-history/）が公開されるまでは出さない（リンク切れを作らない）。
+  {%- endcomment -%}
+  {%- assign ah = site.hubs | where: "url", "/hub/agent-history/" | first -%}
+  {%- if ah %}
+  <section class="a-agents" aria-labelledby="h-agents">
+    <div class="sec-head"><h2 id="h-agents">エージェント別 調整履歴</h2><a class="more" href="{{ ah.url | relative_url }}">全エージェント</a></div>
+    <ul class="agents">
+      {%- for a in site.data.agents %}
+      <li><a class="agent" href="{{ ah.url | relative_url }}#{{ a[0] }}">{%- assign a_ok = 0 -%}{%- if a[1].icon -%}{%- assign a_ok = site.static_files | where: "path", a[1].icon | size -%}{%- endif -%}<span class="agent-icon" data-initial="{{ a[1].name | slice: 0 }}" aria-hidden="true">{% if a_ok > 0 %}<img src="{{ a[1].icon | relative_url }}" alt="" width="72" height="72" loading="lazy" decoding="async" onerror="this.style.display='none'">{% endif %}</span>{{ a[1].name }}</a></li>
+      {%- endfor %}
+    </ul>
+    <p class="hint">横にスワイプで続きを表示。押すと、そのエージェントの数値変更をパッチ順に見られます。</p>
+  </section>
+  {%- endif %}
+
+  {%- comment -%} ツール {%- endcomment -%}
+  {%- assign tools_sorted = site.tools | sort: "order", "last" -%}
+  <section class="a-tools" aria-labelledby="h-tools">
+    <div class="sec-head"><h2 id="h-tools">ツール</h2>{% if tools_sorted.size > 0 %}<a class="more" href="{{ '/tools/' | relative_url }}">ツール一覧</a>{% endif %}</div>
+    {%- if tools_sorted.size > 0 %}
+    <ul class="grid grid--2">
+      {%- for tl in tools_sorted limit: 4 %}
+      <li><a class="tool-card" href="{{ tl.url | relative_url }}">
+        <span class="tool-card-title">{{ tl.title | escape }}</span>
+        {%- if tl.formula_short %}<span class="formula">{{ tl.formula_short }}</span>{% endif %}
+        {%- if tl.description %}<span class="meta">{{ tl.description | truncate: 70 }}</span>{% endif %}
+      </a></li>
+      {%- endfor %}
+    </ul>
+    {%- else %}
+    <p class="empty">感度変換・eDPI 計算のツールを準備中です。計算式と出典はページ内に明記します。</p>
+    {%- endif %}
+  </section>
+
+  {%- capture ad_side %}{% include ad.html slot=site.adsense_slots.sidebar %}{% endcapture -%}
+  {%- assign ad_side_s = ad_side | strip -%}
+  {%- if ad_side_s != "" %}
+  <div class="a-side">{{ ad_side }}</div>
+  {%- endif %}
+{%- endif %}
+</div>

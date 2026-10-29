@@ -1,40 +1,180 @@
 ---
 layout: default
 ---
-<article class="post">
-  <header>
-    <h1>{{ page.title }}</h1>
-    <p class="meta">
-      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y年%-m月%-d日' }}</time>
-      {% if page.last_modified_at %} ・ 更新 {{ page.last_modified_at | date: '%Y年%-m月%-d日' }}{% endif %}
-      {% assign chars = content | strip_html | size %}
-      ・ 約{{ chars | divided_by: 500 | plus: 1 }}分で読めます
-      {% for c in page.categories %} ・ <a href="{{ '/categories/' | relative_url }}#{{ c | slugify }}">{{ c }}</a>{% endfor %}
+{%- comment -%}
+  記事ページ。front matter で使える項目（すべて任意。無ければその欄を出さない）:
+    category: tournaments          # _data/categories.yml の slug（1記事1カテゴリ）
+    tags: [vct-2027, pacific]      # 横断の軸。「次に読みたい記事」はタグ優先
+    description: "..."             # メタ説明（120字前後）
+    audience: "..."                # リード枠: この記事は誰向けか
+    checked: 2026-10-28            # リード枠: 確認日
+    patch: "11.09"                 # リード枠: 対象パッチ
+    last_modified_at: 2026-10-30   # 更新日
+    thumb_map: lotus / thumb_agent: jett   # 合成サムネ（省略時はカテゴリの既定）
+    image: /assets/img/posts/xxx.webp      # 専用アイキャッチ（OG にも使われる）。無ければ合成サムネ
+    image_alt: "..." / image_source: "元ページURL"
+    sources: [{title: "...", url: "...", note: "..."}]   # 出典
+    image_credits: ["筆者撮影（VALORANT © Riot Games, Inc.）"]
+    history: [{date: 2026-10-30, note: "..."}]          # 更新履歴
+    hub: vct-2027                  # この記事のハブ（_hubs のファイル名）
+    tools: [edpi]                  # この記事のツール（_tools のファイル名）
+{%- endcomment -%}
+{%- assign p_cat = page.categories | first -%}
+{%- assign p_catd = site.data.categories | where: "slug", p_cat | first -%}
+{%- assign p_map_key = page.thumb_map | default: p_catd.thumb_map -%}
+{%- assign p_agent_key = page.thumb_agent | default: p_catd.thumb_agent -%}
+{%- assign p_map = site.data.maps[p_map_key] -%}
+{%- assign p_agent = site.data.agents[p_agent_key] -%}
+{%- comment -%} サムネに実際に画像が出るときだけ © 表記と画像出典を出す（ファイルが無ければ出さない） {%- endcomment -%}
+{%- assign p_map_ok = 0 -%}{%- if p_map.banner -%}{%- assign p_map_ok = site.static_files | where: "path", p_map.banner | size -%}{%- endif -%}
+{%- assign p_ag_ok = 0 -%}{%- if p_agent.icon -%}{%- assign p_ag_ok = site.static_files | where: "path", p_agent.icon | size -%}{%- endif -%}
+{%- if p_map_ok > 0 or p_ag_ok > 0 -%}{%- assign p_thumb_img = true -%}{%- else -%}{%- assign p_thumb_img = false -%}{%- endif -%}
+<article class="page post">
+  {% include breadcrumb.html cat=p_cat title=page.title %}
+
+  <header class="post-head">
+    <p class="post-labels">
+      {%- if p_catd %}
+      <a class="chip" href="{{ '/category/' | append: p_catd.slug | append: '/' | relative_url }}" style="--c:var(--c-{{ p_catd.slug }})">{{ p_catd.name }}</a>
+      {%- elsif p_cat %}
+      <span class="chip chip--line">{{ p_cat }}</span>
+      {%- endif %}
+      <span class="meta">
+        <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y年%-m月%-d日' }}</time> 公開
+        {%- if page.last_modified_at %} ・ <time datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: '%Y年%-m月%-d日' }}</time> 更新{% endif %}
+        {%- assign chars = content | strip_html | size %} ・ 約{{ chars | divided_by: 500 | plus: 1 }}分で読めます
+      </span>
     </p>
+    <h1 class="page-title">{{ page.title | escape }}</h1>
+
+    {%- if page.audience or page.checked or page.patch %}
+    <div class="lead-box">
+      <dl>
+        {%- if page.audience %}<dt>対象</dt><dd>{{ page.audience }}</dd>{% endif %}
+        {%- if page.checked %}<dt>確認日</dt><dd><time datetime="{{ page.checked | date: '%Y-%m-%d' }}">{{ page.checked | date: '%Y年%-m月%-d日' }}</time></dd>{% endif %}
+        {%- if page.patch %}<dt>対象パッチ</dt><dd>{{ page.patch }}</dd>{% endif %}
+      </dl>
+    </div>
+    {%- endif %}
   </header>
+
+  {%- if page.image %}
+  <figure class="eyecatch"><img src="{{ page.image | relative_url }}" alt="{{ page.image_alt | default: '' | escape }}" width="1200" height="675" fetchpriority="high" onerror="this.style.display='none'"></figure>
+  <p class="eyecatch-credit">{{ page.image_credit | default: '© Riot Games' }}</p>
+  {%- else %}
+  <div class="eyecatch">{% include thumb.html cat=p_cat map=page.thumb_map agent=page.thumb_agent class="thumb--wide" eager=true %}</div>
+  {%- if p_thumb_img %}<p class="eyecatch-credit">© Riot Games</p>{% endif %}
+  {%- endif %}
 
   {% include ad.html slot=site.adsense_slots.article_top %}
 
-  <div class="post-body">
+  <nav class="toc" id="toc" aria-label="目次" hidden>
+    <details open><summary>目次</summary><ol></ol></details>
+  </nav>
+
+  <div class="post-body prose" data-toc-source>
     {{ content }}
   </div>
+
+  {%- comment -%} 出典（画像クレジットを含む） {%- endcomment -%}
+  {%- if page.sources or page.image_credits or page.image or p_thumb_img %}
+  <section class="box sources" aria-labelledby="h-sources">
+    <h2 class="box-title" id="h-sources">出典</h2>
+    <ul>
+      {%- for s in page.sources %}
+      <li>{% if s.url %}<a href="{{ s.url }}" rel="noopener" target="_blank">{{ s.title | default: s.url | escape }}</a>{% else %}{{ s.title | escape }}{% endif %}{% if s.note %}（{{ s.note | escape }}）{% endif %}</li>
+      {%- endfor %}
+      {%- for ic in page.image_credits %}
+      <li>{{ ic | escape }}</li>
+      {%- endfor %}
+      {%- if page.image %}
+      <li>画像出典: VALORANT 公式サイト{% if page.image_source %}（<a href="{{ page.image_source }}" rel="noopener" target="_blank">{{ page.image_source }}</a>）{% endif %} © Riot Games, Inc.</li>
+      {%- elsif p_thumb_img %}
+      <li>サムネイル画像出典: VALORANT 公式サイト（{% if p_ag_ok > 0 and p_agent.source %}<a href="{{ p_agent.source }}" rel="noopener" target="_blank">{{ p_agent.name }}</a>{% endif %}{% if p_ag_ok > 0 and p_agent.source and p_map_ok > 0 and p_map.source %}、{% endif %}{% if p_map_ok > 0 and p_map.source %}<a href="{{ p_map.source }}" rel="noopener" target="_blank">{{ p_map.name }}</a>{% endif %}）© Riot Games, Inc.</li>
+      {%- endif %}
+    </ul>
+  </section>
+  {%- endif %}
+
+  {%- if page.history and page.history.size > 0 %}
+  <section class="box" aria-labelledby="h-history">
+    <h2 class="box-title" id="h-history">更新履歴</h2>
+    <ul class="history-list">
+      {%- for h in page.history %}
+      <li><time datetime="{{ h.date | date: '%Y-%m-%d' }}">{{ h.date | date: '%Y年%-m月%-d日' }}</time><span>{{ h.note | escape }}</span></li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
 
   {% include share.html %}
 
   {% include ad.html slot=site.adsense_slots.article_bottom %}
 
-  {% assign cat = page.categories | first %}
-  {% if cat %}
-  {% assign related = site.categories[cat] | where_exp: "p", "p.url != page.url" %}
-  {% if related.size > 0 %}
-  <section class="related">
-    <h2>次に読みたい記事</h2>
-    <ul>
-      {% for p in related limit: 5 %}
-      <li><a href="{{ p.url | relative_url }}">{{ p.title }}</a></li>
-      {% endfor %}
+  {%- comment -%} この記事のハブ・ツール {%- endcomment -%}
+  {%- assign p_links = "" | split: "" -%}
+  {%- if page.hub -%}
+    {%- assign p_hub_url = "/hub/" | append: page.hub | append: "/" -%}
+    {%- assign p_hub = site.hubs | where: "url", p_hub_url -%}
+    {%- assign p_links = p_links | concat: p_hub -%}
+  {%- endif -%}
+  {%- for tn in page.tools -%}
+    {%- assign p_tool_url = "/tools/" | append: tn | append: "/" -%}
+    {%- assign p_tool = site.tools | where: "url", p_tool_url -%}
+    {%- assign p_links = p_links | concat: p_tool -%}
+  {%- endfor -%}
+  {%- if p_links.size > 0 %}
+  <section class="related" aria-labelledby="h-links">
+    <div class="sec-head"><h2 id="h-links">この記事のまとめ・ツール</h2></div>
+    <ul class="grid grid--2">
+      {%- for d in p_links %}
+      {% include card.html doc=d class="card--compact" %}
+      {%- endfor %}
     </ul>
   </section>
-  {% endif %}
-  {% endif %}
+  {%- endif %}
+
+  {%- comment -%}
+    次に読みたい記事（6件）: 同じタグ → 同じカテゴリ → 新着 の順に、重複なしで埋める
+  {%- endcomment -%}
+  {%- if site.posts.size > 1 %}
+  <section class="related" aria-labelledby="h-related">
+    <div class="sec-head"><h2 id="h-related">次に読みたい記事</h2></div>
+    <ul class="grid grid--2">
+      {%- assign r_shown = 0 -%}
+      {%- capture r_seen %}|{{ page.url }}|{% endcapture -%}
+      {%- for t in page.tags -%}
+        {%- for p in site.tags[t] -%}
+          {%- if r_shown >= 6 %}{% break %}{% endif -%}
+          {%- capture r_key %}|{{ p.url }}|{% endcapture -%}
+          {%- unless r_seen contains r_key -%}
+            {%- assign r_seen = r_seen | append: r_key -%}
+            {%- assign r_shown = r_shown | plus: 1 -%}
+            {% include card.html doc=p class="card--compact" %}
+          {%- endunless -%}
+        {%- endfor -%}
+      {%- endfor -%}
+      {%- if p_cat -%}
+        {%- for p in site.categories[p_cat] -%}
+          {%- if r_shown >= 6 %}{% break %}{% endif -%}
+          {%- capture r_key %}|{{ p.url }}|{% endcapture -%}
+          {%- unless r_seen contains r_key -%}
+            {%- assign r_seen = r_seen | append: r_key -%}
+            {%- assign r_shown = r_shown | plus: 1 -%}
+            {% include card.html doc=p class="card--compact" %}
+          {%- endunless -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- for p in site.posts -%}
+        {%- if r_shown >= 6 %}{% break %}{% endif -%}
+        {%- capture r_key %}|{{ p.url }}|{% endcapture -%}
+        {%- unless r_seen contains r_key -%}
+          {%- assign r_seen = r_seen | append: r_key -%}
+          {%- assign r_shown = r_shown | plus: 1 -%}
+          {% include card.html doc=p class="card--compact" %}
+        {%- endunless -%}
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
 </article>

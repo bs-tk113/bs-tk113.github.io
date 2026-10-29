@@ -1,0 +1,28 @@
+{%- comment -%}
+  カード（画像先頭）。記事・ハブ・ツールのどれでも使える。<li> ごと出力する。
+  使い方: {% include card.html doc=post %}   任意: class="card--row"（横長）  excerpt=true（説明文を出す）
+{%- endcomment -%}
+{%- assign cd = include.doc -%}
+{%- assign cd_cat = cd.category -%}
+{%- unless cd_cat -%}{%- assign cd_cat = cd.categories | first -%}{%- endunless -%}
+<li><a class="card{% if include.class %} {{ include.class }}{% endif %}" href="{{ cd.url | relative_url }}">
+{% include thumb.html cat=cd_cat map=cd.thumb_map agent=cd.thumb_agent label=cd.thumb_label %}
+<span class="card-body">
+<span class="card-title">{{ cd.title | escape }}</span>
+{%- if include.excerpt -%}
+{%- assign cd_desc = cd.description | default: cd.excerpt | strip_html | strip_newlines | truncate: 80 -%}
+{%- if cd_desc != "" -%}<span class="card-desc">{{ cd_desc }}</span>{%- endif -%}
+{%- endif -%}
+<span class="meta">
+{%- if cd.last_modified_at -%}
+<time datetime="{{ cd.last_modified_at | date_to_xmlschema }}">{{ cd.last_modified_at | date: '%Y年%-m月%-d日' }}</time> 更新
+{%- elsif cd.collection == "posts" -%}
+<time datetime="{{ cd.date | date_to_xmlschema }}">{{ cd.date | date: '%Y年%-m月%-d日' }}</time>
+{%- elsif cd.collection == "tools" -%}
+ツール
+{%- elsif cd.collection == "hubs" -%}
+まとめハブ
+{%- endif -%}
+</span>
+</span>
+</a></li>

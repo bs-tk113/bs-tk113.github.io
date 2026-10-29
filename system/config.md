@@ -3,7 +3,7 @@
 編集長（`/daily-post`）は毎回最初にこのファイルを読む。
 
 ```yaml
-blog_name: "（未定）"
+blog_name: "クラッチノート（CLUTCH NOTE）"   # 2026-10-28 決定（鳴海の推奨）
 topic_status: decided          # undecided の間は /daily-post はテーマ決めから始める（2026-10-22 決定）
 auto_publish: false            # true にすると記事作成後に git commit & push まで行う
 target_length: 3000-5000       # 本文の文字数目安

@@ -1,0 +1,16 @@
+---
+layout: null
+permalink: /search.json
+sitemap: false
+---
+{%- assign s_docs = site.posts | concat: site.hubs | concat: site.tools -%}
+[
+{%- for d in s_docs -%}
+{%- assign d_cat = d.category -%}
+{%- unless d_cat -%}{%- assign d_cat = d.categories | first -%}{%- endunless -%}
+{%- assign d_catd = site.data.categories | where: "slug", d_cat | first -%}
+{%- assign d_desc = d.description | default: d.excerpt | strip_html | strip_newlines | truncate: 100 -%}
+{%- assign d_tags = d.tags | join: " " -%}
+{"t":{{ d.title | jsonify }},"u":{{ d.url | relative_url | jsonify }},"c":{{ d_catd.name | default: d_cat | default: "" | jsonify }},"d":{{ d_desc | jsonify }},"k":{{ d_tags | append: " " | append: d.tag | jsonify }}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]

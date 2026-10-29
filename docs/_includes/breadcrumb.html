@@ -1,0 +1,35 @@
+{%- comment -%}
+  パンくず（HTML ＋ 構造化データ BreadcrumbList）
+  使い方: {% include breadcrumb.html cat=slug title=page.title %}
+  任意: section="hub" / "tool"（カテゴリの代わりに一覧ページを中間に置く）
+{%- endcomment -%}
+{%- assign bc_cat = site.data.categories | where: "slug", include.cat | first -%}
+{%- assign bc_mid_name = "" -%}
+{%- assign bc_mid_url = "" -%}
+{%- if include.section == "hub" -%}
+  {%- assign bc_mid_name = "まとめハブ" -%}{%- assign bc_mid_url = "/hub/" -%}
+{%- elsif include.section == "tool" -%}
+  {%- assign bc_mid_name = "ツール" -%}{%- assign bc_mid_url = "/tools/" -%}
+{%- elsif bc_cat -%}
+  {%- assign bc_mid_name = bc_cat.name -%}{%- assign bc_mid_url = "/category/" | append: bc_cat.slug | append: "/" -%}
+{%- endif -%}
+<nav class="crumbs" aria-label="パンくずリスト">
+<ol>
+<li><a href="{{ '/' | relative_url }}">トップ</a></li>
+{%- if bc_mid_url != "" %}
+<li><a href="{{ bc_mid_url | relative_url }}">{{ bc_mid_name }}</a></li>
+{%- endif %}
+<li aria-current="page">{{ include.title | escape }}</li>
+</ol>
+</nav>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"トップ","item":{{ '/' | absolute_url | jsonify }}}
+{%- if bc_mid_url != "" -%}
+,{"@type":"ListItem","position":2,"name":{{ bc_mid_name | jsonify }},"item":{{ bc_mid_url | absolute_url | jsonify }}}
+,{"@type":"ListItem","position":3,"name":{{ include.title | jsonify }}}
+{%- else -%}
+,{"@type":"ListItem","position":2,"name":{{ include.title | jsonify }}}
+{%- endif -%}
+]}
+</script>

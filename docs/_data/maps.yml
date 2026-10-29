@@ -1,0 +1,41 @@
+# マップ（キー: 英小文字。front matter の thumb_map: に書く値）
+# banner: 640x360 WebP（30KB 以下）。合成サムネの背景・カテゴリタイル・ヒーローのぼかし背景に使う。
+# ファイルがまだ無くても表示は崩れない（カテゴリ色のグラデーションが出る）。
+# 取得元はマップ一覧ページ（マップ個別のページは無い。2026-10-28 確認）。
+
+ascent:
+  name: アセント
+  banner: /assets/img/maps/ascent-banner.webp
+  source: https://playvalorant.com/ja-jp/maps/
+bind:
+  name: バインド
+  banner: /assets/img/maps/bind-banner.webp
+  source: https://playvalorant.com/ja-jp/maps/
+breeze:
+  name: ブリーズ
+  banner: /assets/img/maps/breeze-banner.webp
+  source: https://playvalorant.com/ja-jp/maps/
+haven:
+  name: ヘイヴン
+  banner: /assets/img/maps/haven-banner.webp
+  source: https://playvalorant.com/ja-jp/maps/
+icebox:
+  name: アイスボックス
+  banner: /assets/img/maps/icebox-banner.webp
+  source: https://playvalorant.com/ja-jp/maps/
+lotus:
+  name: ロータス
+  banner: /assets/img/maps/lotus-banner.webp
+  source: https://playvalorant.com/ja-jp/maps/
+pearl:
+  name: パール
+  banner: /assets/img/maps/pearl-banner.webp
+  source: https://playvalorant.com/ja-jp/maps/
+split:
+  name: スプリット
+  banner: /assets/img/maps/split-banner.webp
+  source: https://playvalorant.com/ja-jp/maps/
+sunset:
+  name: サンセット
+  banner: /assets/img/maps/sunset-banner.webp
+  source: https://playvalorant.com/ja-jp/maps/

@@ -1,0 +1,26 @@
+{%- comment -%}
+  リンク先を決める（リンク切れを作らないため）。
+  使い方: {% include resolve-link.html url=x doc=y fallback=z %} のあと {{ rl_url }} を使う。
+  - url があればそれ
+  - doc（/hub/<name>/ や /tools/<name>/）が公開済みならその URL
+  - 未公開なら fallback。どれも無ければ rl_url は空文字（呼び出し側で表示をやめる）
+  URL は baseurl なし。出力時に relative_url を通すこと。
+{%- endcomment -%}
+{%- comment -%}
+  label / fallback_label を渡すと、表示名を rl_label に入れる（fallback に飛ぶときは fallback_label を使い、行き先と表示名をずらさない）。
+{%- endcomment -%}
+{%- assign rl_url = "" -%}
+{%- assign rl_hit = nil -%}
+{%- assign rl_label = include.label -%}
+{%- if include.url and include.url != "" -%}
+  {%- assign rl_url = include.url -%}
+{%- elsif include.doc and include.doc != "" -%}
+  {%- assign rl_hit = site.hubs | where: "url", include.doc | first -%}
+  {%- unless rl_hit -%}{%- assign rl_hit = site.tools | where: "url", include.doc | first -%}{%- endunless -%}
+  {%- if rl_hit -%}
+    {%- assign rl_url = rl_hit.url -%}
+  {%- elsif include.fallback and include.fallback != "" -%}
+    {%- assign rl_url = include.fallback -%}
+    {%- assign rl_label = include.fallback_label | default: include.label -%}
+  {%- endif -%}
+{%- endif -%}

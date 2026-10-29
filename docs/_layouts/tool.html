@@ -1,0 +1,141 @@
+---
+layout: default
+---
+{%- comment -%}
+  ツールページ: 入力 → 結果 → 共有（URL で状態を再現）→ 計算式と出典（必須）→ 使い方と解説 → FAQ → 広告 → 関連記事
+  広告は入力欄の近くに置かない（FAQ の下だけ）。
+  front matter:
+    title / description / checked（計算式を確認した日）/ order
+    tool_script: edpi.js            # docs/assets/js/tools/ の JS（外部ライブラリなし）
+    formula_short: "eDPI = DPI × ゲーム内感度"   # 一覧カード用の1行
+    formulas: [{name, expr, note}]  # 計算式（必須）
+    constants: [{name, value, note}]# 計算に使う定数（あれば。出典必須）
+    sources: [{title, url, note}]   # 計算式・定数の出典（必須）
+    usage: |                        # 使い方と解説（Markdown）
+    faq: [{q, a}]                   # よくある質問（a は Markdown 可）
+    tag: sensitivity                # 関連記事のタグ
+    history: [{date, note}]
+  本文（ファイルの中身）には入力フォームと結果欄の HTML を書く。
+{%- endcomment -%}
+<article class="page tool" style="--c:var(--c-tools)">
+  {% include breadcrumb.html cat="tools" title=page.title section="tool" %}
+
+  <header class="post-head">
+    <p class="post-labels">
+      <a class="chip" href="{{ '/tools/' | relative_url }}" style="--c:var(--c-tools)">ツール</a>
+      {%- if page.checked %}<span class="meta">計算式の確認日 <time datetime="{{ page.checked | date: '%Y-%m-%d' }}">{{ page.checked | date: '%Y年%-m月%-d日' }}</time></span>{% endif %}
+    </p>
+    <h1 class="page-title">{{ page.title | escape }}</h1>
+    {%- if page.description %}<p>{{ page.description }}</p>{% endif %}
+  </header>
+
+  <div class="tool-app">
+    {{ content }}
+    <noscript><p class="tool-error">この計算ツールは JavaScript を使います。下の「計算式」を使えば手計算もできます。</p></noscript>
+  </div>
+
+  <section class="formula-box" id="formula" aria-labelledby="h-formula">
+    <h2 class="box-title" id="h-formula">計算式と出典</h2>
+    {%- if page.formulas and page.formulas.size > 0 %}
+    {%- for f in page.formulas %}
+    <p><strong>{{ f.name }}</strong></p>
+    <p class="formula">{{ f.expr }}</p>
+    {%- if f.note %}<p class="meta">{{ f.note }}</p>{% endif %}
+    {%- endfor %}
+    {%- else %}
+    <p class="tool-error">計算式が未記入です（front matter の formulas に書いてください）。</p>
+    {%- endif %}
+
+    {%- if page.constants and page.constants.size > 0 %}
+    <p><strong>計算に使う定数</strong></p>
+    <div class="table-scroll"><table>
+      <thead><tr><th scope="col">項目</th><th scope="col">値</th><th scope="col">備考</th></tr></thead>
+      <tbody>{% for k in page.constants %}<tr><td>{{ k.name }}</td><td>{{ k.value }}</td><td>{{ k.note }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {%- endif %}
+
+    <p><strong>出典</strong></p>
+    {%- if page.sources and page.sources.size > 0 %}
+    <ul>
+      {%- for s in page.sources %}
+      <li>{% if s.url %}<a href="{{ s.url }}" rel="noopener" target="_blank">{{ s.title | default: s.url | escape }}</a>{% else %}{{ s.title | escape }}{% endif %}{% if s.note %}（{{ s.note | escape }}）{% endif %}</li>
+      {%- endfor %}
+    </ul>
+    {%- else %}
+    <p class="tool-error">出典が未記入です（front matter の sources に書いてください）。</p>
+    {%- endif %}
+  </section>
+
+  {%- if page.usage %}
+  <section aria-labelledby="h-usage">
+    <div class="prose">
+      <h2 id="h-usage">使い方と解説</h2>
+      {{ page.usage | markdownify }}
+    </div>
+  </section>
+  {%- endif %}
+
+  {%- if page.faq and page.faq.size > 0 %}
+  <section class="faq" aria-labelledby="h-faq">
+    <div class="prose"><h2 id="h-faq">よくある質問</h2></div>
+    {%- for f in page.faq %}
+    <details>
+      <summary>{{ f.q }}</summary>
+      <div class="faq-a prose">{{ f.a | markdownify }}</div>
+    </details>
+    {%- endfor %}
+  </section>
+  {%- endif %}
+
+  {% include ad.html slot=site.adsense_slots.tool_bottom %}
+
+  {%- assign tr_shown = 0 -%}
+  {%- capture tr_list -%}
+    {%- capture tr_seen %}|{{ page.url }}|{% endcapture -%}
+    {%- if page.tag -%}
+      {%- for p in site.tags[page.tag] -%}
+        {%- if tr_shown >= 6 %}{% break %}{% endif -%}
+        {%- capture tr_key %}|{{ p.url }}|{% endcapture -%}
+        {%- unless tr_seen contains tr_key -%}
+          {%- assign tr_seen = tr_seen | append: tr_key -%}{%- assign tr_shown = tr_shown | plus: 1 -%}
+          {% include card.html doc=p class="card--compact" %}
+        {%- endunless -%}
+      {%- endfor -%}
+    {%- endif -%}
+    {%- for p in site.categories.tools -%}
+      {%- if tr_shown >= 6 %}{% break %}{% endif -%}
+      {%- capture tr_key %}|{{ p.url }}|{% endcapture -%}
+      {%- unless tr_seen contains tr_key -%}
+        {%- assign tr_seen = tr_seen | append: tr_key -%}{%- assign tr_shown = tr_shown | plus: 1 -%}
+        {% include card.html doc=p class="card--compact" %}
+      {%- endunless -%}
+    {%- endfor -%}
+    {%- for p in site.tools -%}
+      {%- if tr_shown >= 6 %}{% break %}{% endif -%}
+      {%- capture tr_key %}|{{ p.url }}|{% endcapture -%}
+      {%- unless tr_seen contains tr_key -%}
+        {%- assign tr_seen = tr_seen | append: tr_key -%}{%- assign tr_shown = tr_shown | plus: 1 -%}
+        {% include card.html doc=p class="card--compact" %}
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if tr_shown > 0 %}
+  <section class="related" aria-labelledby="h-related">
+    <div class="sec-head"><h2 id="h-related">関連記事・ほかのツール</h2></div>
+    <ul class="grid grid--2">{{ tr_list }}</ul>
+  </section>
+  {%- endif %}
+
+  {%- if page.history and page.history.size > 0 %}
+  <section class="box" aria-labelledby="h-history">
+    <h2 class="box-title" id="h-history">更新履歴</h2>
+    <ul class="history-list">
+      {%- for h in page.history %}
+      <li><time datetime="{{ h.date | date: '%Y-%m-%d' }}">{{ h.date | date: '%Y年%-m月%-d日' }}</time><span>{{ h.note | escape }}</span></li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+  {% include share.html %}
+</article>
