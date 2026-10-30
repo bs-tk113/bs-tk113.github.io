@@ -799,6 +799,16 @@ a.ag:focus-visible{outline-offset:2px}
 .pl-link:focus-visible{outline-offset:-3px}
 .pl-empty{margin:0; padding:20px 16px; border:2px dashed var(--line); color:var(--muted); background:var(--surface)}
 .pl-src,.pl-foot,.pl-unknown,.pl-team-none{color:var(--muted)}
+/* 2026-10-31 編集長: スマホでは選手名鑑の表を1人1枚のカードにする（5列の表は 360px で名前が途中で折れ、リンクが隠れるため） */
+@media (max-width:640px){
+  .pl-table{overflow:visible; border:0; background:none}
+  .pl-table table,.pl-table tbody,.pl-table tr,.pl-table td{display:block; width:auto; min-width:0}
+  .pl-table thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+  .pl-table tr{margin:0 0 10px; padding:10px 12px; background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--c-roster)}
+  .pl-table td{padding:4px 0; border:0; background:none}
+  .pl-table td[data-label="活動名"]{padding-bottom:6px; font-size:1.125rem}
+  .pl-table td:not([data-label="活動名"])::before{content:attr(data-label); display:block; color:var(--muted); font-weight:700}
+}
 
 /* tc-: チームカード（team-cards.html） */
 .tc-title{margin:0 0 10px; font-size:1.125rem}

@@ -58,7 +58,7 @@ tags: [<タグ>]
 ```
 
 - 鳴海が提案した「既存記事 → 本記事」への内部リンク追加も、このタイミングで既存記事に反映する。
-- `auto_publish: true` のときだけ `git add docs promo logs data && git commit -m "post: <タイトル>" && git push`。false なら公開ファイルの場所をユーザーに伝えて終了。
+- `auto_publish: true` のときだけ `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\publish.ps1 -Message "post: <タイトル>"` を実行（GitHub Desktop 同梱の git で commit & push。結果が ERROR ならユーザーに伝える）。false なら公開ファイルの場所をユーザーに伝えて終了。
 
 ## 8. 制作ログ
 `logs/_template.md` をコピーして埋める。**思考の全文ではなく、各段階の「決定・理由・指摘・対応」を要約**する（後で修正しやすくするため）。

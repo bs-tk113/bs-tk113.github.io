@@ -5,7 +5,7 @@
 ```yaml
 blog_name: "クラッチノート（CLUTCH NOTE）"   # 2026-10-28 決定（鳴海の推奨）
 topic_status: decided          # undecided の間は /daily-post はテーマ決めから始める（2026-10-22 決定）
-auto_publish: false            # true にすると記事作成後に git commit & push まで行う
+auto_publish: true             # true にすると記事作成・データ更新の後に scripts/publish.ps1 で commit & push まで行う（2026-10-31 運営者の依頼で true に）
 target_length: 3000-5000       # 本文の文字数目安
 posts_per_day: 1
 max_revision_loops: 2

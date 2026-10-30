@@ -7,5 +7,5 @@
 - メンバーと相互監視のルール: `system/team.md`。レビュー書式: `system/review-rubric.md`。
 - 白石（校閲）の RED は拒否権。覆して公開しない。
 - 制作ログ（`logs/`）には思考の全文ではなく「決定・理由・指摘・対応」の要約を残す。
-- `system/config.md` の `auto_publish` が false の間は git push しない。SNSへの投稿も行わない（文面作成まで）。
+- `system/config.md` の `auto_publish` が false の間は git push しない。true のときは、白石の確認を通った後に `scripts/publish.ps1` で commit & push する（git は GitHub Desktop 同梱のものを使う。2026-10-31 運営者の依頼で true）。SNSへの投稿は行わない（文面作成まで）。
 - ブログ本体は `docs/`（Jekyll / GitHub Pages）。記事は `docs/_posts/YYYY-MM-DD-slug.md`。
