@@ -1,7 +1,8 @@
 ﻿# 変更をまとめて commit して GitHub に push する（GitHub Pages が自動で作り直す）。
 # 使い方: powershell -NoProfile -ExecutionPolicy Bypass -File scripts\publish.ps1 -Message "データ更新 2026-11-01"
 # - git は GitHub Desktop に入っているものを使う（この PC には別の git が入っていないため）
-# - 認証は Git Credential Manager に保存された GitHub のサインインを使う。保存されていなければ止まらずに失敗する（対話の入力は出さない）
+# - 認証は運営者が 2026-10-31 に保存した、このリポジトリ専用のトークン（リポジトリの credential.helper=store）。期限切れ・未保存なら止まらずに失敗する（対話の入力は出さない）
+# - このファイルは UTF-8（BOM 付き）で保存すること。BOM がないと Windows PowerShell 5.1 が日本語を読み違えて動かない
 # - system/config.md の auto_publish が true のときだけ push する
 param([string]$Message = "")
 

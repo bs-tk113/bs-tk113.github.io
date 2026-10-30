@@ -23,6 +23,20 @@
 - 手順を `.claude/skills/daily-update/SKILL.md` に定義。スケジュールタスク「clutchnote-daily-update」を毎日18時に登録（push はしない）
 - IGZIST の2投稿を確認: 1件目＝選手4人（popogachi・Frxeez・kAyle・SID）、2件目＝コーチ・アナリスト3人（sitimentyo・gainpe・yukufuru）。「どちらに誰が載っているか区別していない」注記は、次のデータ更新で正確な出典に直す
 
+## 2026-10-31 自動公開（push の自動化）
+- 運営者の依頼「GitHub で push しないと更新されないのは大変なので自動化してほしい」→ system/config.md の auto_publish を true に
+- scripts/publish.ps1: GitHub Desktop 同梱の git で add → commit → pull --rebase → push。対話の入力は出さず、失敗したら ERROR を返す
+- 認証: 同梱の Git Credential Manager がこの環境のシェルから起動できなかった → リポジトリだけ credential.helper=store にし、運営者がこのリポジトリ専用のトークンを1回入力して保存
+- 確認: スクリプト単体で push 成功（01b8ba0）。ビルド #13 成功、選手名鑑のスマホ用 CSS が公開されたことも確認
+- 注意: publish.ps1 は UTF-8（BOM 付き）で保存する（BOM がないと PowerShell 5.1 が日本語を読み違えて動かない）。トークンの期限が切れたら作り直す
+
+## 2026-10-31 サイト名の変更（クラッチノート → 観戦帖）
+- 運営者の指摘: 「クラッチノート」という VALORANT 関連サイトがすでにある → Bing で確認: iPhone の戦績トラッカー「Clutch Note」（clutch-note.com）が上位
+- 鳴海の候補: 1位 観戦帖 KANSENCHO／2位 早見盤／3位 ロスター帳。観戦帖は名前で検索すると辞書ページしか出てこず、ゲーム系で同じ名前なし。kansencho.com・.jp・.gg は未登録とみられる
+- 編集長の判断: 観戦帖を採用（命名は運営者から任されている）。title・author・ブランドマーク「観」・英語表記 Kansencho・運営者情報に読みを追加
+- 未確認: X / YouTube のアカウント名が取れるか、商標（J-PlatPat）→ 運営者に確認を依頼
+- 検索に出ない件: Bing は1ページも登録されていない（site: 検索で0件）。Google は Search Console で登録をリクエスト済み。公開から数日のため、登録まで数日〜数週間かかる
+
 ## 次回に回したもの
 - トップの画像の合計が約450KB（目安400KB）→ カテゴリ画像を 320×180 の軽い版にする（水瀬案）
 - 用語集・選手名鑑のチーム見出しの装飾が本文の見出しと重なる → 紅林の第2弾で直す
