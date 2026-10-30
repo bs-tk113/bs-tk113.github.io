@@ -3,10 +3,12 @@ layout: default
 ---
 {%- comment -%}
   トップページ。jekyll-paginate は index.html でだけ動くので、このファイルを移動しないこと。
-  1ページ目: ヒーロー → いまの話題 → 今週の大会 → カテゴリ → 最新の週まとめ → 人気ランキング → 広告 → 新着記事（ページ送り）→ まとめハブ → エージェント別 → ツール → 広告
+  1ページ目: ヒーロー → いまの話題 → 今週の大会 → カテゴリ → エージェント → 最新の週まとめ → 人気ランキング（集計前はピックアップ）→ 広告 → 新着記事（ページ送り）→ まとめハブ → ツール → 広告
   2ページ目以降（/page2/ など）: 新着記事の一覧だけ
-  記事・ハブ・ツールが0件でも崩れない（空の場合の案内と、_data/roadmap.yml の公開予定を出す）。
+  2026-10-30 紅林: 読者の画面に「準備中」「公開予定」の言い訳を出さない。中身が0件の枠は枠ごと出さない
+    （週まとめ・新着記事・まとめハブ・ツール）。ランキングが集計前の間は、右列に公開済みのまとめ・ツールの「ピックアップ」を出す。
   いまの話題（_data/now.yml）・今週の大会（_data/matches.yml）は、データが空なら枠ごと出さない。
+  セクション見出しの「01」「02」の番号は CSS（.home の counter）で付く。並べ替えても番号は自動で振り直される。
 {%- endcomment -%}
 {%- assign all_docs = site.posts | concat: site.hubs | concat: site.tools -%}
 
@@ -22,7 +24,7 @@ layout: default
   <img class="hero-bg" src="{{ hero_map.banner | relative_url }}" alt="" width="640" height="360" decoding="async" onerror="this.style.display='none'">
   {%- endif %}
   {%- if hero_ag_ok > 0 %}
-  <img class="hero-agent" src="{{ hero_agent.portrait | relative_url }}" alt="" width="{{ hero_agent.portrait_w | default: 616 }}" height="{{ hero_agent.portrait_h | default: 822 }}" fetchpriority="high" decoding="async" onerror="this.style.display='none'">
+  <img class="hero-agent" src="{{ hero_agent.portrait | relative_url }}" alt="" width="{{ hero_agent.portrait_w | default: 616 }}" height="{{ hero_agent.portrait_h | default: 822 }}" decoding="async" onerror="this.style.display='none'">
   {%- endif %}
   <div class="hero-inner">
     <span class="kicker">{{ hero.kicker | default: '非公式ファンサイト' }}</span>
@@ -38,7 +40,7 @@ layout: default
       {%- for qk in hero.quick limit: 3 -%}
         {%- include resolve-link.html url=qk.url doc=qk.doc fallback=qk.fallback label=qk.label fallback_label=qk.fallback_label -%}
         {%- if rl_url != "" %}
-      <li><a href="{{ rl_url | relative_url }}">{{ rl_label }}</a></li>
+      <li><a href="{{ rl_url | relative_url }}">{% if qk.icon %}{% include icon.html name=qk.icon %}{% endif %}{{ rl_label }}</a></li>
         {%- endif -%}
       {%- endfor %}
     </ul>
@@ -65,7 +67,7 @@ layout: default
   {%- endcapture -%}
   {%- if hn_shown > 0 %}
   <section class="a-now" aria-labelledby="h-now">
-    <div class="sec-head"><h2 id="h-now">いまの話題</h2><a class="more" href="{{ '/now/' | relative_url }}">すべて見る</a></div>
+    <div class="sec-head"><h2 id="h-now">{% include icon.html name="now" %}いまの話題</h2><a class="more" href="{{ '/now/' | relative_url }}">すべて見る</a></div>
     <ol class="tl tl--compact">{{ hn_list }}</ol>
   </section>
   {%- endif %}
@@ -81,18 +83,18 @@ layout: default
   {%- assign hs_list_s = hs_list | strip -%}
   {%- if hs_list_s != "" %}
   <section class="a-sched" aria-labelledby="h-sched" data-sched-home>
-    <div class="sec-head"><h2 id="h-sched">今週の大会</h2><a class="more" href="{{ '/schedule/' | relative_url }}">カレンダー</a></div>
+    <div class="sec-head"><h2 id="h-sched">{% include icon.html name="schedule" %}今週の大会</h2><a class="more" href="{{ '/schedule/' | relative_url }}">カレンダー</a></div>
     <p class="meta">今日から7日間の予定と、直近の結果（結果は折りたたみ）。日本時間。</p>
     {{ hs_list }}
   </section>
   {%- endif %}
 
   {%- comment -%}
-    カテゴリから探す（7つ。記事数つき。0件のカテゴリは roadmap.yml の「公開予定 n本」）
+    カテゴリから探す（7つ。記事数つき。0件のカテゴリは「近日公開」の一語だけ）
     並び: 先頭のカードを大きく（2列なら横2マス）して、7枚でも空きマスが出ないようにしている（style.css .cats）
   {%- endcomment -%}
   <section class="a-cat" id="cat" aria-labelledby="h-cat">
-    <div class="sec-head"><h2 id="h-cat">カテゴリから探す</h2><a class="more" href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a></div>
+    <div class="sec-head"><h2 id="h-cat">{% include icon.html name="hub" %}カテゴリから探す</h2><a class="more" href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a></div>
     <ul class="cats">
       {%- for c in site.data.categories %}
       {%- assign c_map = site.data.maps[c.thumb_map] -%}
@@ -100,23 +102,74 @@ layout: default
       {%- assign c_posts = site.categories[c.slug] | size -%}
       {%- assign c_hubtools = site.hubs | concat: site.tools | where: "category", c.slug | size -%}
       {%- assign c_total = c_posts | plus: c_hubtools -%}
-      {%- include roadmap.html cat=c.slug count_only=true -%}
       {%- include cat-url.html catd=c %}
       <li><a class="cat" href="{{ cu_url | relative_url }}" style="--c:var(--c-{{ c.slug }})">
         {%- if c_img_ok > 0 %}<img src="{{ c_map.banner | relative_url }}" alt="" width="640" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'">{% endif %}
+        <span class="cat-icon">{% include icon.html name=c.slug %}</span>
         <span class="cat-name">{{ c.name }}</span>
         <span class="cat-desc">{{ c.desc }}</span>
-        <span class="cat-count">{% if c_total > 0 %}{{ c_total }}件{% elsif rm_count > 0 %}公開予定 {{ rm_count }}本{% else %}準備中{% endif %}</span>
+        {%- if c_total > 0 %}
+        <span class="cat-count">{{ c_total }} 件</span>
+        {%- else %}
+        <span class="cat-count cat-count--soon">近日公開</span>
+        {%- endif %}
       </a></li>
       {%- endfor %}
     </ul>
   </section>
 
-  {%- comment -%} 最新の週まとめ（weekly カテゴリの最新1本。front matter の points: で要点4行） {%- endcomment -%}
+  {%- comment -%}
+    エージェント（_data/agents.yml の全員。ロールで絞り込み＝site.js の data-filter-scope。JS が無くても全員見える）
+    エージェント別 調整履歴のハブ（/hub/agent-history/）が公開されていれば、調整履歴があるエージェント
+    （_data/patches.yml の changes に target: agent・key: <キー> がある）のアイコンが、そのハブの #a-<キー> へのリンクになる
+    （アンカーの形は _includes/agent-history.html に合わせている）。履歴がないエージェント・ハブ公開前はリンクにしない（空振りを作らない）。
+  {%- endcomment -%}
+  {%- assign ah = site.hubs | where: "url", "/hub/agent-history/" | first -%}
+  {%- assign ah_keys = "|" -%}
+  {%- if ah -%}
+    {%- for ahp in site.data.patches -%}
+      {%- for ahc in ahp.changes -%}
+        {%- if ahc.target == "agent" and ahc.key -%}{%- assign ah_keys = ah_keys | append: ahc.key | append: "|" -%}{%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- assign ag_img = 0 -%}
+  {%- assign ag_linked = 0 -%}
+  <section class="a-agents" aria-labelledby="h-agents" data-filter-scope>
+    <div class="sec-head"><h2 id="h-agents">{% include icon.html name="agent" %}{% if ah %}エージェント別 調整履歴{% else %}エージェント{% endif %}</h2>{% if ah %}<a class="more" href="{{ ah.url | relative_url }}">全エージェント</a>{% endif %}</div>
+    <div class="filter roster-filter" role="group" aria-label="ロールで絞り込む" data-filter-key="role" hidden>
+      <button type="button" class="filter-btn" data-filter-value="" aria-pressed="true">すべて</button>
+      {%- for flt_role in site.data.roles limit: 4 %}
+      <button type="button" class="filter-btn" data-filter-value="{{ flt_role.key }}" aria-pressed="false">{% include role-icon.html role=flt_role.key %}</button>
+      {%- endfor %}
+    </div>
+    <ul class="roster">
+      {%- for a in site.data.agents %}
+      {%- assign a_key = a[0] -%}{%- assign a_d = a[1] -%}
+      {%- assign a_ok = 0 -%}{%- if a_d.icon -%}{%- assign a_ok = site.static_files | where: "path", a_d.icon | size -%}{%- endif -%}
+      {%- if a_ok > 0 -%}{%- assign ag_img = 1 -%}{%- endif -%}
+      {%- capture a_kk %}|{{ a_key }}|{% endcapture -%}
+      {%- assign a_link = false -%}{%- if ah and ah_keys contains a_kk -%}{%- assign a_link = true -%}{%- assign ag_linked = ag_linked | plus: 1 -%}{%- endif %}
+      <li data-filter-item data-role="{{ a_d.role | default: 'other' }}">
+        {%- if a_link %}<a class="ag" href="{{ ah.url | relative_url }}#a-{{ a_key }}" style="--rf:var(--r-{{ a_d.role | default: 'flex' }})">{% else %}<span class="ag ag--nolink" style="--rf:var(--r-{{ a_d.role | default: 'flex' }})">{% endif -%}
+        <span class="ag-icon" data-initial="{{ a_d.name | slice: 0 }}">
+          {%- if a_ok > 0 %}<img src="{{ a_d.icon | relative_url }}" alt="" width="96" height="96" loading="lazy" decoding="async" onerror="this.style.display='none'">{% endif -%}
+          {%- if a_d.role %}<span class="ag-role">{% include role-icon.html role=a_d.role noname=true %}</span>{% endif -%}
+        </span>
+        <span class="ag-name">{{ a_d.name }}</span>
+        {%- if a_link %}</a>{% else %}</span>{% endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+    {%- if ag_linked > 0 %}<p class="roster-note">下線つきの名前を押すと、そのエージェントの調整履歴へ。</p>{% endif %}
+    {%- if ag_img > 0 %}<p class="roster-credit">画像 © Riot Games, Inc.</p>{% endif %}
+  </section>
+
+  {%- comment -%} 最新の週まとめ（weekly カテゴリの最新1本。front matter の points: で要点4行）。まだ無ければ枠ごと出さない {%- endcomment -%}
   {%- assign wk = site.categories.weekly | first -%}
+  {%- if wk %}
   <section class="a-weekly" aria-labelledby="h-weekly">
-    <div class="sec-head"><h2 id="h-weekly">最新の週まとめ</h2>{% if wk %}<a class="more" href="{{ '/category/weekly/' | relative_url }}">過去の週まとめ</a>{% endif %}</div>
-    {%- if wk %}
+    <div class="sec-head"><h2 id="h-weekly">{% include icon.html name="weekly" %}最新の週まとめ</h2><a class="more" href="{{ '/category/weekly/' | relative_url }}">過去の週まとめ</a></div>
     <article class="weekly">
       <a href="{{ wk.url | relative_url }}" tabindex="-1" aria-hidden="true">{% include thumb.html cat="weekly" map=wk.thumb_map agent=wk.thumb_agent label=wk.thumb_label class="thumb--wide" %}</a>
       <div class="weekly-body">
@@ -134,37 +187,70 @@ layout: default
         <a class="btn" href="{{ wk.url | relative_url }}">週まとめを読む</a>
       </div>
     </article>
-    {%- else %}
-    <p class="empty">週まとめはまだありません。第1回を準備中です（以後、毎週月曜に公開します）。公開したらここに最新の1本が出ます。</p>
-    {%- endif %}
   </section>
+  {%- endif %}
 
-  {%- comment -%} 人気ランキング（_data/popular.yml。集計期間を必ず表示。公開されていない URL は飛ばす） {%- endcomment -%}
+  {%- comment -%}
+    人気ランキング（_data/popular.yml。集計期間を必ず表示。公開されていない URL は飛ばす）
+    集計前（period が空・items が空）は、同じ枠に「ピックアップ」（公開済みのまとめハブ・ツールを5件。並びは下のコメント）を出す。
+    どちらも0件なら枠ごと出さない。
+  {%- endcomment -%}
   {%- assign pop = site.data.popular -%}
+  {%- assign pop_shown = 0 -%}
+  {%- capture pop_list -%}
+    {%- if pop.period and pop.period != "" and pop.items and pop.items.size > 0 -%}
+      {%- for it in pop.items -%}
+        {%- if pop_shown >= 5 %}{% break %}{% endif -%}
+        {%- assign it_doc = all_docs | where: "url", it.url | first -%}
+        {%- if it_doc -%}
+        {%- assign pop_shown = pop_shown | plus: 1 -%}
+        {%- assign it_cat = it_doc.category -%}
+        {%- unless it_cat %}{% assign it_cat = it_doc.categories | first %}{% endunless %}
+        <li><a class="rank-item" href="{{ it_doc.url | relative_url }}"><span class="rank-thumb">{% include thumb.html cat=it_cat map=it_doc.thumb_map agent=it_doc.thumb_agent class="thumb--sq" nolabel=true %}<span class="rank-no">{{ pop_shown }}</span></span><span class="rank-title">{{ it.title | default: it_doc.title | escape }}</span></a></li>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- comment -%}
+    ピックアップの並び（2026-10-31 日向レビュー）: 下の枠に出ないものを優先する。
+    ① 用語集・エージェント別 調整履歴 → ② まとめハブの7件目以降（下の枠は6件まで）→ ③ ツールの5件目以降（下の枠は4件まで）→ ④ 残りを order 順
+    URL を " " 区切りの文字列に並べてから、1件ずつ文書を引く（重複は " URL " の一致で除く）。
+  {%- endcomment -%}
+  {%- assign pk_docs = site.hubs | concat: site.tools | sort: "order", "last" -%}
+  {%- assign pk_hubs = site.hubs | sort: "order", "last" -%}
+  {%- assign pk_tools = site.tools | sort: "order", "last" -%}
+  {%- assign pk_urls = " " -%}
+  {%- assign pk_pri = "/hub/glossary/ /hub/agent-history/" | split: " " -%}
+  {%- for u in pk_pri -%}
+    {%- assign pk_hit = pk_docs | where: "url", u | first -%}
+    {%- if pk_hit -%}{%- assign pk_urls = pk_urls | append: u | append: " " -%}{%- endif -%}
+  {%- endfor -%}
+  {%- for d in pk_hubs offset: 6 -%}{%- capture pk_k %} {{ d.url }} {% endcapture -%}{%- unless pk_urls contains pk_k -%}{%- assign pk_urls = pk_urls | append: d.url | append: " " -%}{%- endunless -%}{%- endfor -%}
+  {%- for d in pk_tools offset: 4 -%}{%- capture pk_k %} {{ d.url }} {% endcapture -%}{%- unless pk_urls contains pk_k -%}{%- assign pk_urls = pk_urls | append: d.url | append: " " -%}{%- endunless -%}{%- endfor -%}
+  {%- for d in pk_docs -%}{%- capture pk_k %} {{ d.url }} {% endcapture -%}{%- unless pk_urls contains pk_k -%}{%- assign pk_urls = pk_urls | append: d.url | append: " " -%}{%- endunless -%}{%- endfor -%}
+  {%- assign pk_list = pk_urls | strip | split: " " -%}
+  {%- if pop_shown > 0 %}
   <aside class="a-rank" aria-labelledby="h-rank">
     <div class="rank-box">
       <div class="sec-head"><h2 id="h-rank">人気ランキング</h2></div>
-      {%- assign pop_shown = 0 -%}
-      {%- if pop.period and pop.period != "" and pop.items and pop.items.size > 0 %}
       <p class="rank-note">集計期間: {{ pop.period }}（週1回更新）</p>
-      <ol class="rank-list">
-        {%- for it in pop.items -%}
-          {%- if pop_shown >= 5 %}{% break %}{% endif -%}
-          {%- assign it_doc = all_docs | where: "url", it.url | first -%}
-          {%- if it_doc -%}
-          {%- assign pop_shown = pop_shown | plus: 1 -%}
-          {%- assign it_cat = it_doc.category -%}
-          {%- unless it_cat %}{% assign it_cat = it_doc.categories | first %}{% endunless %}
-        <li><a class="rank-item" href="{{ it_doc.url | relative_url }}"><span class="rank-thumb">{% include thumb.html cat=it_cat map=it_doc.thumb_map agent=it_doc.thumb_agent class="thumb--sq" nolabel=true %}<span class="rank-no">{{ pop_shown }}</span></span><span class="rank-title">{{ it.title | default: it_doc.title | escape }}</span></a></li>
-          {%- endif -%}
-        {%- endfor %}
-      </ol>
-      {%- endif %}
-      {%- if pop_shown == 0 %}
-      <p class="rank-note">集計を始めたら、閲覧数の多いページを週1回更新で表示します（集計期間を明記します）。</p>
-      {%- endif %}
+      <ol class="rank-list">{{ pop_list }}</ol>
     </div>
   </aside>
+  {%- elsif pk_docs.size > 0 %}
+  <aside class="a-rank" aria-labelledby="h-rank">
+    <div class="rank-box">
+      <div class="sec-head"><h2 id="h-rank">ピックアップ</h2></div>
+      <ul class="rank-list pick-list">
+        {%- for pk_u in pk_list limit: 5 -%}
+        {%- assign d = pk_docs | where: "url", pk_u | first -%}
+        {%- assign d_cat = d.category | default: "tools" %}
+        <li><a class="rank-item" href="{{ d.url | relative_url }}"><span class="rank-thumb">{% include thumb.html cat=d_cat map=d.thumb_map agent=d.thumb_agent class="thumb--sq" nolabel=true %}</span><span class="rank-title">{{ d.short_title | default: d.title | escape }}<br><span class="pick-kind">{% if d.collection == "tools" %}{% include icon.html name="tools" %}ツール{% else %}{% include icon.html name="hub" %}まとめ{% endif %}</span></span></a></li>
+        {%- endfor %}
+      </ul>
+    </div>
+  </aside>
+  {%- endif %}
 
   {%- capture ad_infeed %}{% include ad.html slot=site.adsense_slots.home_infeed %}{% endcapture -%}
   {%- assign ad_infeed_s = ad_infeed | strip -%}
@@ -173,10 +259,10 @@ layout: default
   {%- endif %}
 {%- endif %}
 
-  {%- comment -%} 新着記事（jekyll-paginate） {%- endcomment -%}
+  {%- comment -%} 新着記事（jekyll-paginate）。記事が0件の間は枠ごと出さない {%- endcomment -%}
+  {%- if paginator.posts and paginator.posts.size > 0 %}
   <section class="a-latest" aria-labelledby="h-latest">
-    <div class="sec-head"><h2 id="h-latest">{% if paginator.page and paginator.page > 1 %}新着記事（{{ paginator.page }}ページ目）{% else %}新着記事{% endif %}</h2></div>
-    {%- if paginator.posts and paginator.posts.size > 0 %}
+    <div class="sec-head"><h2 id="h-latest">{% include icon.html name="new" %}{% if paginator.page and paginator.page > 1 %}新着記事（{{ paginator.page }}ページ目）{% else %}新着記事{% endif %}</h2></div>
     <ul class="grid grid--latest">
       {%- for post in paginator.posts %}
       {% include card.html doc=post class="card--compact" excerpt=true %}
@@ -189,65 +275,39 @@ layout: default
       {%- if paginator.next_page %}<a href="{{ paginator.next_page_path | relative_url }}" rel="next">古い記事 &raquo;</a>{% else %}<span></span>{% endif %}
     </nav>
     {%- endif %}
-    {%- else %}
-    <p class="empty">まだ記事はありません。最初の記事を準備中です。</p>
-    {%- endif %}
   </section>
+  {%- endif %}
 
 {%- if paginator.page == 1 or paginator.page == nil %}
-  {%- comment -%} まとめハブ・一覧表 {%- endcomment -%}
+  {%- comment -%} まとめハブ・一覧表（0件なら枠ごと出さない） {%- endcomment -%}
   {%- assign hubs_sorted = site.hubs | sort: "order", "last" -%}
+  {%- if hubs_sorted.size > 0 %}
   <section class="a-hubs" aria-labelledby="h-hubs">
-    <div class="sec-head"><h2 id="h-hubs">まとめハブ・一覧表</h2>{% if hubs_sorted.size > 0 %}<a class="more" href="{{ '/hub/' | relative_url }}">すべて見る</a>{% endif %}</div>
-    {%- if hubs_sorted.size > 0 %}
+    <div class="sec-head"><h2 id="h-hubs">{% include icon.html name="hub" %}まとめハブ・一覧表</h2><a class="more" href="{{ '/hub/' | relative_url }}">すべて見る</a></div>
     <ul class="grid grid--3">
       {%- for h in hubs_sorted limit: 6 %}
       {% include card.html doc=h %}
       {%- endfor %}
     </ul>
-    {%- else %}
-    <p class="empty">大会・移籍・パッチのまとめハブを準備中です。公開予定は次のとおりです。</p>
-    {% include roadmap.html type="hub" limit=5 %}
-    {%- if rm_count > 5 %}<p class="meta rm-more">ほか {{ rm_count | minus: 5 }}本。<a href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a>から、カテゴリごとの公開予定を見られます。</p>{% endif %}
-    {%- endif %}
-  </section>
-
-  {%- comment -%}
-    エージェント別 調整履歴の入口（_data/agents.yml）。
-    行き先のハブ（/hub/agent-history/）が公開されるまでは出さない（リンク切れを作らない）。
-  {%- endcomment -%}
-  {%- assign ah = site.hubs | where: "url", "/hub/agent-history/" | first -%}
-  {%- if ah %}
-  <section class="a-agents" aria-labelledby="h-agents">
-    <div class="sec-head"><h2 id="h-agents">エージェント別 調整履歴</h2><a class="more" href="{{ ah.url | relative_url }}">全エージェント</a></div>
-    <ul class="agents">
-      {%- for a in site.data.agents %}
-      <li><a class="agent" href="{{ ah.url | relative_url }}#{{ a[0] }}">{%- assign a_ok = 0 -%}{%- if a[1].icon -%}{%- assign a_ok = site.static_files | where: "path", a[1].icon | size -%}{%- endif -%}<span class="agent-icon" data-initial="{{ a[1].name | slice: 0 }}" aria-hidden="true">{% if a_ok > 0 %}<img src="{{ a[1].icon | relative_url }}" alt="" width="72" height="72" loading="lazy" decoding="async" onerror="this.style.display='none'">{% endif %}</span>{{ a[1].name }}</a></li>
-      {%- endfor %}
-    </ul>
-    <p class="hint">横にスワイプで続きを表示。押すと、そのエージェントの数値変更をパッチ順に見られます。</p>
   </section>
   {%- endif %}
 
-  {%- comment -%} ツール {%- endcomment -%}
+  {%- comment -%} ツール（0件なら枠ごと出さない） {%- endcomment -%}
   {%- assign tools_sorted = site.tools | sort: "order", "last" -%}
+  {%- if tools_sorted.size > 0 %}
   <section class="a-tools" aria-labelledby="h-tools">
-    <div class="sec-head"><h2 id="h-tools">ツール</h2>{% if tools_sorted.size > 0 %}<a class="more" href="{{ '/tools/' | relative_url }}">ツール一覧</a>{% endif %}</div>
-    {%- if tools_sorted.size > 0 %}
+    <div class="sec-head"><h2 id="h-tools">{% include icon.html name="tools" %}ツール</h2><a class="more" href="{{ '/tools/' | relative_url }}">ツール一覧</a></div>
     <ul class="grid grid--2">
       {%- for tl in tools_sorted limit: 4 %}
       <li><a class="tool-card" href="{{ tl.url | relative_url }}">
-        <span class="tool-card-title">{{ tl.title | escape }}</span>
+        <span class="tool-card-title">{% include icon.html name="tools" %}{{ tl.title | escape }}</span>
         {%- if tl.formula_short %}<span class="formula">{{ tl.formula_short }}</span>{% endif %}
         {%- if tl.description %}<span class="meta">{{ tl.description | truncate: 70 }}</span>{% endif %}
       </a></li>
       {%- endfor %}
     </ul>
-    {%- else %}
-    <p class="empty">感度変換・eDPI 計算のツールを準備中です。計算式と出典はページ内に明記します。</p>
-    {% include roadmap.html type="tool" %}
-    {%- endif %}
   </section>
+  {%- endif %}
 
   {%- capture ad_side %}{% include ad.html slot=site.adsense_slots.sidebar %}{% endcapture -%}
   {%- assign ad_side_s = ad_side | strip -%}

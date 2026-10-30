@@ -31,13 +31,14 @@ layout: default
 
   <header class="post-head">
     <p class="post-labels">
-      <a class="chip" href="{{ '/hub/' | relative_url }}" style="--c:var(--c-{{ h_catd.slug | default: 'default' }})">{{ h_catd.name | default: 'まとめハブ' }}</a>
+      <a class="chip" href="{{ '/hub/' | relative_url }}" style="--c:var(--c-{{ h_catd.slug | default: 'default' }})">{% if h_catd %}{% include icon.html name=h_catd.slug %}{% else %}{% include icon.html name="hub" %}{% endif %}{{ h_catd.name | default: 'まとめハブ' }}</a>
     </p>
     <h1 class="page-title">{{ page.title | escape }}</h1>
     {%- if page.last_modified_at %}
     <p class="updated-at"><span>最終更新 <strong><time datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: '%Y年%-m月%-d日 %H:%M' }}</time></strong></span>{% if page.period %}<span>対象期間 <strong>{{ page.period }}</strong></span>{% endif %}</p>
     {%- else %}
-    <p class="updated-at updated-at--missing">最終更新日時が未設定です（front matter の last_modified_at に書いてください）{% if page.period %} ・ 対象期間 {{ page.period }}{% endif %}</p>
+    <!-- 編集部へ: 最終更新日時が未設定です（front matter の last_modified_at に書いてください）。読者の画面には出しません（紅林 2026-10-30） -->
+    {%- if page.period %}<p class="updated-at"><span>対象期間 <strong>{{ page.period }}</strong></span></p>{% endif %}
     {%- endif %}
   </header>
 

@@ -1,0 +1,156 @@
+# ボード: 2027 国内チーム ロスター・移籍トラッカーのデータ。ページは docs/_hubs/roster-tracker.md（board: roster-2027）
+# 書き方は _data/boards/lft-board.yml の先頭と同じ。対象は VCT 2027 のオフシーズン（2026年9月以降）に出た
+# 加入・脱退・引退・休止・コーチ変更の発表。LFT（チーム募集）の告知は lft-board.yml に載せる（ここには重複して載せない）。
+#
+# status: joined（加入）/ left（脱退・退団）/ retired（引退）/ hiatus（休止）/ other
+#   left は _includes/board.html で「退団」と表示し、状態の絞り込みにも「退団」を出す（水瀬 2026-10-31 追加済み）。
+#   退団は type: team の出典（削除されていないもの）があれば確定表記。本人の発表だけなら「退団表明（チーム公式の発表待ち）」。
+# 出典は本人またはチームの公式だけ。X の投稿は now.yml と同じもの（編集部が 2026-10-30 01:30 に確認済み）。
+#   IGZIST の2件の投稿は、どちらに誰が載っているかを now.yml に記録していないため、7行すべてに2件とも付けている。
+# 役割（role）は発表に書いてあるときだけ。書いていなければ ""（「—」と出る）。
+
+title: 2027 国内チーム ロスター・移籍トラッカー
+updated: "2026-10-30 05:00"
+note: "VCT 2027 のオフシーズン（2026年9月以降）に、チームまたは本人が公式に発表したロスターの変化をまとめています。日付は発表日です。IGZIST の発表（10月26日）は2件の投稿に分かれていて、どちらの投稿に誰の名前があるかは区別せず、IGZIST の7行には2件とも出典として付けています。LFT（チーム募集）の告知は LFT・FA ボードに載せています。"
+items:
+  - player: "TenTen"
+    prev_team: "murash"
+    role: ""
+    declared: 2026-09-01
+    terms: "双方合意のうえで、8月31日付で脱退"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "MURASH GAMING 公式サイトのお知らせ"
+        url: "https://murashgaming.co.jp/news/valorant_006/"
+  - player: "JoxJo"
+    prev_team: "riddle"
+    role: ""
+    declared: 2026-10-19
+    terms: "契約満了で退団。チームは VALORANT 部門の活動を休止"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "RIDDLE 公式 X の投稿"
+        url: "https://x.com/RIDDLEORDER/status/2112121584861245717"
+  - player: "gyen"
+    prev_team: "riddle"
+    role: ""
+    declared: 2026-10-19
+    terms: "契約満了で退団。チームは VALORANT 部門の活動を休止"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "RIDDLE 公式 X の投稿"
+        url: "https://x.com/RIDDLEORDER/status/2112121584861245717"
+  - player: "popogachi"
+    prev_team: "igzist"
+    role: ""
+    declared: 2026-10-26
+    terms: "契約満了で退団"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "IGZIST 公式 X の発表（2件の投稿の1件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658298687627501"
+      - type: team
+        label: "IGZIST 公式 X の発表（同・2件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658545647997123"
+  - player: "Frxeez"
+    prev_team: "igzist"
+    role: ""
+    declared: 2026-10-26
+    terms: "契約満了で退団"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "IGZIST 公式 X の発表（2件の投稿の1件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658298687627501"
+      - type: team
+        label: "IGZIST 公式 X の発表（同・2件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658545647997123"
+  - player: "kAyle"
+    prev_team: "igzist"
+    role: ""
+    declared: 2026-10-26
+    terms: "契約満了で退団"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "IGZIST 公式 X の発表（2件の投稿の1件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658298687627501"
+      - type: team
+        label: "IGZIST 公式 X の発表（同・2件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658545647997123"
+  - player: "SID"
+    prev_team: "igzist"
+    role: ""
+    declared: 2026-10-26
+    terms: "契約満了で退団"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "IGZIST 公式 X の発表（2件の投稿の1件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658298687627501"
+      - type: team
+        label: "IGZIST 公式 X の発表（同・2件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658545647997123"
+  - player: "sitimentyo"
+    prev_team: "igzist"
+    role: "スタッフ（コーチ・アナリストの3人として発表）"
+    declared: 2026-10-26
+    terms: "契約満了で退団"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "IGZIST 公式 X の発表（2件の投稿の1件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658298687627501"
+      - type: team
+        label: "IGZIST 公式 X の発表（同・2件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658545647997123"
+  - player: "gainpe"
+    prev_team: "igzist"
+    role: "スタッフ（コーチ・アナリストの3人として発表）"
+    declared: 2026-10-26
+    terms: "契約満了で退団"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "IGZIST 公式 X の発表（2件の投稿の1件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658298687627501"
+      - type: team
+        label: "IGZIST 公式 X の発表（同・2件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658545647997123"
+  - player: "yukufuru"
+    prev_team: "igzist"
+    role: "スタッフ（コーチ・アナリストの3人として発表）"
+    declared: 2026-10-26
+    terms: "契約満了で退団"
+    status: left
+    new_team: ""
+    checked: 2026-10-30
+    sources:
+      - type: team
+        label: "IGZIST 公式 X の発表（2件の投稿の1件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658298687627501"
+      - type: team
+        label: "IGZIST 公式 X の発表（同・2件目）"
+        url: "https://x.com/IGZIST_GG/status/2114658545647997123"

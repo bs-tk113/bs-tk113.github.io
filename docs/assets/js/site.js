@@ -2,7 +2,7 @@
    - テーマ切替（ライト／ダーク。localStorage に保存。初期値は <head> の小さな script が先に当てる）
    - メニューの開閉
    - 目次（記事・ハブ本文の h2/h3 から作る。2つ未満なら出さない）
-   - 絞り込みボタン（いまの話題・大会カレンダー・ボード）
+   - 絞り込みボタン（いまの話題・大会カレンダー・ボード・トップのエージェント一覧〔ロール別〕）
    - 大会カレンダーの「今日」の印、トップの「今週の大会」の期間の絞り込み
    - サイト内検索（/search/ で search.json を読んで絞り込む）
    JS が動かなくても本文・リンクはすべて読める作りにしてある。 */
@@ -102,6 +102,9 @@
           if (val === '' || v === val) its[n].removeAttribute('hidden'); else its[n].setAttribute('hidden', '');
         }
         hideEmptyGroups(scope);
+        /* 横スクロールの一覧（トップのエージェント一覧など）は、絞り込んだら先頭に戻す */
+        var hs = scope.querySelectorAll('.roster');
+        for (var hi = 0; hi < hs.length; hi++) hs[hi].scrollLeft = 0;
       });
     })(scopes[si]);
   }

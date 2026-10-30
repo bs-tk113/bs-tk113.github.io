@@ -1,7 +1,9 @@
 # マップ（キー: 英小文字。front matter の thumb_map: に書く値）
-# banner: 640x360 WebP（30KB 以下）。合成サムネの背景・カテゴリタイル・ヒーローのぼかし背景に使う。
+# banner: 640x360 JPEG（30〜46KB）。合成サムネの背景・カテゴリタイル・ヒーローや一覧ページ見出しの背景に使う。
 # ファイルがまだ無くても表示は崩れない（カテゴリ色のグラデーションが出る）。
-# 取得元はマップ一覧ページ（マップ個別のページは無い。2026-10-28 確認）。
+# 取得元はマップ一覧ページ（マップ個別のページは無い。2026-10-28 確認）。取得日は docs/assets/img/README.md。
+# 2026-10-30 紅林: 公式のマップ一覧にある残り4つ（サミット・カロード・アビス・フラクチャー）を追加して全13。
+#   name は公式サイトの日本語表記（SUMMIT は公式も英字表記）。
 
 ascent:
   name: アセント
@@ -38,4 +40,20 @@ split:
 sunset:
   name: サンセット
   banner: /assets/img/maps/sunset-banner.jpg
+  source: https://playvalorant.com/ja-jp/maps/
+fracture:
+  name: フラクチャー
+  banner: /assets/img/maps/fracture-banner.jpg
+  source: https://playvalorant.com/ja-jp/maps/
+abyss:
+  name: アビス
+  banner: /assets/img/maps/abyss-banner.jpg
+  source: https://playvalorant.com/ja-jp/maps/
+corrode:
+  name: カロード
+  banner: /assets/img/maps/corrode-banner.jpg
+  source: https://playvalorant.com/ja-jp/maps/
+summit:
+  name: SUMMIT
+  banner: /assets/img/maps/summit-banner.jpg
   source: https://playvalorant.com/ja-jp/maps/

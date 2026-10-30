@@ -8,13 +8,16 @@
 #   data: そのデータ（_data/<名前>.yml）の items が空のあいだはタブを出さない（いまの話題・大会カレンダー用）
 # URL は baseurl なしで書く（テンプレート側で付ける）。
 # 同じ fallback を2つのタブに書かない（同じページへのタブが並ぶと迷う）。
+#   icon: 先頭のアイコン（_includes/icon.html の name。省略時は cat と同じ名前のカテゴリアイコン）
 tabs:
   - label: いまの話題
     cat: default
+    icon: now
     url: /now/
     data: now
   - label: 大会カレンダー
     cat: tournaments
+    icon: schedule
     url: /schedule/
     data: matches
   - label: VCT 2027
@@ -22,32 +25,45 @@ tabs:
     doc: /hub/vct-2027/
     fallback: /category/tournaments/
     fallback_label: 大会ハブ
+  # 選手名鑑: ハブを公開すると自動で出る（fallback なし＝未公開の間は出ない）
+  - label: 選手名鑑
+    cat: roster
+    icon: player
+    doc: /hub/players/
+  - label: 用語集
+    cat: glossary
+    doc: /hub/glossary/
+    fallback: /category/glossary/
+    fallback_label: 用語・仕組み解説
   - label: オープン予選
     cat: tournaments
     doc: /hub/vct-2027-open-qualifier-japan/
   - label: Pacific 日本勢
     cat: tournaments
     doc: /hub/vct-pacific-japan-teams/
+  # 配信者大会: fallback を外した。ハブ（/hub/streamer-tournaments-2026/）を公開したときだけ出る
   - label: 配信者大会
     cat: community
     doc: /hub/streamer-tournaments-2026/
-    fallback: /category/community/
-    fallback_label: 配信者・コミュニティ大会
   - label: 移籍トラッカー
     cat: roster
     doc: /hub/roster-tracker/
     fallback: /category/roster/
     fallback_label: ロスター・移籍
-  - label: パッチ履歴
+  # カテゴリ名「パッチ履歴」（/category/patch/）と区別するため、タブはハブの名前に合わせる
+  - label: パッチ変更履歴
     cat: patch
     doc: /hub/patch-history/
     fallback: /category/patch/
+    fallback_label: パッチ履歴
   - label: LFT ボード
     cat: roster
     doc: /hub/lft-board/
-  - label: 週まとめ
-    cat: weekly
-    url: /category/weekly/
+  # 週まとめ: 記事が0件の間は出さない。タブの仕組み（data: は _data の items しか見ない）では記事数で出し分けられないので、
+  # 第1回を公開したら下の3行のコメントを外す（自動にするなら default.html 側に「カテゴリの記事数」の条件を足す＝水瀬さん）。
+  # - label: 週まとめ
+  #   cat: weekly
+  #   url: /category/weekly/
   - label: 感度変換
     cat: tools
     doc: /tools/sensitivity/
@@ -56,11 +72,6 @@ tabs:
     doc: /tools/edpi/
     fallback: /tools/
     fallback_label: ツール
-  - label: 用語集
-    cat: glossary
-    doc: /hub/glossary/
-    fallback: /category/glossary/
-    fallback_label: 用語・仕組み解説
 
 # メニュー（カテゴリ7つは categories.yml から自動で出る。ここはその下に並ぶ固定リンク。data: はタブと同じ）
 menu:

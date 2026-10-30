@@ -24,6 +24,6 @@
 </span>
 {%- endif -%}
 {%- unless include.nolabel -%}
-<span class="label">{{ include.label | default: t_cat.name | default: include.cat | default: "記事" }}</span>
+<span class="label">{% if t_cat %}{% include icon.html name=t_cat.slug %}{% endif %}{{ include.label | default: t_cat.name | default: include.cat | default: "記事" }}</span>
 {%- endunless -%}
 </span>

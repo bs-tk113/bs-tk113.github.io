@@ -1,0 +1,27 @@
+{%- comment -%}
+  ロールのアイコン＋ロール名（色だけで伝えない）。データは _data/roles.yml。紅林 2026-10-30
+  使い方: {% include role-icon.html role="duelist" %}
+          {% include role-icon.html role=agent.role short=true %}
+  role に書けるもの: key（duelist / initiator / controller / sentinel / flex / igl / coach / sub）、
+                     日本語のロール名（デュエリスト 等）、roles.yml の aliases。大文字小文字は問わない。
+                     「デュエリスト / IGL」「duelist,igl」のように / ・ , 、 で区切ると複数並べる。
+  任意: short=true（短い名前）  noname=true（アイコンだけ見せて、名前は読み上げ用に隠す）  class="..."
+  roles.yml に無い文字は、アイコンなしの文字だけのバッジで出す（消さない）。空なら何も出さない。
+  出力: <span class="role role--duelist"><svg class="ic">…</svg><span class="role-name">デュエリスト</span></span>
+{%- endcomment -%}
+{%- assign ri_parts = include.role | default: "" | append: "" | replace: "、", "/" | replace: ",", "/" | replace: "・", "/" | split: "/" -%}
+{%- for ri_part in ri_parts -%}
+  {%- assign ri_raw = ri_part | strip -%}
+  {%- if ri_raw == "" -%}{%- continue -%}{%- endif -%}
+  {%- assign ri_in = ri_raw | downcase -%}
+  {%- assign ri = nil -%}
+  {%- for ri_r in site.data.roles -%}
+    {%- if ri_r.key == ri_in or ri_r.name == ri_raw or ri_r.short == ri_raw -%}{%- assign ri = ri_r -%}{%- break -%}{%- endif -%}
+    {%- if ri_r.aliases contains ri_in or ri_r.aliases contains ri_raw -%}{%- assign ri = ri_r -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+  {%- if ri -%}
+<span class="role role--{{ ri.key }}{% if include.class %} {{ include.class }}{% endif %}">{% include icon.html name=ri.icon %}{% if include.noname %}<span class="sr-only">{{ ri.name }}</span>{% else %}<span class="role-name">{% if include.short %}{{ ri.short }}{% else %}{{ ri.name }}{% endif %}</span>{% endif %}</span>
+  {%- else -%}
+<span class="role role--other{% if include.class %} {{ include.class }}{% endif %}"><span class="role-name">{{ ri_raw | escape }}</span></span>
+  {%- endif -%}
+{%- endfor -%}

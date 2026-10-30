@@ -6,10 +6,13 @@ permalink: /tools/
 ---
 {%- assign tool_list = site.tools | sort: "order", "last" -%}
 <div class="cat-hero" style="--c:var(--c-tools)">
+  {% include hero-art.html map="sunset" %}
   <div class="wrap">
     {% include breadcrumb.html title=page.title %}
+    <span class="cat-hero-icon">{% include icon.html name="tools" %}</span>
     <h1>ツール一覧</h1>
-    <p>どのツールも、計算式と出典をページ内に書いています。入れた数字はどこにも送られません（ブラウザの中で計算します）。</p>
+    <p>どのツールも、計算式と出典をページ内に書いています。入力した数字をサーバーに送ることはありません（ブラウザの中で計算します。共有用 URL を開いた場合、その URL はアクセス解析に記録されます）。</p>
+    {%- if ha_ok > 0 %}<p class="cat-hero-credit">画像 © Riot Games, Inc.</p>{% endif %}
   </div>
 </div>
 <div class="wrap list-page">
@@ -18,21 +21,21 @@ permalink: /tools/
     <ul class="grid grid--2">
       {%- for tl in tool_list %}
       <li><a class="tool-card" href="{{ tl.url | relative_url }}">
-        <span class="tool-card-title">{{ tl.title | escape }}</span>
+        <span class="tool-card-title">{% include icon.html name="tools" %}{{ tl.title | escape }}</span>
         {%- if tl.formula_short %}<span class="formula">{{ tl.formula_short }}</span>{% endif %}
         {%- if tl.description %}<span class="meta">{{ tl.description | truncate: 70 }}</span>{% endif %}
       </a></li>
       {%- endfor %}
     </ul>
     {%- else %}
-    <p class="empty">ツールは準備中です。計算式と出典をページ内に明記して公開します。</p>
+    <p class="empty">ツールは、まだありません。</p>
     {%- endif %}
   </section>
   {%- capture tl_rm %}{% include roadmap.html type="tool" %}{% endcapture -%}
   {%- assign tl_rm_s = tl_rm | strip -%}
   {%- if tl_rm_s != "" %}
   <section aria-labelledby="h-tool-rm">
-    <div class="sec-head"><h2 id="h-tool-rm">公開予定のツール</h2></div>
+    <div class="sec-head"><h2 id="h-tool-rm">近日公開のツール</h2></div>
     {{ tl_rm }}
   </section>
   {%- endif %}

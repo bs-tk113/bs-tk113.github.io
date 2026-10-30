@@ -14,11 +14,14 @@ noindex_if_empty: now
 {%- assign nw_items = "" | split: "" -%}
 {%- if nw.items and nw.items.size > 0 -%}{%- assign nw_items = nw.items | sort: "date" | reverse -%}{%- endif -%}
 {%- assign nw_wd = "日,月,火,水,木,金,土" | split: "," -%}
-<div class="cat-hero">
+<div class="cat-hero" style="--c:var(--hud-fill)">
+  {% include hero-art.html map="split" %}
   <div class="wrap">
     {% include breadcrumb.html title=page.title %}
+    <span class="cat-hero-icon">{% include icon.html name="now" %}</span>
     <h1>いまの話題</h1>
-    <p>公式・チーム・本人・主催者の発表だけを出典に、編集部の言葉で要約しています。どの話題にも出典の種類と確認日時を付けています。</p>
+    <p>大会・移籍・パッチ・配信者大会の最新の動きを時系列で。出典は公式・チーム・本人・主催者の発表だけです。</p>
+    {%- if ha_ok > 0 %}<p class="cat-hero-credit">画像 © Riot Games, Inc.</p>{% endif %}
   </div>
 </div>
 
@@ -57,17 +60,17 @@ noindex_if_empty: now
   </div>
   {{ nw_body }}
   {%- else %}
-  <p class="empty">いまはまだ掲載している話題がありません。出典（公式・チーム・本人・主催者の発表）を確認したものから載せます。日程は<a href="{{ '/schedule/' | relative_url }}">大会カレンダー</a>、全体像は<a href="{{ '/hub/' | relative_url }}">まとめハブ</a>をご覧ください。</p>
+  <p class="empty">いま掲載している話題はありません。日程は<a href="{{ '/schedule/' | relative_url }}">大会カレンダー</a>、全体像は<a href="{{ '/hub/' | relative_url }}">まとめハブ</a>から。</p>
   {%- endif %}
 
+  {%- comment -%} 2026-10-30 紅林: 編集部の内規（24時間以内に外す等）は読者に要る2点に絞った。全文は出典ポリシー（about.md）にある {%- endcomment %}
   <aside class="box" aria-labelledby="h-now-policy">
-    <h2 class="box-title" id="h-now-policy">このページの決まり</h2>
+    <h2 class="box-title" id="h-now-policy">掲載について</h2>
     <ul>
-      <li>SNS の投稿は転載・翻訳せず、編集部の言葉で事実だけを要約し、元の投稿へのリンクを付けます。</li>
-      <li>移籍・引退は、本人の投稿とチームの公式発表がそろうまで「確定」と書きません。噂・リークは載せません。</li>
-      <li>元の投稿が削除されたら24時間以内に要約を外します。公式発表で裏付けがある場合は出典を差し替え、「元の投稿は削除済み」と書きます。</li>
-      <li>スクリーンショット・顔写真・アバター・大会ロゴは載せません。</li>
+      <li>SNS の投稿は転載せず、事実の要約と元の投稿へのリンクで紹介しています。</li>
+      <li>加入・引退は、本人とチームの両方の発表を確認してから「決定」と書きます。退団はチームの公式発表をもとに書きます。噂・リークは扱いません。</li>
+      <li>元の投稿が削除・非公開になったときは24時間以内に要約を外すか、公式発表に出典を差し替えて「元の投稿は削除済み」と書きます。本人・チーム・主催者から削除のご依頼があれば24時間以内に対応します。</li>
     </ul>
-    <p class="meta"><a href="{{ '/about/' | relative_url }}#source-policy">出典ポリシーの全文</a></p>
+    <p class="meta"><a href="{{ '/about/' | relative_url }}#source-policy">出典ポリシー</a></p>
   </aside>
 </div>

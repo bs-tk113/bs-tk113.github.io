@@ -22,7 +22,7 @@ layout: default
 
   <header class="post-head">
     <p class="post-labels">
-      <a class="chip" href="{{ '/tools/' | relative_url }}" style="--c:var(--c-tools)">ツール</a>
+      <a class="chip" href="{{ '/tools/' | relative_url }}" style="--c:var(--c-tools)">{% include icon.html name="tools" %}ツール</a>
       {%- if page.checked %}<span class="meta">計算式の確認日 <time datetime="{{ page.checked | date: '%Y-%m-%d' }}">{{ page.checked | date: '%Y年%-m月%-d日' }}</time></span>{% endif %}
     </p>
     <h1 class="page-title">{{ page.title | escape }}</h1>
@@ -43,7 +43,8 @@ layout: default
     {%- if f.note %}<p class="meta">{{ f.note }}</p>{% endif %}
     {%- endfor %}
     {%- else %}
-    <p class="tool-error">計算式が未記入です（front matter の formulas に書いてください）。</p>
+    <!-- 編集部へ: 計算式が未記入です（front matter の formulas に書いてください）。読者の画面には出しません -->
+    <p class="meta">計算式は準備ができしだい掲載します。</p>
     {%- endif %}
 
     {%- if page.constants and page.constants.size > 0 %}
@@ -62,7 +63,8 @@ layout: default
       {%- endfor %}
     </ul>
     {%- else %}
-    <p class="tool-error">出典が未記入です（front matter の sources に書いてください）。</p>
+    <!-- 編集部へ: 出典が未記入です（front matter の sources に書いてください）。読者の画面には出しません -->
+    <p class="meta">出典は準備ができしだい掲載します。</p>
     {%- endif %}
   </section>
 

@@ -1,0 +1,66 @@
+{%- comment -%}
+  チームカード（VCT Pacific 日本のチーム一覧など）。チームの基本データは _data/teams.yml、所属選手は _data/players.yml。
+  使い方: ハブ本文の Markdown の中で、行頭から {% include team-cards.html group="partner" %} と書く。
+    group      front matter の team_cards の group と同じ値のカードだけ出す（省略時は全部）
+    title      カード群の見出し（h3）。省略時は見出しなし
+  front matter（page.team_cards）の書き方:
+    team_cards:
+      - key: zeta                     # teams.yml のキー
+        group: partner                # partner / non-partner など、カードを分ける目印
+        status: "2027年もパートナー（再契約）"   # 2027年の立場（事実だけ。公式に出ていなければ書かない）
+        status_src: {title: "...", url: "https://..."}
+        results:                      # 2026年の主な成績（公式の結果・チーム公式の結果報告で確かめたものだけ）
+          - text: "VCT Pacific 2026 Kickoff 9-10位"
+            src: {title: "...", url: "https://..."}
+        note: "補足（任意）"
+  所属選手は players.yml の team が key の人を出す（status: left は出さない）。名前は選手名鑑（/hub/players/#pl-<id>）へのリンク。
+  見た目はデザイナーが style.css で付ける。クラス名は tc- で始める。インラインの style は使わない。画像はチームバッジ（team.html）だけ。
+  Markdown の中から呼ぶため、出力は1行にまとめる。変数は tc_ で始める名前だけ使う。
+{%- endcomment -%}
+{%- assign tc_cards = page.team_cards -%}
+{%- assign tc_group = include.group | default: "" -%}
+{%- assign tc_pl_url = '/hub/players/' | relative_url -%}
+{%- capture tc_html -%}
+{%- if include.title and include.title != "" -%}<h3 class="tc-title">{{ include.title | escape }}</h3>{%- endif -%}
+<ul class="tc-list">
+{%- for c in tc_cards -%}
+  {%- if tc_group != "" and c.group != tc_group -%}{%- continue -%}{%- endif -%}
+  {%- assign tc_team = site.data.teams[c.key] -%}
+  {%- assign tc_members = site.data.players | where: "team", c.key -%}
+<li class="tc-card tc-card--{{ c.group | default: 'other' }}" id="tc-{{ c.key }}">
+<p class="tc-name">{% include team.html key=c.key size="md" %}</p>
+{%- if c.status and c.status != "" -%}
+<p class="tc-status"><span class="tc-label">2027年</span> {{ c.status | escape }}{% if c.status_src.url %} <a class="tc-src" href="{{ c.status_src.url }}" rel="noopener" target="_blank">{{ c.status_src.title | default: "出典" | escape }}</a>{% endif %}</p>
+{%- endif -%}
+{%- if c.results and c.results.size > 0 -%}
+<div class="tc-results"><p class="tc-label">2026年の主な成績</p><ul class="tc-results-list">
+  {%- for r in c.results -%}
+<li>{{ r.text | escape }}{% if r.src.url %} <a class="tc-src" href="{{ r.src.url }}" rel="noopener" target="_blank">{{ r.src.title | default: "出典" | escape }}</a>{% endif %}</li>
+  {%- endfor -%}
+</ul></div>
+{%- endif -%}
+<div class="tc-members"><p class="tc-label">所属（チーム公式で確認できた範囲）</p>
+{%- assign tc_shown = 0 -%}
+{%- capture tc_mem -%}
+  {%- for p in tc_members -%}
+    {%- if p.status == "left" -%}{%- continue -%}{%- endif -%}
+    {%- assign tc_shown = tc_shown | plus: 1 -%}
+    {%- case p.status -%}
+      {%- when "coach" -%}{%- assign tc_st = p.role | default: "スタッフ" -%}
+      {%- when "lft" -%}{%- assign tc_st = "LFT告知" -%}
+      {%- when "sub" -%}{%- assign tc_st = "控え" -%}
+      {%- when "inactive" -%}{%- assign tc_st = "ロスター外" -%}
+      {%- else -%}{%- assign tc_st = "" -%}
+    {%- endcase -%}
+<li class="tc-member tc-member--{{ p.status | default: 'other' }}"><a href="{{ tc_pl_url }}#pl-{{ p.id }}">{{ p.name | escape }}</a>{% if tc_st != "" %} <span class="tc-member-st meta">（{{ tc_st | escape }}）</span>{% endif %}</li>
+  {%- endfor -%}
+{%- endcapture -%}
+{%- if tc_shown > 0 -%}<ul class="tc-members-list">{{ tc_mem }}</ul>
+{%- else -%}<p class="tc-members-empty">チーム公式サイトに VALORANT 部門の選手一覧がまだありません{% if page.last_modified_at %}（{{ page.last_modified_at | date: '%-m月%-d日' }}時点）{% endif %}。</p>{%- endif -%}
+</div>
+{%- if c.note and c.note != "" -%}<p class="tc-note meta">{{ c.note | escape }}</p>{%- endif -%}
+</li>
+{%- endfor -%}
+</ul>
+{%- endcapture -%}
+{{ tc_html | strip_newlines }}

@@ -1,0 +1,48 @@
+# ロール（_includes/role-icon.html と agents.yml の role: が使う。紅林 2026-10-30）
+# key:   英小文字。agents.yml の role:、テンプレートの role="..." に書く値
+# name:  画面に出すロール名（色だけで伝えないため、アイコンと必ずセットで出す）
+# short: 狭い場所用の短い名前
+# icon:  assets/img/icons/icons.svg の i-<icon>
+# 色は style.css の --r-<key>（塗り。上に載せる文字は #14123a）
+# role-icon.html は key のほか name・short（日本語）・aliases の値でも引ける（大文字小文字は問わない）
+
+- key: duelist
+  name: デュエリスト
+  short: デュエ
+  icon: duelist
+  aliases: [duel, "デュエリスト"]
+- key: initiator
+  name: イニシエーター
+  short: イニシ
+  icon: initiator
+  aliases: [init, "イニシエーター"]
+- key: controller
+  name: コントローラー
+  short: コントロ
+  icon: controller
+  aliases: [smokes, smoke, "コントローラー"]
+- key: sentinel
+  name: センチネル
+  short: センチ
+  icon: sentinel
+  aliases: [senti, "センチネル"]
+- key: flex
+  name: フレックス
+  short: フレックス
+  icon: flex
+  aliases: ["フレックス"]
+- key: igl
+  name: IGL
+  short: IGL
+  icon: igl
+  aliases: [shotcaller, "司令塔"]
+- key: coach
+  name: コーチ
+  short: コーチ
+  icon: coach
+  aliases: ["コーチ", "head coach", "ヘッドコーチ"]
+- key: sub
+  name: 控え
+  short: 控え
+  icon: player
+  aliases: [substitute, "サブ", "補欠"]

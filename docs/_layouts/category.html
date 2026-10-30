@@ -14,17 +14,23 @@ layout: default
 {%- assign k_tools = site.tools | where: "category", k_slug | sort: "order", "last" -%}
 {%- assign k_n = k_posts | size -%}
 {%- assign k_total = k_n | plus: k_hubs.size | plus: k_tools.size -%}
+{%- comment -%} 見出し帯: カテゴリの既定マップを背景に、カテゴリのアイコンを右に（紅林 2026-10-30） {%- endcomment -%}
+{%- assign k_map = site.data.maps[k.thumb_map] -%}
+{%- assign k_bg_ok = 0 -%}{%- if k_map.banner -%}{%- assign k_bg_ok = site.static_files | where: "path", k_map.banner | size -%}{%- endif -%}
 <div class="cat-hero" style="--c:var(--c-{{ k.slug | default: 'default' }})">
+  {%- if k_bg_ok > 0 %}<img class="cat-hero-bg" src="{{ k_map.banner | relative_url }}" alt="" width="640" height="360" decoding="async" onerror="this.style.display='none'"><span class="cat-hero-shade" aria-hidden="true"></span>{% endif %}
   <div class="wrap">
     {% include breadcrumb.html title=k.name %}
+    {%- if k.slug %}<span class="cat-hero-icon">{% include icon.html name=k.slug %}</span>{% endif %}
     <h1>{{ k.name | default: page.title }}</h1>
     <p>{{ k.lead | default: page.description }}</p>
+    {%- if k_bg_ok > 0 %}<p class="cat-hero-credit">画像 © Riot Games, Inc.</p>{% endif %}
   </div>
 </div>
 
 <div class="wrap list-page">
   {%- if k.url and k.url != "" %}
-  <p class="notice"><a class="more" href="{{ k.url | relative_url }}">{{ k.name }}の一覧はこちら（計算式と出典つき）</a><br><span class="meta">このページは、使い方の解説や関連記事の一覧です。</span></p>
+  <p class="notice"><a class="more" href="{{ k.url | relative_url }}">{{ k.name }}の本体はこちら（計算式と出典つき）</a><br><span class="meta">このページでは、使い方の解説や関連記事を読めます。</span></p>
   {%- endif %}
 
   {%- if k_slug == "community" %}
@@ -48,7 +54,7 @@ layout: default
     <ul class="grid grid--2">
       {%- for tl in k_tools %}
       <li><a class="tool-card" href="{{ tl.url | relative_url }}">
-        <span class="tool-card-title">{{ tl.title | escape }}</span>
+        <span class="tool-card-title">{% include icon.html name="tools" %}{{ tl.title | escape }}</span>
         {%- if tl.formula_short %}<span class="formula">{{ tl.formula_short }}</span>{% endif %}
         {%- if tl.description %}<span class="meta">{{ tl.description | truncate: 70 }}</span>{% endif %}
       </a></li>
@@ -86,17 +92,16 @@ layout: default
       </ul>
     {%- endif %}
     {%- else %}
-    <p class="empty">このカテゴリの記事はまだありません。<a href="{{ '/categories/' | relative_url }}">ほかのカテゴリ</a>もご覧ください。</p>
+    <p class="empty">このカテゴリの記事は、まだありません。<a href="{{ '/categories/' | relative_url }}">ほかのカテゴリ</a>から探せます。</p>
     {%- endif %}
   </section>
 
-  {%- comment -%} 公開予定（中身が少ないうちは常に出す。公開されたものは自動で消える） {%- endcomment -%}
+  {%- comment -%} 近日公開（公開されたものは自動で消える。2026-10-30 紅林: 見出しを読者の言葉に、運用の説明文は削除） {%- endcomment -%}
   {%- capture k_rm %}{% include roadmap.html cat=k_slug %}{% endcapture -%}
   {%- assign k_rm_s = k_rm | strip -%}
   {%- if k_rm_s != "" %}
   <section aria-labelledby="h-k-roadmap">
-    <div class="sec-head"><h2 id="h-k-roadmap">公開予定のページ</h2></div>
-    <p class="meta rm-lead">このカテゴリで準備しているページです。公式発表を出典に、確認がすんだものから公開します。</p>
+    <div class="sec-head"><h2 id="h-k-roadmap">近日公開</h2></div>
     {{ k_rm }}
   </section>
   {%- endif %}

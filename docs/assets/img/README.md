@@ -17,6 +17,7 @@
 ## 必要な画像
 
 ### 1. エージェントのアイコン（12枚）`agents/<キー>-icon.webp`
+※ 2026-10-30 に全30体・JPEG（`agents/<キー>-icon.jpg`）で置いた。いまの一覧は `_data/agents.yml`、取得記録は下の「出典台帳」。下の表は当初の計画として残す。
 用途: カードのサムネ右下・人気ランキング・トップの「エージェント別 調整履歴」アイコン列（表示は 40〜84px）
 推奨: **96×96px、8KB 以下、透過 WebP**（顔が中央に来るよう正方形に切り抜く）
 
@@ -89,6 +90,28 @@
 | agents/jett-portrait.jpg | https://playvalorant.com/ja-jp/agents/ （ジェットのカード画像） | news/d41286dc9017bf79c0b4d907b7a260c27b0adb69-616x822.png | JPEG 化のみ 616x822（47KB）。背景は透過ではなく濃色 |
 | maps/<9枚>-banner.jpg | https://playvalorant.com/ja-jp/maps/ （各マップのギャラリー先頭の横長画像） | news/…-3840x2160.png ほか | 中央 60% を切り出し 640x360、透過部分は #14123a で塗る（22〜46KB） |
 ロゴ・© 表記・透かしの写り込みは目視で確認し、無し。
+
+2026-10-30 紅林アヤが取得（運営者の許可あり）。取得方法: 公式ページの HTML（__NEXT_DATA__）に載っている画像 URL を、同じ CDN の縮小パラメータ（rect=切り抜き, w, h, fm=jpg, q）付きで PowerShell の Invoke-WebRequest で取得。全ファイルを System.Drawing で開けること（96×96 / 640×360）を確認し、一覧画像で目視確認した。
+| ファイル | 元ページ | 元画像（https://cmsassets.rgpub.io/sanity/images/dsfx7636/ 以下） | 加工 |
+|---|---|---|---|
+| agents/<30体>-icon.jpg（既存12体も切り抜きをやり直して上書き） | https://playvalorant.com/ja-jp/agents/ （一覧のカード画像。役割は各エージェントページの「役割」で確認） | news/…-616x822.png（24体）・news/…-587x900.png / .jpg・news_live/…-587x900.png（6体: ヴァイス・ヴィトー・ウェイレイ・テホ・ハッシュ・ミクス） | 顔まわりを正方形（幅の34%）で切り抜き → 96×96 JPEG q82（2.3〜3.7KB）。切り抜き位置の一覧は下 |
+| maps/summit-banner.jpg | https://playvalorant.com/ja-jp/maps/ （SUMMIT のギャラリー先頭の横長画像） | news_live/97986033c47822dad7ac5b1af24fa183b8b04983-915x515.jpg | rect=183,78,549,309（右下の白い装飾ブロックを避ける）→ 640×360 JPEG q72（31KB） |
+| maps/corrode-banner.jpg | 同（カロード） | news_live/6e3e66577519c8290d874aa94d82e28aec2ccc3e-915x515.jpg | 中央60% rect=183,103,549,309 → 640×360（41KB） |
+| maps/abyss-banner.jpg | 同（アビス） | news_live/53698d442a14b5a6be643d53eb970ac16442cb38-930x522.png | rect=186,82,558,313 → 640×360（36KB） |
+| maps/fracture-banner.jpg | 同（フラクチャー） | news/983a6d66978aabd3ccd4e51517298d9a0b5467d9-3840x2160.png | 中央60% rect=768,432,2304,1296 → 640×360（35KB） |
+
+ロゴ（VALORANT・Riot・大会）・© 表記・透かしの写り込み: 無し（目視）。マップ画像内の看板・壁の文字（例: フラクチャーの「ALPHA SECTOR」）はゲーム内の背景で、ロゴではない。
+使っていないもの: 一覧ページ上部の横長の見出し画像（5120×574）、関連記事のサムネイル（大会のキービジュアルを含むため）。
+
+エージェントのアイコンの切り抜き位置（元画像の px。rect=左,上,幅,高さ）:
+jett 167,56,209 ／ reyna 284,99,209 ／ raze 130,31,209 ／ phoenix 142,50,209 ／ yoru 185,80,209 ／ neon 222,50,209 ／ iso 185,13,209 ／ waylay 211,12,200 ／ hush 194,170,200 ／
+sova 185,13,209 ／ breach 173,56,209 ／ skye 296,50,209 ／ kayo 173,19,209 ／ fade 130,50,209 ／ gekko 50,31,209 ／ tejo 152,76,200 ／
+brimstone 167,31,209 ／ viper 99,37,209 ／ omen 222,50,209 ／ astra 259,68,209 ／ harbor 204,31,209 ／ clove 284,80,209 ／ miks 158,82,200 ／
+sage 259,68,209 ／ cypher 204,13,209 ／ killjoy 185,50,209 ／ chamber 204,31,209 ／ deadlock 222,13,209 ／ vyse 147,70,200 ／ veto 100,47,200
+
+### アイコン（自作）`icons/icons.svg`
+ロール・カテゴリ・状態などの線画アイコン 32 種を1ファイルの SVG スプライトにまとめた（紅林 2026-10-30・自作。公式のロールアイコンや他サイトのアイコンの形は参照していない）。
+使い方は `_includes/icon.html`（`{% include icon.html name="duelist" %}`）と `_includes/role-icon.html`（ロールのアイコン＋ロール名）。
 
 ## 画像を置かない部品
 - サイトのマーク（ヘッダー左の角丸四角）は CSS だけで描いている（画像なし）。

@@ -9,10 +9,13 @@ permalink: /categories/
   記事が0件のカテゴリは、_data/roadmap.yml の公開予定を出す。
 {%- endcomment -%}
 <div class="cat-hero">
+  {% include hero-art.html map="haven" %}
   <div class="wrap">
     {% include breadcrumb.html title=page.title %}
+    <span class="cat-hero-icon">{% include icon.html name="hub" %}</span>
     <h1>カテゴリ一覧</h1>
-    <p>7つのカテゴリから探せます。記事の数は公開済みのものだけを数えています。</p>
+    <p>大会・配信者大会・移籍・パッチ・週まとめ・ツール・用語。7つの棚から探せます。</p>
+    {%- if ha_ok > 0 %}<p class="cat-hero-credit">画像 © Riot Games, Inc.</p>{% endif %}
   </div>
 </div>
 
@@ -31,9 +34,10 @@ permalink: /categories/
       <li class="cat-index-item" id="{{ c.slug }}">
         <a class="cat" href="{{ cu_url | relative_url }}" style="--c:var(--c-{{ c.slug }})">
           {%- if c_img_ok > 0 %}<img src="{{ c_map.banner | relative_url }}" alt="" width="640" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'">{% endif %}
+          <span class="cat-icon">{% include icon.html name=c.slug %}</span>
           <span class="cat-name">{{ c.name }}</span>
           <span class="cat-desc">{{ c.desc }}</span>
-          <span class="cat-count">{% if c_total > 0 %}{{ c_total }}件{% elsif rm_count > 0 %}公開予定 {{ rm_count }}本{% else %}準備中{% endif %}</span>
+          {%- if c_total > 0 %}<span class="cat-count">{{ c_total }} 件</span>{% else %}<span class="cat-count cat-count--soon">近日公開</span>{% endif %}
         </a>
         {%- if c_n > 0 %}
         <ul>

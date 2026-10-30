@@ -1,0 +1,52 @@
+# ハブ「VALORANT ストリーマー大会 2026 一覧」（docs/_hubs/streamer-tournaments-2026.md）の表データ。
+# hub.html が tables_data: streamer-tournaments-2026 で読む。
+# ルール（data/topics.md「選手・配信者・非公式大会」7）:
+#   - 主催者の公式発表（公式サイト・主催者本人のプレスリリース）だけを出典にし、編集部が自分で表にする。他サイトの表は写さない
+#   - Liquipedia・まとめサイト・ニュースサイトは出典にしない
+#   - 画像（大会ロゴ・キービジュアル・顔）は使わない
+#   - 「公式」「Riot主催」と誤認させない（Riot が「協力」のときはそう書く）
+#   - 出場者は活動名を数名まで。結果は主催者の発表で確かめられたものだけ（未確認は「未確認」と書く）
+# 2026-10-30 初版（柚木）。確認日はすべて 2026-10-30。
+
+tables:
+  - id: m2026-03
+    title: "2026年3月の配信者大会"
+    columns: ["大会名", "主催", "開催日", "形式", "主な出場者（活動名）", "結果", "配信（主催）", "出典"]
+    rows:
+      - - "VSPO! SHOWDOWN 2026 powered by RAGE（VALORANT 部門）"
+        - "ぶいすぽっ！（株式会社バーチャルエンターテイメント）。企画制作運営: RAGE"
+        - "3月21日（土）・22日（日）／有明アリーナ（東京）"
+        - "1日1試合カード。ぶいすぽっ！チーム（5人）とライバルチーム（5人）が3試合。オーバータイムなしのサドンデス制"
+        - "DAY1: 紡木こかげ（リーダー）ほか／ライバル側 ade ほか。DAY2: 英リサ（リーダー）ほか／ライバル側 善悪菌 ほか"
+        - "未確認（主催の開催報告の本文に VALORANT の勝敗の記載なし）"
+        - {text: "ぶいすぽっ！公式 YouTube", url: "https://www.youtube.com/@Vspo77"}
+        - {text: "主催の詳細発表（PR TIMES・2026年1月22日）", url: "https://prtimes.jp/main/html/rd/p/000000607.000044525.html"}
+    note: "VALORANT・League of Legends・ストリートファイター6 の3タイトルで行われたイベントのうち、VALORANT 部門だけを載せています。Twitch（https://www.twitch.tv/vspo_official）でも配信。DAY1・DAY2 のアーカイブは主催の開催報告に YouTube のリンクがあります（一定期間で自動削除と案内）。出典: 公式サイト（rage-esports.jp/2026/vsposhowdown/）、主催の発表（PR TIMES、2025年11月25日・2026年1月22日・4月2日）。2026年10月30日確認。"
+
+  - id: m2026-04
+    title: "2026年4月の配信者大会"
+    columns: ["大会名", "主催", "開催日", "形式", "主な出場者（活動名）", "結果", "配信（主催）", "出典"]
+    rows:
+      - - "Devil Clutch杯2026 #1 Supported by Riot Games"
+        - "Clutch_Fi（ZETA DIVISION CREATOR 部門）。Riot Games は「協力」（主催ではない）"
+        - "4月28日（火）・29日（水・祝）／練習期間 4月21日〜27日"
+        - "4チーム（元プロとストリーマーの混合）。Day1 は総当たりで順位を決め、Day2 は下位チームから順に上位へ挑む"
+        - "チーム: DEXLA'Z LABO／THE POWERNETH B♡YS／HAPPY CROW FRIENDS／SCOOBI-JUU！。ZETA の発表で名前が出ている出演者: crow、Laz、JUNiOR"
+        - "未確認（主催側の結果発表を確認できず）"
+        - {text: "ZETA DIVISION 公式 YouTube", url: "https://www.youtube.com/@ZETADIVISION"}
+        - {text: "主催側の発表（PR TIMES・GANYMEDE、2026年4月13日）", url: "https://prtimes.jp/main/html/rd/p/000000172.000041650.html"}
+    note: "出場者の YouTube・Twitch でも個人視点の配信あり（主催側の発表より）。チーム名と出演者は ZETA DIVISION 公式ニュース（2026年4月13日）による。1チームの人数は主催側の発表の本文に書かれていないため載せていません。2026年10月30日確認。"
+
+  - id: reference
+    title: "参考：配信者大会ではない非公式大会（企業主催・一般参加）"
+    columns: ["大会名", "主催", "開催日", "形式", "参加できるチーム", "結果", "配信（主催）", "出典"]
+    rows:
+      - - "Predator League 2027 VALORANT Japan Round（日本予選）"
+        - "日本エイサー株式会社（制作・運営: GLOE株式会社）"
+        - "11月7日（土）・14日（土）・15日（日）予定（出場チーム数で変わる場合あり）"
+        - "オンライン。最大32チーム。優勝チームは2027年1月の本戦（ベトナム・ホーチミン市）へ"
+        - "プロ・アマ・学生などを問わない（18歳以上、日本国籍の選手2名以上 など。詳細は主催のルールブック）"
+        - "開催前"
+        - {text: "Acer Japan 公式 YouTube", url: "https://www.youtube.com/@AcerJapanChannel"}
+        - {text: "主催の発表（PR TIMES・2026年9月18日）", url: "https://prtimes.jp/main/html/rd/p/000001094.000000640.html"}
+    note: "配信者が中心の大会ではありませんが、Riot 主催ではない大会として日程を載せています。Predator Japan の Twitch（https://www.twitch.tv/predator_japan）でも配信予定。主催の発表では、配信予定は11月14日・15日の全試合。2026年10月30日確認。"

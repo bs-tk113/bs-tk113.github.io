@@ -7,6 +7,7 @@
   所属（表明時）・加入先: teams.yml のキーか name と同じ文字（大文字小文字は問わない）ならチームバッジ付き、それ以外は文字のまま（_includes/team.html plain_unknown=true）。
   安全装置:
     - joined / retired は self と team の両方の出典（削除されていないもの）がそろうまで「確定」の表記にしない（ルール3）
+    - left（退団）は team の出典（削除されていないもの）があれば「退団」と確定表記。本人の発表だけなら「退団表明（チーム公式の発表待ち）」
     - 出典がすべて削除済みの行は出さない（ルール4）
 {%- endcomment -%}
 {%- assign bd_slug = page.board -%}
@@ -15,8 +16,9 @@
 {%- if bd.items and bd.items.size > 0 -%}{%- assign bd_rows = bd.items | sort: "declared", "first" | reverse -%}{%- endif -%}
 <section class="board" aria-labelledby="bd-title" data-filter-scope>
   <div class="prose"><h2 id="bd-title">{{ bd.title | default: "一覧" | escape }}</h2></div>
-  <p class="updated-at">{% if bd.updated and bd.updated != "" %}<span>表の最終更新 <strong>{{ bd.updated | escape }}</strong></span>{% else %}<span>表の最終更新 <strong>未掲載</strong></span>{% endif %}<span>出典は本人またはチームの公式だけ</span></p>
+  <p class="updated-at">{% if bd.updated and bd.updated != "" %}<span>表の最終更新 <strong>{{ bd.updated | escape }}</strong></span>{% endif %}<span>出典は本人またはチームの公式だけ</span></p>
 
+  {%- assign bd_st_seen = "" -%}
   {%- capture bd_body -%}
   {%- for r in bd_rows -%}
     {%- assign r_live = 0 -%}{%- assign r_self = false -%}{%- assign r_team = false -%}
@@ -28,6 +30,7 @@
       {%- endunless -%}
     {%- endfor -%}
     {%- if r_live == 0 -%}{%- continue -%}{%- endif -%}
+    {%- assign bd_st_seen = bd_st_seen | append: "|" | append: r.status | append: "|" -%}
     {%- assign r_both = false -%}{%- if r_self and r_team -%}{%- assign r_both = true -%}{%- endif -%}
     {%- case r.status -%}
       {%- when "lft" -%}{%- assign r_st = "チーム募集中（LFT）" -%}
@@ -35,6 +38,9 @@
         {%- if r_both -%}{%- assign r_st = "加入決定" -%}{%- elsif r_team -%}{%- assign r_st = "加入発表（本人の発表待ち）" -%}{%- else -%}{%- assign r_st = "加入表明（チーム公式の発表待ち）" -%}{%- endif -%}
       {%- when "retired" -%}
         {%- if r_both -%}{%- assign r_st = "引退" -%}{%- elsif r_team -%}{%- assign r_st = "引退発表（本人の発表待ち）" -%}{%- else -%}{%- assign r_st = "引退表明（チーム公式の発表待ち）" -%}{%- endif -%}
+      {%- when "left" -%}
+        {%- comment -%} 退団はチームの公式発表だけで事実として確定する（team の出典があれば確定。本人の発表は待たない。2026-10-30 編集長） {%- endcomment -%}
+        {%- if r_team -%}{%- assign r_st = "退団" -%}{%- else -%}{%- assign r_st = "退団表明（チーム公式の発表待ち）" -%}{%- endif -%}
       {%- when "hiatus" -%}{%- assign r_st = "休止" -%}
       {%- when "returned" -%}{%- assign r_st = "復帰" -%}
       {%- else -%}{%- assign r_st = "その他" -%}
@@ -56,10 +62,13 @@
   {%- if bd_body_s != "" %}
   <div class="filter" role="group" aria-label="状態で絞り込む" data-filter-key="status" hidden>
     <button type="button" class="filter-btn" data-filter-value="" aria-pressed="true">すべて</button>
-    <button type="button" class="filter-btn" data-filter-value="lft" aria-pressed="false">LFT</button>
-    <button type="button" class="filter-btn" data-filter-value="joined" aria-pressed="false">加入</button>
-    <button type="button" class="filter-btn" data-filter-value="retired" aria-pressed="false">引退</button>
-    <button type="button" class="filter-btn" data-filter-value="hiatus" aria-pressed="false">休止</button>
+    {%- comment -%} その表に1行も無い状態のボタンは出さない（押して0件になるボタンを作らない。水瀬 2026-10-30） {%- endcomment -%}
+    {%- if bd_st_seen contains "|lft|" %}<button type="button" class="filter-btn" data-filter-value="lft" aria-pressed="false">LFT</button>{% endif %}
+    {%- if bd_st_seen contains "|joined|" %}<button type="button" class="filter-btn" data-filter-value="joined" aria-pressed="false">加入</button>{% endif %}
+    {%- if bd_st_seen contains "|left|" %}<button type="button" class="filter-btn" data-filter-value="left" aria-pressed="false">退団</button>{% endif %}
+    {%- if bd_st_seen contains "|retired|" %}<button type="button" class="filter-btn" data-filter-value="retired" aria-pressed="false">引退</button>{% endif %}
+    {%- if bd_st_seen contains "|hiatus|" %}<button type="button" class="filter-btn" data-filter-value="hiatus" aria-pressed="false">休止</button>{% endif %}
+    {%- if bd_st_seen contains "|returned|" %}<button type="button" class="filter-btn" data-filter-value="returned" aria-pressed="false">復帰</button>{% endif %}
   </div>
   <div class="table-scroll board-table" role="region" aria-label="{{ bd.title | default: '一覧' | escape }}" tabindex="0">
     <table>
@@ -69,7 +78,8 @@
   </div>
   {%- if bd.note and bd.note != "" %}<p class="table-note">{{ bd.note | escape }}</p>{% endif %}
   {%- else %}
-  <p class="empty">まだ掲載していません。本人またはチームの公式発表を確認したものから、表明日・出典・確認日つきで載せます。</p>
+  <p class="empty">いま掲載している選手はいません。</p>
   {%- endif %}
-  <p class="table-note">移籍・引退は、本人の発表とチームの公式発表の両方がそろってから「加入決定」「引退」と書きます。元の投稿が削除されたら24時間以内に表から外すか、公式発表に出典を差し替えて「元の投稿は削除済み」と書きます。</p>
+  {%- comment -%} 2026-10-30 紅林: 削除への追随（24時間以内）などの内規は出典ポリシー側に。表の下は読者に要る1文だけ {%- endcomment %}
+  <p class="table-note">「加入決定」「引退」は、本人とチームの両方の発表を確認してから表示します。「退団」はチームの公式発表で表示します。</p>
 </section>

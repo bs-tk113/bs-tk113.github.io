@@ -1,0 +1,74 @@
+{%- comment -%}
+  エージェント別 調整履歴。データは docs/_data/patches.yml（パッチ別ページと同じデータを並べ替えて表示）。
+  使い方: {% include agent-history.html %}
+  - patches.yml の changes のうち target: agent だけを、エージェントごとにまとめる（名前順。各エージェントの中は新しいパッチが上）
+  - 各エージェントに id="a-<key>" のアンカー（パッチ別ページからリンクされる）
+  - パッチ番号は /hub/patch-history/#p-13-09 のようにパッチ別ページの該当パッチへリンク
+  - agents.yml に icon があるときだけ小さなアイコンを出す（名前を文字で併記するので alt は空＝読み上げの重複を避ける）
+  クラス名は ah- 接頭辞（見た目はデザイナーが style.css に追加予定）。表の外枠は既存の .table-scroll を使う。
+{%- endcomment -%}
+{%- assign ah_patches = site.data.patches | sort: "date" | reverse -%}
+{%- assign ah_patch_url = '/hub/patch-history/' | relative_url -%}
+{%- assign ah_pairs = "" -%}
+{%- for p in ah_patches -%}
+  {%- for c in p.changes -%}
+    {%- if c.target == "agent" and c.key -%}
+      {%- assign ah_pairs = ah_pairs | append: c.name | append: "|" | append: c.key | append: "^" -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- assign ah_list = ah_pairs | split: "^" | uniq | sort -%}
+{%- if ah_list.size > 0 %}
+<nav class="ah-index" aria-label="エージェントの一覧">
+  <ul class="ah-index-list">
+    {%- for pair in ah_list %}
+    {%- assign ah_pp = pair | split: "|" %}
+    <li><a href="#a-{{ ah_pp[1] }}">{{ ah_pp[0] | escape }}</a></li>
+    {%- endfor %}
+  </ul>
+</nav>
+
+<div class="ah-list">
+  {%- for pair in ah_list %}
+  {%- assign ah_pp = pair | split: "|" -%}
+  {%- assign ah_name = ah_pp[0] -%}
+  {%- assign ah_key = ah_pp[1] -%}
+  {%- assign ah_ag = site.data.agents[ah_key] %}
+  <section class="ah-agent" id="a-{{ ah_key }}" aria-labelledby="a-{{ ah_key }}-h">
+    <div class="prose">
+      <h2 class="ah-name" id="a-{{ ah_key }}-h">{% if ah_ag and ah_ag.icon %}<img class="ah-icon" src="{{ ah_ag.icon | relative_url }}" width="32" height="32" loading="lazy" decoding="async" alt="">{% endif %}{{ ah_name | escape }}の調整履歴</h2>
+    </div>
+    <div class="table-scroll ah-table" role="region" aria-label="{{ ah_name | escape }}の調整履歴（横にスクロールできます）" tabindex="0">
+      <table>
+        <thead><tr><th scope="col">パッチ</th><th scope="col">公開日</th><th scope="col">種類</th><th scope="col">変更内容</th></tr></thead>
+        <tbody>
+          {%- for p in ah_patches %}
+          {%- for c in p.changes %}
+          {%- if c.target == "agent" and c.key == ah_key %}
+          {%- case c.kind -%}
+            {%- when "buff" -%}{%- assign ah_kd = "強化" -%}
+            {%- when "nerf" -%}{%- assign ah_kd = "弱体化" -%}
+            {%- when "adjust" -%}{%- assign ah_kd = "調整" -%}
+            {%- when "new" -%}{%- assign ah_kd = "新登場" -%}
+            {%- when "rework" -%}{%- assign ah_kd = "作り直し" -%}
+            {%- when "bugfix" -%}{%- assign ah_kd = "不具合修正" -%}
+            {%- else -%}{%- assign ah_kd = "その他" -%}
+          {%- endcase %}
+          <tr class="ah-row">
+            <td data-label="パッチ"><a href="{{ ah_patch_url }}#p-{{ p.version | replace: '.', '-' }}">{{ p.version }}</a></td>
+            <td data-label="公開日"><time datetime="{{ p.date | date: '%Y-%m-%d' }}">{{ p.date | date: '%Y/%-m/%-d' }}</time></td>
+            <td data-label="種類"><span class="status-tag ah-kind ah-kind--{{ c.kind | default: 'other' }}">{{ ah_kd }}</span></td>
+            <td data-label="変更内容">{{ c.summary | escape }}<br><a class="meta ah-source" href="{{ p.url }}" rel="noopener" target="_blank">公式パッチノート {{ p.version }}</a></td>
+          </tr>
+          {%- endif %}
+          {%- endfor %}
+          {%- endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {%- endfor %}
+</div>
+{%- else %}
+<p class="empty">まだ掲載していません。公式パッチノートで確認したものから載せます。</p>
+{%- endif %}

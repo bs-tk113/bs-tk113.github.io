@@ -1,0 +1,479 @@
+# パッチ変更履歴（/hub/patch-history/ と /hub/agent-history/ の元データ）
+# 2026-10-30 初版（柚木）。出典は playvalorant.com の公式パッチノート（日本語版）だけ。
+#   数値は各パッチノートで確認（日本語版で読み、英語版で突き合わせ）。文章は編集部の言葉。公式の文は写さない。
+#   他サイトの要約・表は見ない・写さない。確認できなかったパッチは載せない。
+#
+# 項目:
+#   version  "13.09" のように文字列で
+#   date     公式パッチノートの公開日（UTC 13:00〜14:00 公開。日本時間でも同じ日付）
+#   url      公式パッチノート（日本語版）
+#   headline このパッチの要点（自分の言葉で1文）
+#   changes  競技に影響する変更だけ（エージェント・武器・マップ・マップローテーション）。
+#            バグ修正の細目・見た目・台詞・期間限定モード・Premier の日程は載せない。該当なしは []。
+#     target  agent / map / weapon / mode / system
+#     key     agent は英名の小文字・記号なし（kay/o は kayo）。map は maps.yml のキー。weapon は英名の小文字
+#     name    表示名（公式の日本語表記）
+#     kind    buff（強化）/ nerf（弱体化）/ adjust（調整）/ new（新登場）/ rework（作り直し）/ bugfix（不具合修正）
+#             pool_in（マッププール入り）/ pool_out（マッププールから外れる） ← マップローテーション用に追加
+#     summary 数値は公式どおり（変更前 → 変更後）。文章は自分の言葉
+#
+# 新しいエージェント・マップのキー（agents.yml / maps.yml に未登録。デザイナーが追加予定）:
+#   agent: hush, veto, miks, clove, waylay, deadlock, kayo, skye, breach, gekko, harbor, tejo, vyse, phoenix, yoru, iso
+#   map:   summit, corrode, abyss, fracture
+# 番号の飛び: 12.xx〜13.xx のうち 13.03・13.07 は公式のニュース一覧になく、URL も 404（2026-10-30 確認）。
+
+- version: "13.09"
+  date: 2026-10-27
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-1309"
+  headline: "新デュエリスト「ハッシュ」が登場。ウォーデンを扱いやすく強化し、クローヴの移動速度アップをほかのエージェントと同じ水準まで下げた。"
+  changes:
+    - target: agent
+      key: hush
+      name: "ハッシュ"
+      kind: new
+      summary: "新エージェント（デュエリスト）。アビリティーはテレキネシス（パッシブ）・ディスプレイスメント・フラッシュバルブ・フロー・サスペンション"
+      # ロールは公式エージェントページ https://playvalorant.com/ja-jp/agents/hush/ で確認
+    - target: agent
+      key: clove
+      name: "クローヴ"
+      kind: nerf
+      summary: "ピック・ミー・アップの移動速度ボーナスを 15% → 10% に。ノット・デッド・イェットで復活したクローヴを倒すと、倒した側に ULT ポイントとシグネチャーの回復が入るように"
+    - target: weapon
+      key: warden
+      name: "ウォーデン"
+      kind: buff
+      summary: "2発目の弾丸誤差 0.25 → 0.2、3発目 0.6 → 0.5。最初の数発の縦の反動と、続けて撃ったときの拡散も軽くした"
+
+- version: "13.08"
+  date: 2026-10-13
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-13-08"
+  headline: "マッププールを2枚ずつ入れ替え（バインドとカロードが入り、アセントとスプリットが抜けた）。カロードは防衛側の回り道を短くする地形調整も。"
+  changes:
+    - target: map
+      key: bind
+      name: "バインド"
+      kind: pool_in
+      summary: "コンペティティブとデスマッチのマッププールに追加"
+    - target: map
+      key: corrode
+      name: "カロード"
+      kind: pool_in
+      summary: "コンペティティブとデスマッチのマッププールに追加"
+    - target: map
+      key: corrode
+      name: "カロード"
+      kind: adjust
+      summary: "防衛側が A・B サイトの奥へ回る道を短くした。ミッドのハーフウォールを金属製にして1メートル外側へ。A サイトの設置できる範囲も変更"
+    - target: map
+      key: ascent
+      name: "アセント"
+      kind: pool_out
+      summary: "コンペティティブとデスマッチのマッププールから除外"
+    - target: map
+      key: split
+      name: "スプリット"
+      kind: pool_out
+      summary: "コンペティティブとデスマッチのマッププールから除外"
+
+- version: "13.06"
+  date: 2026-09-22
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-13-06"
+  headline: "ヴァンダル・ファントムと同じ 2,900 クレジットの新ライフル「ウォーデン」を追加。エージェントとマップの数値調整はなし。"
+  changes:
+    - target: weapon
+      key: warden
+      name: "ウォーデン"
+      kind: new
+      summary: "2,900 クレジットの新しいフルオートのライフル（スコープ2倍）。マガジン18発・予備36発、ダメージは頭200・胴50・脚42、連射速度 6.5、リロード 2.5秒"
+
+- version: "13.05"
+  date: 2026-09-01
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-13-05"
+  headline: "競技に関わるエージェント・武器・マップの変更はなし（射撃場やプラクティスモードのボットの数の設定などが中心）。"
+  changes: []
+
+- version: "13.04"
+  date: 2026-08-18
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-13-04"
+  headline: "マッププールの入れ替え（アビスが入り、ブリーズが抜けた）。エージェントと武器の調整はなし。"
+  changes:
+    - target: map
+      key: abyss
+      name: "アビス"
+      kind: pool_in
+      summary: "コンペティティブとデスマッチのマッププールに追加"
+    - target: map
+      key: breeze
+      name: "ブリーズ"
+      kind: pool_out
+      summary: "コンペティティブとデスマッチのマッププールから除外"
+
+- version: "13.02"
+  date: 2026-07-28
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-13-02"
+  headline: "フェニックスの ULT に必要なポイントを1つ増やした。ほかに競技向けの数値調整はなし。"
+  changes:
+    - target: agent
+      key: phoenix
+      name: "フェニックス"
+      kind: nerf
+      summary: "ラン・イット・バック（ULT）に必要なポイントを 6 → 7 に"
+
+- version: "13.01"
+  date: 2026-07-14
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-13-01"
+  headline: "強さが目立っていたアウトローに、続けて撃つときの制限を付けた。ヨルのゲートクラッシュは 12.05 で短くした時間を一部戻した。"
+  changes:
+    - target: weapon
+      key: outlaw
+      name: "アウトロー"
+      kind: nerf
+      summary: "1発目を撃ったあとの次の弾について、射撃間隔 0.1秒 → 0.15秒、拡散 0 → 2.25、反動 0 → 4.0"
+    - target: agent
+      key: yoru
+      name: "ヨル"
+      kind: buff
+      summary: "ゲートクラッシュのビーコンが残る時間を 15秒 → 20秒 に（12.05 で 30秒 → 15秒 に短くしていた）"
+    - target: agent
+      key: yoru
+      name: "ヨル"
+      kind: adjust
+      summary: "フェイクアウトの分身が持つ武器を「いちばん強い武器」から「ヨルが最後に持っていた武器」に変更"
+    - target: agent
+      key: iso
+      name: "アイソ"
+      kind: buff
+      summary: "ダブルタップを解除したあと、すぐに武器を構えられるように"
+
+- version: "13.00"
+  date: 2026-06-23
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-13-00"
+  headline: "センチネルとイニシエーターをまとめて強化し、新マップ「サミット」が登場。マッププールはサミットとサンセットが入り、フラクチャーとパールが抜けた。"
+  changes:
+    - target: agent
+      key: cypher
+      name: "サイファー"
+      kind: buff
+      summary: "トラップワイヤーが作動するまでの時間を 0.9秒 → 0.7秒 に"
+    - target: agent
+      key: killjoy
+      name: "キルジョイ"
+      kind: buff
+      summary: "タレットの発射速度を 50% アップ、アラームボットの移動速度を 50% アップ、ナノスワームの効果時間を 4秒 → 5秒 に"
+    - target: agent
+      key: veto
+      name: "ヴィトー"
+      kind: buff
+      summary: "インターセプターを回収したあとのクールダウンを 30秒 → 20秒 に。クロスカットは使える範囲 24m → 30m、置いてから作動するまで 1.5秒 → 0.75秒"
+    - target: agent
+      key: sage
+      name: "セージ"
+      kind: buff
+      summary: "ヒーリングオーブで自分を時間をかけて回復する量を 50 → 100 に"
+    - target: agent
+      key: deadlock
+      name: "デッドロック"
+      kind: buff
+      summary: "グラヴィネットのクールダウンを 60秒 → 50秒 に"
+    - target: agent
+      key: sova
+      name: "ソーヴァ"
+      kind: buff
+      summary: "シグネチャー（固有）アビリティーのクールダウンを 60秒 → 50秒 に（イニシエーター5人に共通の調整）"
+    - target: agent
+      key: fade
+      name: "フェイド"
+      kind: buff
+      summary: "シグネチャー（固有）アビリティーのクールダウンを 60秒 → 50秒 に（イニシエーター5人に共通の調整）"
+    - target: agent
+      key: skye
+      name: "スカイ"
+      kind: buff
+      summary: "シグネチャー（固有）アビリティーのクールダウンを 60秒 → 50秒 に（イニシエーター5人に共通の調整）"
+    - target: agent
+      key: breach
+      name: "ブリーチ"
+      kind: buff
+      summary: "シグネチャー（固有）アビリティーのクールダウンを 60秒 → 50秒 に（イニシエーター5人に共通の調整）"
+    - target: agent
+      key: kayo
+      name: "KAY/O"
+      kind: buff
+      summary: "シグネチャー（固有）アビリティーのクールダウンを 60秒 → 50秒 に（イニシエーター5人に共通の調整）"
+    - target: agent
+      key: gekko
+      name: "ゲッコー"
+      kind: buff
+      summary: "クリーチャーを回収したあとのアビリティーのクールダウンを 20秒 → 15秒 に"
+    - target: weapon
+      key: bandit
+      name: "バンディット"
+      kind: buff
+      summary: "射撃間隔 0.45秒 → 0.4秒、縦方向の最大反動 4 → 3、「タップ効率」3 → 4"
+    - target: map
+      key: summit
+      name: "サミット"
+      kind: new
+      summary: "新マップ（3レーン・2サイト）。コンペティティブとデスマッチに追加。最初の2週間は、コンペティティブで負けたときの RR の減りが半分（勝ったときは通常どおり）"
+    - target: map
+      key: sunset
+      name: "サンセット"
+      kind: pool_in
+      summary: "コンペティティブとデスマッチのマッププールに追加（12.00 で外れていた）"
+    - target: map
+      key: fracture
+      name: "フラクチャー"
+      kind: pool_out
+      summary: "コンペティティブとデスマッチのマッププールから除外"
+    - target: map
+      key: pearl
+      name: "パール"
+      kind: pool_out
+      summary: "コンペティティブとデスマッチのマッププールから除外"
+
+- version: "12.11"
+  date: 2026-06-09
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-11"
+  headline: "12.09 のジャッジの調整をコンソール版にも反映。PC 版の競技に関わる調整はなし。"
+  changes:
+    - target: weapon
+      key: judge
+      name: "ジャッジ"
+      kind: nerf
+      summary: "最小拡散 2.25 → 2.5 をコンソール版にも適用（PC 版は 12.09 で適用済み）"
+
+- version: "12.10"
+  date: 2026-05-27
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-10"
+  headline: "競技に関わるエージェント・武器・マップの変更はなし（期間限定モード「スカーミッシュ」用のマップ追加などが中心）。"
+  changes: []
+
+- version: "12.09"
+  date: 2026-05-12
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-09"
+  headline: "ショットガン全体を「動きながら撃つと当たりにくい」方向に弱体化。ネオンも空中での速さと ULT 中の回復を絞った。"
+  changes:
+    - target: weapon
+      key: shotguns
+      name: "ショットガン全種"
+      kind: nerf
+      summary: "しゃがみ撃ちの精度ボーナスを 15% にそろえた（バッキー 10% → 15%、ジャッジ・ショーティー 25% → 15%）。拡散の増え方は、止まって撃つとき 0.075 → 0.75、歩き 0.09 → 1.5、走り 0.1 → 3.0。ロープ中の精度も大きく下げた"
+    - target: weapon
+      key: bucky
+      name: "バッキー"
+      kind: nerf
+      summary: "0〜8m のペレット1発のダメージを 頭 40 → 34、胴 20 → 17、脚 17 → 14 に。最小拡散 2.6 → 3.0。移動中・ジャンプ中に撃ったときの拡散も増やした（ジャンプ撃ち 1.25 → 4.0 など）"
+    - target: weapon
+      key: judge
+      name: "ジャッジ"
+      kind: nerf
+      summary: "最小拡散 2.25 → 2.5（PC 版。コンソール版は 12.11）。移動中・ジャンプ中に撃ったときの拡散も増やした（ジャンプ撃ち 2.25 → 4.0 など）"
+    - target: weapon
+      key: shorty
+      name: "ショーティー"
+      kind: nerf
+      summary: "発射速度 3.33 → 3.0。移動中・ジャンプ中に撃ったときの拡散も増やした（ジャンプ撃ち 1.25 → 4.0 など）"
+    - target: agent
+      key: neon
+      name: "ネオン"
+      kind: nerf
+      summary: "ハイギア中にジャンプしても空中で速くならないように。エネルギーがキルで回復するのは ULT 中だけに（自然回復はそのまま）"
+
+- version: "12.08"
+  date: 2026-04-28
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-08"
+  headline: "マッププールの入れ替え（アセントが入り、バインドが抜けた）。エージェントと武器の数値調整はなし。"
+  changes:
+    - target: map
+      key: ascent
+      name: "アセント"
+      kind: pool_in
+      summary: "コンペティティブとデスマッチのマッププールに追加"
+    - target: map
+      key: bind
+      name: "バインド"
+      kind: pool_out
+      summary: "コンペティティブとデスマッチのマッププールから除外"
+
+- version: "12.07"
+  date: 2026-04-14
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-07"
+  headline: "競技に関わるエージェント・武器・マップの変更はなし。"
+  changes: []
+
+- version: "12.06"
+  date: 2026-03-31
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-06"
+  headline: "ウェイレイのサチュレートを「構えてから投げる」アビリティーに変更（ノート冒頭の大きな変更はエイプリルフールの企画で、実際の変更ではないと公式が明記）。"
+  changes:
+    - target: agent
+      key: waylay
+      name: "ウェイレイ"
+      kind: nerf
+      summary: "サチュレートを、すぐに投げられるアビリティーから、構えてから使うアビリティーに変更"
+
+- version: "12.05"
+  date: 2026-03-17
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-05"
+  headline: "新コントローラー「ミクス」が登場。ヨルとクローヴを弱体化し、スカイのガイディングライトにクールダウンを付けた。マッププールは2枚ずつ入れ替え。"
+  changes:
+    - target: agent
+      key: miks
+      name: "ミクス"
+      kind: new
+      summary: "新エージェント（コントローラー）"
+    - target: agent
+      key: yoru
+      name: "ヨル"
+      kind: nerf
+      summary: "ゲートクラッシュのビーコンが残る時間を 30秒 → 15秒、ブラインドサイドのチャージ数を 2 → 1 に"
+    - target: agent
+      key: clove
+      name: "クローヴ"
+      kind: nerf
+      summary: "倒されたあとに使ったルースのスモーク時間を 14秒 → 6秒、メドルの効果範囲を 6m → 4m に"
+    - target: agent
+      key: skye
+      name: "スカイ"
+      kind: nerf
+      summary: "ガイディングライトに 60秒 のクールダウンを追加"
+    - target: map
+      key: lotus
+      name: "ロータス"
+      kind: adjust
+      summary: "攻撃側ロビーの壁を厚くし、A サイトの階段の外に空間を足すなど地形を調整。A サイトの設置できる範囲も変更"
+    - target: map
+      key: lotus
+      name: "ロータス"
+      kind: pool_in
+      summary: "コンペティティブとデスマッチのマッププールに追加"
+    - target: map
+      key: fracture
+      name: "フラクチャー"
+      kind: pool_in
+      summary: "コンペティティブとデスマッチのマッププールに追加"
+    - target: map
+      key: abyss
+      name: "アビス"
+      kind: pool_out
+      summary: "コンペティティブとデスマッチのマッププールから除外"
+    - target: map
+      key: corrode
+      name: "カロード"
+      kind: pool_out
+      summary: "コンペティティブとデスマッチのマッププールから除外"
+
+- version: "12.04"
+  date: 2026-03-03
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-04"
+  headline: "キルジョイのタレットを、置く向きを選べる設置方法に変更。ほかに競技向けの数値調整はなし。"
+  changes:
+    - target: agent
+      key: killjoy
+      name: "キルジョイ"
+      kind: adjust
+      summary: "タレットの置き方をセージのバリアオーブと同じ方式に（置く前に回転でき、向きも切り替えられる）"
+
+- version: "12.03"
+  date: 2026-02-17
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-03"
+  headline: "ゲッコーの回収まわりを強化（落ちた球体を拾える時間を延ばし、モッシュピットも回収できるように）。"
+  changes:
+    - target: agent
+      key: gekko
+      name: "ゲッコー"
+      kind: buff
+      summary: "クリーチャーが球体になったあとの回収タイマーを 15秒 → 20秒 に延長。モッシュピットも回収できるように"
+
+- version: "12.02"
+  date: 2026-02-03
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-02"
+  headline: "ハーバーを大きく強化し、レイナを弱体化。ウィングマン・シーカー・ブームボットがスタンを受けるようになった。"
+  changes:
+    - target: agent
+      key: harbor
+      name: "ハーバー"
+      kind: buff
+      summary: "コーヴはクールダウン 40秒 → 30秒、スモーク 15秒 → 19.25秒、HP 500 → 680。ハイタイドは壁の高さ 6m → 8m、最大の長さ 50m → 60m。レコニングは水の速さ 25% アップ、再使用で7秒間その場に止められる"
+    - target: agent
+      key: reyna
+      name: "レイナ"
+      kind: nerf
+      summary: "ソウルオーブが残る時間を 4秒 → 3秒、エンプレスに必要な ULT ポイントを 6 → 7 に。デバウアーで上限を超えて回復した分は10秒で消えるように"
+    - target: agent
+      key: gekko
+      name: "ゲッコー"
+      kind: nerf
+      summary: "ウィングマンがスタンを受けるように（スカイのシーカー、レイズのブームボットと共通の変更）"
+    - target: agent
+      key: skye
+      name: "スカイ"
+      kind: nerf
+      summary: "シーカーがスタンを受けるように（ゲッコーのウィングマン、レイズのブームボットと共通の変更）"
+    - target: agent
+      key: raze
+      name: "レイズ"
+      kind: nerf
+      summary: "ブームボットがスタンを受けるように（ゲッコーのウィングマン、スカイのシーカーと共通の変更）"
+
+- version: "12.01"
+  date: 2026-01-20
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-01"
+  headline: "競技に関わるエージェント・武器・マップの変更はなし（不具合修正が中心）。"
+  changes: []
+
+- version: "12.00"
+  date: 2026-01-06
+  url: "https://playvalorant.com/ja-jp/news/game-updates/valorant-patch-notes-12-00"
+  headline: "新サイドアーム「バンディット」とブリーズの作り直しで 2026 年が始まった。ブリーチ・ハーバー・ヴァイスを強化し、テホを調整。マッププールはブリーズが入りサンセットが抜けた。"
+  changes:
+    - target: agent
+      key: breach
+      name: "ブリーチ"
+      kind: buff
+      summary: "フラッシュポイントの弾の速さを 2000 → 2400（20% アップ）、フォールトラインの幅を 7.5m → 8m に"
+    - target: agent
+      key: harbor
+      name: "ハーバー"
+      kind: buff
+      summary: "ストームサージは爆発までの時間 0.8秒 → 0.6秒、スロウ 0.6秒 → 2秒（視線が通っていなくても効くように）。レコニングのスロウも 0.6秒 → 2秒"
+    - target: agent
+      key: tejo
+      name: "テホ"
+      kind: adjust
+      summary: "スペシャルデリバリーのスタンを 4秒 → 2.5秒 に短くし、爆発にダメージ（中心 35・最小 20）を追加。ステルスドローンは敵の特定を「瞬間的特定」から「完全特定」に変え、パルスの半径を 30m → 16m に"
+    - target: agent
+      key: vyse
+      name: "ヴァイス"
+      kind: buff
+      summary: "スチールガーデンの半径を 26m → 28m に"
+    - target: weapon
+      key: bandit
+      name: "バンディット"
+      kind: new
+      summary: "600 クレジットの新しいサイドアーム。マガジン8発・予備24発、リロード 1.5秒、構え 0.75秒"
+    - target: map
+      key: breeze
+      name: "ブリーズ"
+      kind: rework
+      summary: "射線・開けた場所・防衛側の回り道を大きく作り直した。最初の2週間は、コンペティティブで負けたときの RR の減りが半分"
+    - target: map
+      key: breeze
+      name: "ブリーズ"
+      kind: pool_in
+      summary: "コンペティティブとデスマッチのマッププールに追加"
+    - target: map
+      key: sunset
+      name: "サンセット"
+      kind: pool_out
+      summary: "コンペティティブとデスマッチのマッププールから除外"
+    - target: map
+      key: haven
+      name: "ヘイヴン"
+      kind: adjust
+      summary: "ミッドの窓に壊せるオブジェクトを追加し、壁の撃ち抜きやすさを調整"
+    - target: map
+      key: corrode
+      name: "カロード"
+      kind: adjust
+      summary: "A・B サイトの要所にある壁の素材を調整"

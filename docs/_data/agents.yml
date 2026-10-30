@@ -1,17 +1,19 @@
-# エージェント（キー: 英小文字。front matter の thumb_agent: に書く値）
-# 画像は docs/assets/img/agents/ に自前で置く（外部への直リンク禁止）。
-# ファイルがまだ無くても表示は崩れない（輪と頭文字のフォールバックが出る）。
+# エージェント（キー: 英名の小文字・記号なし。front matter の thumb_agent: に書く値。例 kayo）
+# 2026-10-30 紅林: 全30体に拡充し role: を追加（公式サイトのエージェント一覧・各エージェントページで確認）。
+# 並び順＝トップの「エージェント」一覧の並び（ロール順。デュエリスト → イニシエーター → コントローラー → センチネル）。
+# 画像は docs/assets/img/agents/ に自前で置く（外部への直リンク禁止）。取得元・取得日は docs/assets/img/README.md。
+# ファイルが無くても表示は崩れない（頭文字の枠のフォールバックが出る）。
 # source は画像の取得元ページ（出典台帳。記事の出典欄にも使う）。
-# 一覧と推奨サイズ: docs/assets/img/README.md
 #
-# icon:     96x96 WebP（8KB 以下）  カードのサムネ右下・ランキング・アイコン列
+# role:     _data/roles.yml の key（duelist / initiator / controller / sentinel）。_includes/role-icon.html でアイコン＋ロール名になる
+# icon:     96x96 JPEG（2〜4KB）。顔まわりを正方形に切り抜いたもの。カードのサムネ右下・ランキング・エージェント一覧
 # portrait: トップのヒーロー（hero.yml で指定したものだけ使う）。
 #           いまの jett-portrait.jpg は 616x822 の濃色背景（透過ではない）。四角く浮かないよう
 #           style.css の .hero-agent で mask-image（左右と下を透明にフェード）をかけている。
 #           portrait_w / portrait_h に画像の実寸を書く（レイアウトのずれ防止の width/height に使う）。
-
 jett:
   name: ジェット
+  role: duelist
   icon: /assets/img/agents/jett-icon.jpg
   portrait: /assets/img/agents/jett-portrait.jpg
   portrait_w: 616
@@ -19,45 +21,147 @@ jett:
   source: https://playvalorant.com/ja-jp/agents/jett/
 reyna:
   name: レイナ
+  role: duelist
   icon: /assets/img/agents/reyna-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/reyna/
 raze:
   name: レイズ
+  role: duelist
   icon: /assets/img/agents/raze-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/raze/
+phoenix:
+  name: フェニックス
+  role: duelist
+  icon: /assets/img/agents/phoenix-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/phoenix/
+yoru:
+  name: ヨル
+  role: duelist
+  icon: /assets/img/agents/yoru-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/yoru/
 neon:
   name: ネオン
+  role: duelist
   icon: /assets/img/agents/neon-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/neon/
+iso:
+  name: アイソ
+  role: duelist
+  icon: /assets/img/agents/iso-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/iso/
+waylay:
+  name: ウェイレイ
+  role: duelist
+  icon: /assets/img/agents/waylay-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/waylay/
+hush:
+  name: ハッシュ
+  role: duelist
+  icon: /assets/img/agents/hush-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/hush/
 sova:
   name: ソーヴァ
+  role: initiator
   icon: /assets/img/agents/sova-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/sova/
+breach:
+  name: ブリーチ
+  role: initiator
+  icon: /assets/img/agents/breach-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/breach/
+skye:
+  name: スカイ
+  role: initiator
+  icon: /assets/img/agents/skye-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/skye/
+kayo:
+  name: KAY/O
+  role: initiator
+  icon: /assets/img/agents/kayo-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/kay-o/
 fade:
   name: フェイド
+  role: initiator
   icon: /assets/img/agents/fade-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/fade/
-omen:
-  name: オーメン
-  icon: /assets/img/agents/omen-icon.jpg
-  source: https://playvalorant.com/ja-jp/agents/omen/
+gekko:
+  name: ゲッコー
+  role: initiator
+  icon: /assets/img/agents/gekko-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/gekko/
+tejo:
+  name: テホ
+  role: initiator
+  icon: /assets/img/agents/tejo-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/tejo/
+brimstone:
+  name: ブリムストーン
+  role: controller
+  icon: /assets/img/agents/brimstone-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/brimstone/
 viper:
   name: ヴァイパー
+  role: controller
   icon: /assets/img/agents/viper-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/viper/
+omen:
+  name: オーメン
+  role: controller
+  icon: /assets/img/agents/omen-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/omen/
 astra:
   name: アストラ
+  role: controller
   icon: /assets/img/agents/astra-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/astra/
-killjoy:
-  name: キルジョイ
-  icon: /assets/img/agents/killjoy-icon.jpg
-  source: https://playvalorant.com/ja-jp/agents/killjoy/
-cypher:
-  name: サイファー
-  icon: /assets/img/agents/cypher-icon.jpg
-  source: https://playvalorant.com/ja-jp/agents/cypher/
+harbor:
+  name: ハーバー
+  role: controller
+  icon: /assets/img/agents/harbor-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/harbor/
+clove:
+  name: クローヴ
+  role: controller
+  icon: /assets/img/agents/clove-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/clove/
+miks:
+  name: ミクス
+  role: controller
+  icon: /assets/img/agents/miks-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/miks/
 sage:
   name: セージ
+  role: sentinel
   icon: /assets/img/agents/sage-icon.jpg
   source: https://playvalorant.com/ja-jp/agents/sage/
+cypher:
+  name: サイファー
+  role: sentinel
+  icon: /assets/img/agents/cypher-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/cypher/
+killjoy:
+  name: キルジョイ
+  role: sentinel
+  icon: /assets/img/agents/killjoy-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/killjoy/
+chamber:
+  name: チェンバー
+  role: sentinel
+  icon: /assets/img/agents/chamber-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/chamber/
+deadlock:
+  name: デッドロック
+  role: sentinel
+  icon: /assets/img/agents/deadlock-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/deadlock/
+vyse:
+  name: ヴァイス
+  role: sentinel
+  icon: /assets/img/agents/vyse-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/vyse/
+veto:
+  name: ヴィトー
+  role: sentinel
+  icon: /assets/img/agents/veto-icon.jpg
+  source: https://playvalorant.com/ja-jp/agents/veto/
+

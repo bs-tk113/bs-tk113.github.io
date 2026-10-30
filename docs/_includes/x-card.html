@@ -23,7 +23,7 @@
 {%- if xc_type != "" %}<span class="src-type src-type--{{ include.type }}">{{ xc_type }}</span>{% endif %}
 </div>
 {%- if include.summary and include.summary != "" %}
-<p class="x-summary"><span class="x-summary-label">編集部の要約</span>{{ include.summary | escape }}</p>
+<p class="x-summary"><span class="x-summary-label">要約</span>{{ include.summary | escape }}</p>
 {%- endif %}
 <figcaption class="x-foot">
 {%- if include.posted_at and include.posted_at != "" -%}

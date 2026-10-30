@@ -20,7 +20,8 @@
   {%- if include.limit and rm_count > include.limit -%}{%- continue -%}{%- endif -%}
   {%- unless include.count_only -%}
   {%- case it.type -%}{%- when "hub" -%}{%- assign rm_type = "まとめ・一覧表" -%}{%- when "tool" -%}{%- assign rm_type = "ツール" -%}{%- else -%}{%- assign rm_type = "記事" -%}{%- endcase %}
-<li><span class="rm-title">{{ it.title | escape }}</span><span class="rm-meta"><span class="rm-type">{{ rm_type }}</span><span class="status-tag status-tag--plan">{{ it.status | default: "企画中" | escape }}</span></span></li>
+{%- comment -%} 2026-10-30 紅林: 編集部の工程名（企画中・制作中・確認中）は読者に見せない。表示は「近日公開」に統一（status はデータに残してよい） {%- endcomment %}
+<li><span class="rm-title">{{ it.title | escape }}</span><span class="rm-meta"><span class="rm-type">{{ rm_type }}</span><span class="status-tag status-tag--soon">近日公開</span></span></li>
   {%- endunless -%}
 {%- endfor -%}
 {%- endcapture -%}

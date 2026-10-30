@@ -1,8 +1,12 @@
 /* =========================================================
    本番スタイル（水瀬カナデ / 2026-10-28 改訂「夜のスタジアム」）
+   2026-10-30 紅林アヤ: ビジュアル刷新「夜のスタジアム × HUD」（方針: drafts/2026-10-30-visual/direction.md）
    - ヘッダー・ヒーロー・フッターは両モードで夜色。本文だけライト／ダーク切替
-   - 文字は全部 16px（1rem）以上。角丸14px。斜めカット・赤系は使わない
-   - Web フォントなし（システムフォント）
+   - 文字は全部 16px（1rem）以上。Web フォントなし（システムフォント。数字の HUD は ui-monospace）
+   - 斜めカット（clip-path）はカード・タイル・タグの角に限って使う。赤系・公式風の書体は使わない
+     （白石の NG「赤＋斜めカット＋公式風書体＝公式の告知に見える加工」の組み合わせにしない。OG 画像には使わない）
+   - clip-path の部品はフォーカス枠が切れるので、outline-offset を内側（負）にしている
+   - 変更前: drafts/2026-10-30-visual/style.before.css
    ========================================================= */
 
 /* ===== 配色トークン ===== */
@@ -19,7 +23,15 @@
   --c-tournaments:#ffb020; --c-community:#e879f9; --c-roster:#2dd4bf; --c-patch:#a78bfa; --c-weekly:#38bdf8; --c-tools:#a3e635; --c-glossary:#fb923c;
   --c-default:#94a3b8;
   --on-c:#14123a;
-  --radius:14px;
+  /* HUD（罫線・数字）の青緑。fill は夜色の上・塗り用、ink は文字・線用（白地でコントラスト確保） */
+  --hud-fill:#5eead4; --hud:#0f766e;
+  /* ロール色（塗り専用。上に載せる文字は #14123a）。ink はアイコン・文字に使う濃い版。必ずロール名とセットで使う */
+  --r-duelist:#ff9a52; --r-initiator:#4ade80; --r-controller:#c084fc; --r-sentinel:#60a5fa; --r-flex:#cbd5e1; --r-igl:#ffb020; --r-coach:#e2e8f0; --r-sub:#cbd5e1;
+  --ri-duelist:#b43c06; --ri-initiator:#15803d; --ri-controller:#7e22ce; --ri-sentinel:#1d4ed8; --ri-flex:#475569; --ri-igl:#8a4b00; --ri-coach:#334155; --ri-sub:#475569;
+  --mono:ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, monospace;
+  --focus:#8a4b00;         /* フォーカス枠（明るい地の上。金の塗り #ffb020 は白地で 1.8:1 しかなく見えないため濃い金。水瀬 2026-10-31） */
+  --cut:12px;              /* 斜めカットの大きさ */
+  --radius:8px;
   --header-h:112px;
   color-scheme:light;
 }
@@ -27,12 +39,16 @@
   :root:not([data-theme="light"]){
     --bg:#0c0b1d; --surface:#16152e; --surface-2:#1f1d3d; --fg:#ecebf7; --muted:#b3b2cc; --line:#2c2a50;
     --accent:#ffc24d; --link:#b9b4ff; --shadow:0 6px 24px rgba(0,0,0,.35);
+    --hud:#5eead4; --focus:#ffc24d;
+    --ri-duelist:#ff9a52; --ri-initiator:#4ade80; --ri-controller:#d8b4fe; --ri-sentinel:#93c5fd; --ri-flex:#cbd5e1; --ri-igl:#ffc24d; --ri-coach:#e2e8f0; --ri-sub:#cbd5e1;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0c0b1d; --surface:#16152e; --surface-2:#1f1d3d; --fg:#ecebf7; --muted:#b3b2cc; --line:#2c2a50;
   --accent:#ffc24d; --link:#b9b4ff; --shadow:0 6px 24px rgba(0,0,0,.35);
+  --hud:#5eead4; --focus:#ffc24d;
+  --ri-duelist:#ff9a52; --ri-initiator:#4ade80; --ri-controller:#d8b4fe; --ri-sentinel:#93c5fd; --ri-flex:#cbd5e1; --ri-igl:#ffc24d; --ri-coach:#e2e8f0; --ri-sub:#cbd5e1;
   color-scheme:dark;
 }
 
@@ -49,16 +65,22 @@ a{color:inherit}
 [hidden]{display:none !important}
 .wrap{max-width:1200px; margin:0 auto; padding:0 16px}
 .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
-:focus-visible{outline:3px solid var(--accent-fill); outline-offset:2px}
+:focus-visible{outline:3px solid var(--focus, var(--accent-fill)); outline-offset:2px}
+/* 夜色の上（ヘッダー・ヒーロー・見出し帯・フッター・カテゴリタイル）は両モードとも明るい金 */
+.site-header :focus-visible,.hero :focus-visible,.cat-hero :focus-visible,.site-footer :focus-visible,.cat:focus-visible{outline-color:var(--accent-fill)}
 .skip{position:absolute; left:8px; top:-100px; z-index:100; background:var(--accent-fill); color:var(--on-accent); padding:8px 14px; border-radius:10px; font-weight:800}
 .skip:focus{top:8px}
 main{display:block}
 
 /* ===== ヘッダー ===== */
 .site-header{position:sticky; top:0; z-index:20; background:var(--night); color:var(--on-night); box-shadow:0 2px 10px rgba(0,0,0,.25)}
+/* ヘッダー下の HUD ライン（金 → 青緑 → 細線） */
+.site-header::after{content:""; position:absolute; left:0; right:0; bottom:0; height:2px; pointer-events:none;
+  background:linear-gradient(90deg, var(--accent-fill) 0 64px, transparent 64px 70px, var(--hud-fill) 70px 86px, rgba(255,255,255,.14) 86px)}
 .bar{display:flex; align-items:center; gap:4px; min-height:56px}
 .brand{display:flex; align-items:center; gap:10px; text-decoration:none; font-weight:800; font-size:1.125rem; margin-right:auto; min-width:0; color:var(--on-night)}
-.brand-mark{flex:none; width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,var(--c-tournaments),var(--c-roster)); display:grid; place-items:center; color:#14123a; font-size:1rem; font-weight:900; line-height:1}
+.brand-mark{flex:none; width:30px; height:30px; background:linear-gradient(135deg,var(--c-tournaments),var(--c-roster)); display:grid; place-items:center; color:#14123a; font-size:1rem; font-weight:900; line-height:1;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
 .brand-name{min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .icon-btn{flex:none; width:44px; height:44px; border-radius:10px; border:0; background:transparent; color:var(--on-night); display:grid; place-items:center; cursor:pointer; text-decoration:none}
 .icon-btn:hover{background:rgba(255,255,255,.08)}
@@ -74,10 +96,16 @@ main{display:block}
 /* 話題タブ（タブ列の中だけ横スクロール） */
 .tabs{display:flex; gap:8px; overflow-x:auto; padding:0 16px 10px; scrollbar-width:none; scroll-snap-type:x proximity; max-width:1200px; margin:0 auto; -webkit-overflow-scrolling:touch}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:none; scroll-snap-align:start; display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:0 14px; border-radius:999px; background:rgba(255,255,255,.08); color:var(--on-night); text-decoration:none; font-size:1rem; white-space:nowrap; border:1px solid rgba(255,255,255,.12)}
+.tab{flex:none; scroll-snap-align:start; display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:0 14px 0 10px; background:rgba(255,255,255,.08); color:var(--on-night); text-decoration:none; font-size:1rem; white-space:nowrap;
+  box-shadow:inset 0 -2px 0 var(--c, var(--c-default));
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
 .tab:hover{background:rgba(255,255,255,.16)}
-.tab[aria-current="page"]{background:var(--accent-fill); color:var(--on-accent); border-color:transparent; font-weight:700}
+.tab:focus-visible{outline-offset:-3px}
+.tab[aria-current="page"]{background:var(--accent-fill); color:var(--on-accent); font-weight:700}
+.tab[aria-current="page"]:focus-visible{outline-color:var(--night)} /* 金の塗りの内側に金の枠だと見えないため */
 .tab .dot{width:8px; height:8px; border-radius:50%; background:var(--c, var(--c-default))}
+.tab .ic{width:18px; height:18px; color:var(--c, var(--c-default))}
+.tab[aria-current="page"] .ic{color:var(--on-accent)}
 
 /* メニュー */
 .drawer{background:var(--night-2); padding:8px 16px 16px; max-height:calc(100vh - 110px); overflow-y:auto}
@@ -85,6 +113,7 @@ main{display:block}
 .drawer a{display:flex; align-items:center; gap:8px; min-height:44px; padding:8px; color:var(--on-night); text-decoration:none; border-radius:8px}
 .drawer a:hover{background:rgba(255,255,255,.08)}
 .drawer .dot{flex:none; width:10px; height:10px; border-radius:3px; background:var(--c, var(--c-default))}
+.drawer .ic{flex:none; width:22px; height:22px; color:var(--c, var(--on-night-muted))}
 .drawer-sep{grid-column:1 / -1; border-top:1px solid rgba(255,255,255,.14); margin:6px 0}
 
 /* （旧ティッカーは 2026-10-30 に廃止。日程は /schedule/ の .sched に移した） */
@@ -108,24 +137,47 @@ main{display:block}
   -webkit-mask-image:radial-gradient(ellipse 50% 70% at 50% 30%, #000 58%, transparent 100%);
           mask-image:radial-gradient(ellipse 50% 70% at 50% 30%, #000 58%, transparent 100%);
   -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat}
+.hero{border-bottom:3px solid transparent; border-image:linear-gradient(90deg, var(--accent-fill) 0 40%, var(--hud-fill) 40% 44%, rgba(255,255,255,.12) 44%) 1}
 .hero-inner{position:relative; padding:36px 16px 52px; max-width:1200px; margin:0 auto}
-.kicker{display:inline-block; font-size:1rem; font-weight:700; color:var(--on-accent); background:var(--accent-fill); padding:2px 12px; border-radius:999px}
-.hero h1{font-size:clamp(1.75rem, 7vw, 3rem); line-height:1.25; margin:14px 0 8px; letter-spacing:.02em}
+/* HUD の括弧（左上・左下。右下は画像の © 表記があるので置かない） */
+.hero-inner::before,.hero-inner::after{content:""; position:absolute; width:26px; height:26px; pointer-events:none; opacity:.9}
+.hero-inner::before{left:8px; top:14px; border-left:2px solid var(--hud-fill); border-top:2px solid var(--hud-fill)}
+.hero-inner::after{left:8px; bottom:14px; border-left:2px solid var(--accent-fill); border-bottom:2px solid var(--accent-fill)}
+.kicker{display:inline-flex; align-items:center; gap:6px; font-size:1rem; font-weight:800; color:var(--on-accent); background:var(--accent-fill); padding:2px 16px 2px 12px; letter-spacing:.04em;
+  clip-path:polygon(0 0,100% 0,calc(100% - 10px) 100%,0 100%)}
+.hero h1{font-size:clamp(1.75rem, 7vw, 3rem); line-height:1.25; margin:14px 0 8px; letter-spacing:.02em; text-shadow:0 2px 18px rgba(12,11,29,.6)}
 .hero .lead{font-size:1.0625rem; color:var(--on-night-muted); margin:0 0 18px; max-width:30em}
 .search{display:flex; gap:8px; max-width:520px}
-.search input{flex:1; min-width:0; height:48px; border-radius:12px; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.95); color:#16152b; padding:0 14px; font-size:1rem}
-.search button{flex:none; height:48px; padding:0 18px; border:0; border-radius:12px; background:var(--accent-fill); color:var(--on-accent); font-weight:800; font-size:1rem; cursor:pointer}
+.search input{flex:1; min-width:0; height:48px; border-radius:4px; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.95); color:#16152b; padding:0 14px; font-size:1rem}
+.search button{flex:none; height:48px; padding:0 20px 0 18px; border:0; background:var(--accent-fill); color:var(--on-accent); font-weight:800; font-size:1rem; cursor:pointer;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%)}
+.search button:focus-visible{outline-offset:-4px; outline-color:var(--night)}
 .quick{display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 0; padding:0; list-style:none}
-.quick a{display:inline-flex; align-items:center; min-height:44px; padding:0 14px; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); text-decoration:none; font-size:1rem; color:var(--on-night)}
+.quick a{display:inline-flex; align-items:center; gap:6px; min-height:44px; padding:0 16px 0 12px; background:rgba(255,255,255,.12); text-decoration:none; font-size:1rem; color:var(--on-night);
+  box-shadow:inset 3px 0 0 var(--hud-fill); clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
 .quick a:hover{background:rgba(255,255,255,.2)}
+.quick a:focus-visible{outline-offset:-3px}
+.quick .ic{width:18px; height:18px; color:var(--hud-fill)}
 .credit{position:absolute; right:12px; bottom:6px; margin:0; font-size:1rem; color:var(--on-night-muted); opacity:.85}
 
 /* ===== トップのレイアウト（スマホは DOM 順。PC は右列にランキングと広告） ===== */
 .home{padding-top:28px; padding-bottom:48px}
 .home > *{margin:0 0 36px; min-width:0}
-.sec-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin:0 0 14px}
-.sec-head h2{margin:0; font-size:1.375rem; line-height:1.4; padding-left:12px; border-left:5px solid var(--accent-fill)}
-.more{font-size:1rem; color:var(--accent); font-weight:700; text-decoration:none; white-space:nowrap}
+/* セクション見出し（HUD 風: 菱形 or 番号 → 見出し → 罫線。下線の左端だけ金） */
+.sec-head{position:relative; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:4px 12px; margin:0 0 16px; padding-bottom:8px; border-bottom:1px solid var(--line)}
+.sec-head::after{content:""; position:absolute; left:0; bottom:-1px; width:72px; height:3px; background:var(--accent-fill)}
+.sec-head h2{display:flex; align-items:center; gap:10px; margin:0; font-size:1.375rem; line-height:1.4; letter-spacing:.02em}
+.sec-head h2::before{content:""; flex:none; width:10px; height:10px; background:var(--accent-fill); transform:rotate(45deg); margin:0 2px}
+.sec-head h2 .ic{flex:none; width:24px; height:24px; color:var(--hud)}
+/* トップだけ「01」「02」の番号 */
+.home{counter-reset:sec}
+.home .sec-head h2::before{counter-increment:sec; content:counter(sec, decimal-leading-zero); width:auto; height:auto; transform:none; margin:0;
+  font-family:var(--mono); font-size:1rem; font-weight:800; line-height:1.6; color:var(--on-accent); background:var(--accent-fill); padding:0 10px 0 6px;
+  clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+/* 右列のランキング／ピックアップは番号を振らない（菱形に戻す） */
+.home .rank-box .sec-head h2::before{counter-increment:none; content:""; width:10px; height:10px; padding:0; margin:0 2px; transform:rotate(45deg); clip-path:none}
+.more{display:inline-flex; align-items:center; gap:6px; font-size:1rem; color:var(--accent); font-weight:700; text-decoration:none; white-space:nowrap}
+.more::after{content:""; width:.45em; height:.45em; border-right:2px solid currentColor; border-top:2px solid currentColor; transform:rotate(45deg)}
 .more:hover{text-decoration:underline}
 .empty{margin:0; padding:20px 16px; border:2px dashed var(--line); border-radius:var(--radius); color:var(--muted); background:var(--surface)}
 .empty a{color:var(--link)}
@@ -137,17 +189,28 @@ main{display:block}
 .cats > li:first-child{grid-column:1 / -1}
 .cats > li:first-child .cat{min-height:132px}
 .cats > li:first-child .cat-name{font-size:1.25rem}
-.cat{position:relative; display:flex; flex-direction:column; justify-content:flex-end; min-height:112px; padding:12px; border-radius:var(--radius); overflow:hidden; text-decoration:none; color:#fff; isolation:isolate; box-shadow:var(--shadow);
+.cat{position:relative; display:flex; flex-direction:column; justify-content:flex-end; min-height:112px; padding:12px; overflow:hidden; text-decoration:none; color:#fff; isolation:isolate;
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)));
+  border-bottom:3px solid var(--c, var(--c-default));
   background:radial-gradient(120% 100% at 90% 0%, var(--c, var(--c-default)) 0%, transparent 60%), linear-gradient(160deg, var(--night-2), var(--night))}
+.cat:focus-visible{outline-offset:-4px}
+/* カテゴリのアイコン（右上。自作 SVG） */
+.cat-icon{position:absolute; right:10px; top:10px; z-index:1; display:grid; place-items:center; width:40px; height:40px; color:var(--c, var(--c-default)); background:rgba(12,11,29,.72);
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%)}
+.cat-icon .ic{width:24px; height:24px}
+.cats > li:first-child .cat-icon{width:48px; height:48px}
+.cats > li:first-child .cat-icon .ic{width:30px; height:30px}
 .cat img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; transition:transform .25s}
 .cat::after{content:""; position:absolute; inset:0; z-index:-1;
   background:linear-gradient(180deg, rgba(12,11,29,.25) 0%, rgba(12,11,29,.88) 75%);
   background:linear-gradient(180deg, color-mix(in srgb, var(--c, var(--c-default)) 35%, transparent) 0%, rgba(12,11,29,.88) 75%)}
 .cat:hover img{transform:scale(1.06)}
-.cat-name{font-weight:800; font-size:1.0625rem; line-height:1.4}
-.cat-name::before{content:""; display:inline-block; width:10px; height:10px; border-radius:3px; background:var(--c, var(--c-default)); margin-right:8px; vertical-align:middle}
+.cat-name{font-weight:800; font-size:1.0625rem; line-height:1.4; padding-right:44px; text-shadow:0 1px 8px rgba(12,11,29,.7)}
 .cat-desc{font-size:1rem; color:#dedcf5; line-height:1.5}
-.cat-count{font-size:1rem; color:#dedcf5}
+/* 件数は HUD の数字（等幅） */
+.cat-count{align-self:flex-start; margin-top:6px; font-family:var(--mono); font-size:1rem; font-weight:800; line-height:1.6; color:var(--on-c); background:var(--c, var(--c-default)); padding:0 12px 0 8px; font-variant-numeric:tabular-nums;
+  clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+.cat-count--soon{font-family:inherit; background:rgba(255,255,255,.14); color:#fff}
 
 /* ===== 合成サムネ（マップ画像＋カテゴリ色＋エージェントのアイコン） ===== */
 .thumb{position:relative; display:block; aspect-ratio:16/9; overflow:hidden; isolation:isolate;
@@ -159,19 +222,29 @@ main{display:block}
 .thumb::after{content:""; position:absolute; inset:0; z-index:-1;
   background:linear-gradient(135deg, rgba(12,11,29,.05) 0%, rgba(12,11,29,.15) 50%, rgba(12,11,29,.75) 100%);
   background:linear-gradient(135deg, color-mix(in srgb, var(--c, var(--c-default)) 45%, transparent) 0%, rgba(12,11,29,.15) 50%, rgba(12,11,29,.75) 100%)}
-.thumb-agent{position:absolute; right:10px; bottom:10px; width:28%; max-width:84px; min-width:40px; aspect-ratio:1; border-radius:50%; background:#1b1945; border:3px solid var(--c, var(--c-default)); display:grid; place-items:center; overflow:hidden}
-.thumb-agent::before{content:attr(data-initial); color:#fff; font-weight:800; font-size:1.25rem; line-height:1}
-.thumb-agent img{position:absolute; inset:2px; width:calc(100% - 4px); height:calc(100% - 4px); object-fit:contain; border-radius:50%; background:#1b1945}
-.label{position:absolute; left:10px; top:10px; max-width:calc(100% - 20px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:1rem; font-weight:800; line-height:1.5; padding:1px 10px; border-radius:999px; background:var(--c, var(--c-default)); color:var(--on-c)}
+/* エージェントの顔（右下）。カテゴリ色の枠を、左上と右下を切った角の形で */
+.thumb-agent{position:absolute; right:10px; bottom:10px; width:28%; max-width:84px; min-width:40px; aspect-ratio:1; padding:3px; background:var(--c, var(--c-default)); display:grid; place-items:center; overflow:hidden;
+  clip-path:polygon(22% 0,100% 0,100% 78%,78% 100%,0 100%,0 22%)}
+.thumb-agent::before{content:attr(data-initial); color:var(--on-c); font-weight:800; font-size:1.25rem; line-height:1}
+.thumb-agent img{position:absolute; inset:3px; width:calc(100% - 6px); height:calc(100% - 6px); object-fit:cover; background:#1b1945;
+  clip-path:polygon(22% 0,100% 0,100% 78%,78% 100%,0 100%,0 22%)}
+.label{position:absolute; left:0; top:10px; max-width:calc(100% - 20px); display:inline-flex; align-items:center; gap:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:1rem; font-weight:800; line-height:1.5; padding:1px 16px 1px 10px; background:var(--c, var(--c-default)); color:var(--on-c);
+  clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.label .ic{flex:none; width:18px; height:18px}
 .thumb--wide{aspect-ratio:21/9}
 .thumb--sq{aspect-ratio:1}
-.thumb--sq .thumb-agent{width:50%; right:4px; bottom:4px; border-width:2px}
+.thumb--sq .thumb-agent{width:50%; right:4px; bottom:4px; padding:2px}
+.thumb--sq .thumb-agent img{inset:2px; width:calc(100% - 4px); height:calc(100% - 4px)}
 .thumb--sq .thumb-agent::before{font-size:1rem}
 
 /* ===== カード ===== */
 .grid{display:grid; gap:14px; grid-template-columns:minmax(0,1fr); list-style:none; margin:0; padding:0}
-.card{display:flex; flex-direction:column; height:100%; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; text-decoration:none; box-shadow:var(--shadow); transition:transform .15s}
-.card:hover{transform:translateY(-2px)}
+/* カード: 右上と左下を斜めに切ったパネル。clip-path で影が切れるので影は付けない（罫線で囲む） */
+.card{position:relative; display:flex; flex-direction:column; height:100%; background:var(--surface); border:1px solid var(--line); overflow:hidden; text-decoration:none; transition:transform .15s, border-color .15s;
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
+.card:hover{transform:translateY(-2px); border-color:var(--accent-fill)}
+.card:focus-visible{outline-offset:-4px}
+.card .thumb{border-bottom:3px solid var(--c, var(--c-default))}
 .card:hover .thumb-bg{transform:scale(1.05)}
 .card-body{padding:12px 14px 14px; display:flex; flex-direction:column; gap:6px; flex:1}
 .card-title{font-size:1.0625rem; font-weight:800; line-height:1.5}
@@ -183,12 +256,15 @@ main{display:block}
   .card--compact{flex-direction:row; align-items:stretch}
   .card--compact .thumb{flex:none; width:38%; aspect-ratio:auto; min-height:96px}
   .card--compact .label{display:none}
-  .card--compact .thumb-agent{width:44px; right:6px; bottom:6px; border-width:2px}
+  .card--compact .thumb{border-bottom:0; border-right:3px solid var(--c, var(--c-default))}
+  .card--compact .thumb-agent{width:44px; right:6px; bottom:6px; padding:2px}
+  .card--compact .thumb-agent img{inset:2px; width:calc(100% - 4px); height:calc(100% - 4px)}
   .card--compact .thumb-agent::before{font-size:1rem}
 }
 
 /* ===== 最新の週まとめ（トップ） ===== */
-.weekly{display:grid; grid-template-columns:minmax(0,1fr); background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow)}
+.weekly{display:grid; grid-template-columns:minmax(0,1fr); background:var(--surface); border:1px solid var(--line); overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
 .weekly > a{display:block}
 .weekly-body{padding:16px}
 .weekly-title{margin:0 0 6px; font-size:1.25rem; line-height:1.45}
@@ -197,17 +273,24 @@ main{display:block}
 .points{list-style:none; margin:12px 0 14px; padding:0; display:grid; gap:8px}
 .points li{display:grid; grid-template-columns:auto minmax(0,1fr); gap:10px; align-items:start; padding:10px 12px; background:var(--surface-2); border-radius:10px}
 .points .tag{font-size:1rem; font-weight:800; padding:0 8px; border-radius:6px; background:var(--c, var(--c-default)); color:var(--on-c); white-space:nowrap}
-.btn{display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 20px; border-radius:12px; border:0; background:var(--accent-fill); color:var(--on-accent); font-weight:800; font-size:1rem; text-decoration:none; cursor:pointer}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:0 24px 0 20px; border:0; background:var(--accent-fill); color:var(--on-accent); font-weight:800; font-size:1rem; text-decoration:none; cursor:pointer;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%)}
 .btn:hover{filter:brightness(1.05)}
+.btn:focus-visible{outline-offset:-4px; outline-color:var(--fg)}
 .btn--ghost{background:transparent; color:var(--fg); border:2px solid var(--line)}
 
 /* ===== 人気ランキング ===== */
-.rank-box{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow)}
+.rank-box{background:var(--surface); border:1px solid var(--line); border-top:3px solid var(--accent-fill); padding:14px;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%)}
 .rank-list{list-style:none; margin:0; padding:0}
 .rank-list li + li{border-top:1px solid var(--line)}
 .rank-item{display:grid; grid-template-columns:88px minmax(0,1fr); gap:12px; align-items:center; padding:10px 0; text-decoration:none}
-.rank-thumb{position:relative; width:88px; border-radius:10px; overflow:hidden}
-.rank-no{position:absolute; left:0; top:0; z-index:1; min-width:30px; height:30px; display:grid; place-items:center; font-weight:900; font-size:1rem; background:var(--night); color:var(--on-night); border-bottom-right-radius:10px}
+.rank-thumb{position:relative; width:88px; overflow:hidden; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.rank-item:focus-visible{outline-offset:-3px}
+.pick-kind{display:inline-flex; align-items:center; gap:4px; color:var(--muted); font-weight:700}
+.pick-kind .ic{width:18px; height:18px; color:var(--hud)}
+.rank-no{position:absolute; left:0; top:0; z-index:1; min-width:32px; height:30px; padding-right:4px; display:grid; place-items:center; font-family:var(--mono); font-weight:900; font-size:1rem; background:var(--night); color:var(--on-night);
+  clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%)}
 .rank-list li:nth-child(1) .rank-no{background:var(--accent-fill); color:var(--on-accent)}
 .rank-list li:nth-child(2) .rank-no{background:#d6d9e8; color:#14123a}
 .rank-list li:nth-child(3) .rank-no{background:#e9b98a; color:#14123a}
@@ -226,9 +309,13 @@ main{display:block}
 .hint{font-size:1rem; color:var(--muted); margin:6px 0 0}
 
 /* ===== ツールカード ===== */
-.tool-card{display:grid; gap:10px; height:100%; padding:16px 16px 16px 22px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); text-decoration:none; position:relative; overflow:hidden}
+.tool-card{display:grid; gap:10px; height:100%; padding:16px 16px 16px 22px; background:var(--surface); border:1px solid var(--line); text-decoration:none; position:relative; overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%)}
+.tool-card:hover{border-color:var(--c, var(--c-tools))}
+.tool-card:focus-visible{outline-offset:-4px}
 .tool-card::before{content:""; position:absolute; inset:0 auto 0 0; width:6px; background:var(--c, var(--c-tools))}
-.tool-card-title{margin:0; font-size:1.125rem; font-weight:800; line-height:1.5}
+.tool-card-title{display:flex; align-items:center; gap:8px; margin:0; font-size:1.125rem; font-weight:800; line-height:1.5}
+.tool-card-title .ic{flex:none; width:24px; height:24px; color:var(--hud)}
 .tool-card:hover .tool-card-title{text-decoration:underline}
 .formula{font-family:ui-monospace, "SFMono-Regular", Consolas, monospace; font-size:1rem; background:var(--surface-2); border-radius:8px; padding:8px 10px; margin:0; overflow-x:auto}
 
@@ -269,7 +356,10 @@ main{display:block}
 .crumbs [aria-current]{color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:min(100%, 18em); padding:6px 0}
 .post-head{margin-bottom:16px}
 .post-labels{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; margin:0 0 8px}
-.chip{display:inline-flex; align-items:center; min-height:32px; padding:0 12px; border-radius:999px; background:var(--c, var(--c-default)); color:var(--on-c); font-weight:800; text-decoration:none; font-size:1rem}
+.chip{display:inline-flex; align-items:center; gap:6px; min-height:32px; padding:0 16px 0 10px; background:var(--c, var(--c-default)); color:var(--on-c); font-weight:800; text-decoration:none; font-size:1rem;
+  clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.chip .ic{width:18px; height:18px}
+.chip:focus-visible{outline-offset:-3px}
 .chip--line{background:transparent; color:var(--fg); border:1px solid var(--line); font-weight:600}
 .page-title{font-size:clamp(1.5rem, 5.5vw, 2.125rem); line-height:1.4; margin:0 0 12px}
 .lead-box{margin:0 0 18px; padding:14px 16px; background:var(--surface); border:1px solid var(--line); border-left:5px solid var(--accent-fill); border-radius:var(--radius)}
@@ -368,7 +458,17 @@ main{display:block}
 
 /* ===== カテゴリページ ===== */
 .cat-hero{position:relative; overflow:hidden; isolation:isolate; color:var(--on-night); padding:28px 0 24px;
+  border-bottom:3px solid var(--c, var(--accent-fill));
   background:radial-gradient(70% 120% at 90% 0%, var(--c, var(--c-default)) 0%, transparent 60%), linear-gradient(160deg, var(--night-2), var(--night))}
+/* 見出し帯の背景にマップ画像（文字側を暗く）。画像が無くてもグラデーションだけで成立する */
+.cat-hero-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; opacity:.55}
+.cat-hero-shade{position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(90deg, rgba(12,11,29,.94) 0%, rgba(12,11,29,.78) 55%, rgba(12,11,29,.35) 100%)}
+.cat-hero .wrap{position:relative}
+.cat-hero-icon{float:right; display:grid; place-items:center; width:56px; height:56px; margin:4px 0 8px 12px; color:var(--c, var(--accent-fill)); background:rgba(12,11,29,.6); border:1px solid rgba(255,255,255,.16);
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%)}
+.cat-hero-icon .ic{width:34px; height:34px}
+.cat-hero .cat-hero-credit{clear:both; margin:8px 0 0; text-align:right; font-size:1rem; color:var(--on-night-muted); opacity:.85}
 .cat-hero .crumbs ol, .cat-hero .crumbs [aria-current]{color:var(--on-night-muted)}
 .cat-hero .crumbs li + li::before{color:var(--on-night-muted)}
 .cat-hero .crumbs a{color:var(--on-night)}
@@ -401,8 +501,9 @@ main{display:block}
    どのバッジも「色＋文字」。色だけで意味を伝えない。文字は全部 1rem 以上
    ========================================================= */
 
-/* 更新バッジ（カードの日付の前） */
+/* 更新バッジ（カードの日付の前）。2026-10-30 紅林: 中身は .flag（アイコン＋文字）に置き換え、.fresh は余白だけ */
 .fresh{display:inline-block; margin-right:8px; padding:0 8px; border-radius:6px; background:var(--accent-fill); color:var(--on-accent); font-weight:800; line-height:1.6; vertical-align:baseline}
+.fresh.flag{border-radius:0; padding:0 12px 0 6px}
 
 /* 案内の帯 */
 .notice{margin:0 0 20px; padding:12px 16px; background:var(--surface); border:1px solid var(--line); border-left:5px solid var(--accent-fill); border-radius:var(--radius)}
@@ -437,6 +538,8 @@ main{display:block}
 .status-tag--lft{background:var(--c-roster); color:var(--on-c); border-color:transparent}
 .status-tag--joined{background:var(--accent-fill); color:var(--on-accent); border-color:transparent}
 .status-tag--returned{background:var(--c-weekly); color:var(--on-c); border-color:transparent}
+/* 退団（board.html の left）。塗りにせず左の太線で「状態が変わった」ことだけ示す。文字で意味が伝わる */
+.status-tag--left{border-left:4px solid var(--c-patch)}
 
 /* 絞り込みボタン（JS があるときだけ出る） */
 .filter{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px}
@@ -527,6 +630,9 @@ main{display:block}
 .board-table td{display:grid; grid-template-columns:6.5em minmax(0,1fr); gap:8px; padding:4px 0; border:0}
 .board-table td::before{content:attr(data-label); font-weight:700; color:var(--muted)}
 .board-table tr:last-child td{border-bottom:0}
+/* 状態の文字（「加入表明（チーム公式の発表待ち）」など最大16字）は 360px のカードでは1行に入らない。
+   .status-tag の nowrap のままだと td からはみ出してページ全体が横にスクロールするので、ボードの中だけ折り返す（水瀬 2026-10-31） */
+.board-table .status-tag{white-space:normal}
 
 /* チームバッジ（_includes/team.html）。識別用の小さな表示。押せる要素ではない（リンク・hover なし）
    ロゴは logo_bg の枠に入れて object-fit: contain だけ。filter・切り抜き・重ね合わせはしない */
@@ -557,6 +663,214 @@ main{display:block}
 .empty + .roadmap{margin-top:10px}
 .cat-index-rm{padding:10px 12px 14px}
 .cat-index-rm .roadmap li{padding:8px 10px}
+
+/* =========================================================
+   2026-10-30 紅林アヤ: アイコン・ロール・状態・エージェント一覧・ピックアップ
+   ========================================================= */
+
+/* アイコン（_includes/icon.html）。既定は文字の大きさに合わせる */
+.ic{display:inline-block; flex:none; width:1.25em; height:1.25em; vertical-align:-.25em; color:inherit; overflow:visible}
+
+/* 状態の旗（LIVE / NEW / 更新 / LFT ほか）。いつもアイコン＋文字（色だけで伝えない） */
+.flag{display:inline-flex; align-items:center; gap:4px; padding:0 12px 0 6px; font-size:1rem; font-weight:800; line-height:1.6; letter-spacing:.03em; white-space:nowrap; vertical-align:baseline;
+  background:var(--surface-2); color:var(--fg); clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+.flag .ic{width:16px; height:16px}
+.flag--new{background:var(--accent-fill); color:var(--on-accent)}
+.flag--updated{background:var(--hud-fill); color:#14123a}
+.flag--live{background:var(--c-community); color:#14123a}
+.flag--live .ic{animation:flag-blink 1.6s ease-in-out infinite}
+.flag--lft{background:var(--c-roster); color:#14123a}
+.flag--soon{background:transparent; color:var(--muted); box-shadow:inset 0 0 0 1px var(--line)}
+@keyframes flag-blink{50%{opacity:.35}}
+.status-tag--soon{background:transparent; border:1px dashed var(--line); color:var(--muted)}
+
+/* ロール（_includes/role-icon.html） */
+.role{display:inline-flex; align-items:center; gap:4px; font-weight:700; line-height:1.5; white-space:nowrap; vertical-align:middle; color:var(--fg)}
+.role .ic{width:1.15em; height:1.15em; color:var(--rc, var(--muted))}
+.role--duelist{--rc:var(--ri-duelist); --rf:var(--r-duelist)}
+.role--initiator{--rc:var(--ri-initiator); --rf:var(--r-initiator)}
+.role--controller{--rc:var(--ri-controller); --rf:var(--r-controller)}
+.role--sentinel{--rc:var(--ri-sentinel); --rf:var(--r-sentinel)}
+.role--flex{--rc:var(--ri-flex); --rf:var(--r-flex)}
+.role--igl{--rc:var(--ri-igl); --rf:var(--r-igl)}
+.role--coach{--rc:var(--ri-coach); --rf:var(--r-coach)}
+.role--sub{--rc:var(--ri-sub); --rf:var(--r-sub)}
+.role--other{color:var(--muted); font-weight:600}
+.role + .role{margin-left:8px}
+/* 塗りのチップ版: class="role--chip" を渡す */
+.role--chip{padding:0 10px 0 6px; background:var(--rf, var(--surface-2)); color:#14123a; clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+.role--chip .ic{color:#14123a}
+/* 夜色の上（ヒーロー・見出し帯）では塗りの色をそのまま使う */
+.hero .role .ic,.cat-hero .role .ic,.result .role .ic{color:var(--rf, var(--on-night-muted))}
+.hero .role,.cat-hero .role{color:var(--on-night)}
+
+/* エージェント一覧（トップ。ロールで絞り込み＝site.js の data-filter-scope をそのまま使う） */
+.roster-filter{margin:0 0 12px}
+.roster-filter .filter-btn .role{color:inherit}
+.roster-filter .filter-btn[aria-pressed="true"] .role .ic{color:var(--on-accent)}
+.roster{list-style:none; margin:0; padding:2px 2px 10px; display:grid; grid-auto-flow:column; grid-template-rows:repeat(2,auto); grid-auto-columns:80px; gap:12px 8px; overflow-x:auto; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch}
+.roster > li{scroll-snap-align:start; min-width:0}
+.ag{display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none; text-align:center; line-height:1.35; font-size:1rem; color:var(--fg)}
+.ag-icon{position:relative; display:grid; place-items:center; width:68px; height:68px; padding:3px; background:var(--rf, var(--line));
+  clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%); transition:transform .15s}
+.ag-icon::before{content:attr(data-initial); color:#14123a; font-weight:800; font-size:1.25rem}
+.ag-icon img{position:absolute; inset:3px; width:calc(100% - 6px); height:calc(100% - 6px); object-fit:cover; background:var(--night);
+  clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%)}
+/* 右上にロールのアイコン（ロール名は読み上げ用に .sr-only で入っている） */
+.ag-role{position:absolute; right:3px; top:3px; z-index:1; display:grid; place-items:center; width:24px; height:24px; background:rgba(12,11,29,.85)}
+.ag-role .role .ic{width:16px; height:16px; color:var(--rf)}
+.ag-name{max-width:100%; font-weight:700; overflow-wrap:anywhere}
+a.ag .ag-name{text-decoration:underline; text-decoration-thickness:2px; text-decoration-color:var(--rf); text-underline-offset:4px}
+a.ag:hover .ag-icon{transform:translateY(-2px)}
+a.ag:hover .ag-name{color:var(--accent)}
+a.ag:focus-visible{outline-offset:2px}
+.roster-note{margin:8px 0 0; color:var(--muted)}
+.roster-credit{margin:4px 0 0; color:var(--muted); text-align:right}
+
+/* ピックアップ（人気ランキングの集計前に右列に出す。公開済みのまとめ・ツール） */
+.pick-list .rank-no{display:none}
+
+/* =========================================================
+   新しい部品の受け皿（紅林 2026-10-30・基本の形だけ。仕上げは第2弾）
+   作業中の include: players.html（pl-）、team-cards.html（tc-）、glossary.html（gl-）、patch-list.html（ph-）、
+   agent-history.html（ah-）、配信者大会（st-）、感度変換ツール（既存の .tool-* を使う）
+   共通の考え方: パネル＝斜めカット＋細い罫線、ラベル＝切り欠きのタグ、数字＝等幅、色は必ず文字とセット
+   ========================================================= */
+
+/* 共通: アンカー付きの見出し（#リンクでジャンプされる見出し。ヘッダーに隠れないよう scroll-margin） */
+.anchor-head{scroll-margin-top:calc(var(--header-h) + 16px); position:relative}
+.anchor-link{margin-left:8px; color:var(--muted); text-decoration:none; font-weight:700; opacity:.7}
+.anchor-link:hover,.anchor-link:focus-visible{opacity:1; color:var(--accent)}
+:target{scroll-margin-top:calc(var(--header-h) + 16px)}
+/* 共通: パネル・タグ・等幅の数字 */
+.panel{background:var(--surface); border:1px solid var(--line); padding:12px 14px;
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%)}
+.tagcut{display:inline-flex; align-items:center; gap:4px; padding:0 12px 0 8px; font-weight:800; line-height:1.6; background:var(--c, var(--surface-2)); color:var(--on-c); white-space:nowrap;
+  clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+.num{font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:800}
+/* 共通: パッチの変更の種類（文字＋アイコン。色だけにしない） */
+.chg{display:inline-flex; align-items:center; gap:4px; padding:0 8px; font-weight:800; line-height:1.6; white-space:nowrap; border:1px solid var(--line); background:var(--surface-2); color:var(--fg)}
+.chg .ic{width:14px; height:14px}
+.chg--buff .ic{color:var(--ri-initiator)}
+.chg--nerf .ic{color:var(--ri-duelist)}
+.chg--fix .ic,.chg--rework .ic{color:var(--hud)}
+
+/* 共通: 「〜へ移動」の目次チップ（pl-jump / gl-jump / ph-index / ah-index の一覧） */
+.pl-jump-list,.gl-jump-list,.ph-index-list,.ah-index-list{list-style:none; margin:0 0 20px; padding:0; display:flex; flex-wrap:wrap; gap:6px}
+.pl-jump-list a,.gl-jump-list a,.ph-index-list a,.ah-index-list a{display:inline-flex; align-items:center; gap:6px; min-height:44px; padding:0 14px 0 10px; background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--c, var(--accent-fill)); color:var(--fg); font-weight:700; text-decoration:none;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.pl-jump-list a:hover,.gl-jump-list a:hover,.ph-index-list a:hover,.ah-index-list a:hover{border-color:var(--accent-fill)}
+.pl-jump-list a:focus-visible,.gl-jump-list a:focus-visible,.ph-index-list a:focus-visible,.ah-index-list a:focus-visible{outline-offset:-3px}
+.ph-index-list a{font-family:var(--mono); --c:var(--c-patch)}
+.ah-index-list a{--c:var(--c-patch)}
+/* 共通: 種類のタグ（パッチの強化・弱体化など）。文字に加えて記号を前に付ける（色だけにしない） */
+.ph-kind,.ah-kind{white-space:nowrap}
+.ph-kind--buff,.ah-kind--buff{border-color:var(--ri-initiator)}
+.ph-kind--buff::before,.ah-kind--buff::before{content:"▲ "; color:var(--ri-initiator)}
+.ph-kind--nerf,.ah-kind--nerf{border-color:var(--ri-duelist)}
+.ph-kind--nerf::before,.ah-kind--nerf::before{content:"▼ "; color:var(--ri-duelist)}
+.ph-kind--new,.ah-kind--new{background:var(--accent-fill); color:var(--on-accent); border-color:transparent}
+.ph-kind--rework,.ah-kind--rework,.ph-kind--adjust,.ah-kind--adjust{border-color:var(--hud)}
+.ph-kind--rework::before,.ah-kind--rework::before,.ph-kind--adjust::before,.ah-kind--adjust::before{content:"◆ "; color:var(--hud)}
+/* 共通: アンカーで飛ばれる要素はヘッダーに隠れないように */
+.pl-row,.pl-team-name,.tc-card,.gl-cat-title,.gl-term,.ph-patch,.ah-agent{scroll-margin-top:calc(var(--header-h) + 16px)}
+.pl-row:target td{background:color-mix(in srgb, var(--accent-fill) 18%, transparent)}
+.tc-card:target{outline:2px solid var(--accent-fill); outline-offset:-2px}
+.gl-item:has(.gl-term:target){outline:2px solid var(--accent-fill); outline-offset:-2px}
+
+/* 本文（.prose）の中に出る部品の一覧は、.prose ul / ol の字下げ（1.4em）を打ち消す。
+   .prose ul（0,1,1）の方が .tc-list（0,1,0）より強く、360px で左に 22px の無駄な余白が出ていた（水瀬 2026-10-31） */
+.prose .pl-jump-list,.prose .gl-jump-list,.prose .ph-index-list,.prose .ah-index-list,
+.prose .tc-list,.prose .tc-results-list,.prose .tc-members-list,.prose .st-grid,.prose .team-cards,.prose .team-members,.prose .roadmap{padding-left:0}
+.prose .pl-jump-list li,.prose .gl-jump-list li,.prose .ph-index-list li,.prose .ah-index-list li{margin:0}
+
+/* pl-: 選手名鑑（players.html） */
+.pl-team{margin:0 0 24px}
+.pl-team-name{display:flex; align-items:center; gap:10px; margin:0 0 10px; padding:8px 12px; font-size:1.125rem; line-height:1.4; background:var(--surface-2); border-left:4px solid var(--c-roster);
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%)}
+.pl-table th,.pl-table td{vertical-align:middle}
+.pl-name{font-weight:800}
+.pl-status{display:inline-flex; align-items:center; padding:0 10px 0 6px; font-weight:800; line-height:1.6; white-space:nowrap; background:var(--surface-2); color:var(--fg); border:1px solid var(--line)}
+.pl-status--lft{background:var(--c-roster); color:#14123a; border-color:transparent}
+.pl-links{display:inline-flex; flex-wrap:wrap; gap:6px}
+.pl-link{display:inline-flex; align-items:center; min-height:32px; padding:0 12px 0 8px; background:var(--surface-2); border:1px solid var(--line); color:var(--link); font-weight:700; text-decoration:none;
+  clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%)}
+.pl-link:hover{border-color:var(--accent-fill)}
+.pl-link:focus-visible{outline-offset:-3px}
+.pl-empty{margin:0; padding:20px 16px; border:2px dashed var(--line); color:var(--muted); background:var(--surface)}
+.pl-src,.pl-foot,.pl-unknown,.pl-team-none{color:var(--muted)}
+
+/* tc-: チームカード（team-cards.html） */
+.tc-title{margin:0 0 10px; font-size:1.125rem}
+.tc-list{list-style:none; margin:0 0 20px; padding:0; display:grid; gap:12px; grid-template-columns:minmax(0,1fr)}
+.tc-card{background:var(--surface); border:1px solid var(--line); border-top:4px solid var(--c, var(--c-roster)); padding:12px 14px 14px;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%)}
+.tc-name{margin:0 0 8px; font-size:1.125rem; font-weight:800; line-height:1.4}
+.tc-status{margin:0 0 8px}
+.tc-label{display:inline-flex; align-items:center; margin:0 6px 4px 0; padding:0 10px 0 6px; font-weight:800; line-height:1.6; background:var(--surface-2); color:var(--fg); border-left:3px solid var(--c, var(--c-roster))}
+.tc-results,.tc-members{margin:8px 0 0}
+.tc-results-list,.tc-members-list{list-style:none; margin:0; padding:0}
+.tc-results-list li,.tc-member{padding:6px 0; border-top:1px solid var(--line)}
+.tc-member a{color:var(--link); font-weight:700}
+.tc-member-st,.tc-members-empty,.tc-note{color:var(--muted)}
+.tc-src{color:var(--link)}
+
+/* gl-: 用語集（glossary.html） */
+.gl-jump{margin:0 0 20px; padding:12px 14px 2px; background:var(--surface); border:1px solid var(--line); border-top:3px solid var(--c-glossary)}
+.gl-jump-title{margin:0 0 8px; font-weight:800}
+.gl-jump-list a{--c:var(--c-glossary)}
+.gl-count{margin-left:4px; font-family:var(--mono); color:var(--muted); font-weight:700}
+.gl-cat{margin:0 0 28px}
+.gl-cat-title{display:flex; align-items:center; gap:10px; margin:0 0 8px; padding-bottom:6px; font-size:1.25rem; line-height:1.4; border-bottom:1px solid var(--line)}
+.gl-cat-title::before{content:""; flex:none; width:10px; height:10px; background:var(--c-glossary); transform:rotate(45deg)}
+.gl-cat-lead{margin:0 0 12px; color:var(--muted)}
+.gl-list{margin:0; padding:0; display:grid; gap:10px}
+.gl-item{padding:12px 14px; background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--c-glossary)}
+.gl-term{margin:0 0 4px; font-size:1.125rem; font-weight:800; line-height:1.5}
+.gl-reading{margin-left:8px; color:var(--muted); font-weight:600; font-size:1rem}
+.gl-desc{margin:0}
+.gl-related,.gl-page{margin:6px 0 0}
+.gl-label{font-weight:700; color:var(--muted)}
+.gl-rel,.gl-page a{color:var(--link)}
+.gl-page--soon{color:var(--muted)}
+
+/* ph-: パッチ一覧（patch-list.html） */
+.ph-patch{margin:0 0 28px}
+.ph-date{margin-left:6px; color:var(--muted); font-weight:600; font-size:1rem; font-variant-numeric:tabular-nums}
+.ph-headline{font-weight:700}
+.ph-source{margin-top:-.4em}
+.ph-table td:first-child{white-space:nowrap}
+.ph-none{margin-top:8px}
+
+/* ah-: エージェント別 調整履歴（agent-history.html） */
+.ah-agent{margin:0 0 28px}
+.ah-name{display:flex; align-items:center; gap:10px}
+.ah-icon{flex:none; width:40px; height:40px; background:var(--night); border-radius:0;
+  clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%)}
+.prose .ah-icon{border-radius:0}
+.ah-table td:first-child{white-space:nowrap; font-family:var(--mono)}
+
+/* st-: 配信者大会（予約。まだ使われていない） */
+.st-grid{list-style:none; margin:0 0 20px; padding:0; display:grid; gap:12px; grid-template-columns:minmax(0,1fr)}
+.st-card{display:flex; flex-direction:column; gap:6px; background:var(--surface); border:1px solid var(--line); border-top:4px solid var(--c-community); padding:12px 14px; text-decoration:none; color:var(--fg);
+  clip-path:polygon(0 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%)}
+a.st-card:hover{border-color:var(--c-community)}
+a.st-card:focus-visible{outline-offset:-4px}
+.st-name{margin:0; font-size:1.125rem; font-weight:800; line-height:1.4}
+.st-meta{display:flex; flex-wrap:wrap; gap:4px 12px; margin:0; color:var(--muted)}
+
+/* sens-: 感度変換ツール（_tools/sensitivity.html。入力欄は既存の .field / .result を使う） */
+.sens-out{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.sens-error{margin:8px 0 0; color:var(--accent); font-weight:700}
+
+@media (min-width:600px){
+  .roster{grid-auto-flow:row; grid-template-rows:none; grid-template-columns:repeat(auto-fill,minmax(84px,1fr)); overflow:visible; padding-bottom:2px}
+  .tc-list,.st-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:900px){
+  .tc-list,.st-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){.flag--live .ic{animation:none}}
 
 /* ===== 広い画面 ===== */
 @media (min-width:600px){
@@ -597,5 +911,9 @@ main{display:block}
   .home--sub{display:block}
   .home--sub .grid--latest{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none !important; scroll-behavior:auto !important}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none !important; animation:none !important; scroll-behavior:auto !important}
+  /* hover で動かさない（カード・タイル・アイコンの持ち上げと拡大） */
+  .card:hover,a.ag:hover .ag-icon,.cat:hover img,.card:hover .thumb-bg{transform:none}
+}
 @media print{.site-header,.site-footer .foot-cols,.ad-slot,.share,.toc{display:none}}

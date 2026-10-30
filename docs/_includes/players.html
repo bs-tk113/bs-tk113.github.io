@@ -1,0 +1,79 @@
+{%- comment -%}
+  選手名鑑（チーム別ロスター一覧）。データは _data/players.yml。
+  使い方: ハブ本文の Markdown の中で、行頭から {% include players.html %} と書く（front matter に players: true を付けておく）
+  任意:
+    teams="zeta,cr,dfm"   出すチームと順番（teams.yml のキーをカンマ区切り）。省略時は下の既定の順番。所属なし（team: ""）は最後に出る
+    show_left=false       退団発表済み（status: left）の行を出さない。既定は出す（「退団発表済み」と表示）
+  見た目はデザイナーが style.css で付ける。クラス名は pl- で始める。インラインの style は使わない。
+  画像は出さない（顔写真・アバターは RED）。チームはバッジ＋チーム名（_includes/team.html）。
+  各選手の行に id="pl-<id>" のアンカー（/hub/players/#pl-sugarz3ro のようにリンクできる）。チームの見出しは id="pl-team-<キー>"。
+  Markdown の中から呼ぶため、出力は1行にまとめる（kramdown が字下げをコードブロックと読まないように）。
+  変数は pl_ で始める名前だけ使う（include 内の assign は呼び出し元にも残るため）。
+{%- endcomment -%}
+{%- assign pl_all = site.data.players -%}
+{%- assign pl_order_s = include.teams | default: "zeta,cr,dfm,varrel,reject,fennel,igzist,murash,northeption,scarz,sengoku,riddle" -%}
+{%- assign pl_groups = pl_order_s | append: ",__none__" | split: "," -%}
+{%- assign pl_show_left = true -%}{%- if include.show_left == false -%}{%- assign pl_show_left = false -%}{%- endif -%}
+{%- capture pl_html -%}
+<section class="pl" aria-labelledby="pl-title">
+<h2 id="pl-title">チーム別ロスター一覧</h2>
+{%- if pl_all == nil or pl_all.size == 0 -%}
+<p class="pl-empty">まだ掲載していません。チーム公式サイトの選手ページで確認できたものから載せます。</p>
+{%- else -%}
+<nav class="pl-jump" aria-label="チームへ移動"><ul class="pl-jump-list">
+{%- for pl_key in pl_groups -%}
+  {%- assign pl_k = pl_key | strip -%}{%- if pl_k == "__none__" -%}{%- assign pl_k = "" -%}{%- endif -%}
+  {%- assign pl_n = pl_all | where: "team", pl_k | size -%}
+  {%- if pl_n > 0 -%}
+    {%- if pl_k == "" -%}<li><a href="#pl-team-none">所属なし</a></li>
+    {%- else -%}<li><a href="#pl-team-{{ pl_k }}">{% include team.html key=pl_k %}</a></li>{%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+</ul></nav>
+{%- for pl_key in pl_groups -%}
+  {%- assign pl_k = pl_key | strip -%}{%- if pl_k == "__none__" -%}{%- assign pl_k = "" -%}{%- endif -%}
+  {%- assign pl_rows = pl_all | where: "team", pl_k -%}
+  {%- if pl_rows.size == 0 -%}{%- continue -%}{%- endif -%}
+  {%- if pl_k == "" -%}{%- assign pl_anchor = "none" -%}{%- assign pl_tname = "所属なし" -%}
+  {%- else -%}{%- assign pl_anchor = pl_k -%}{%- assign pl_tname = site.data.teams[pl_k].name | default: pl_k -%}{%- endif -%}
+<section class="pl-team" aria-labelledby="pl-team-{{ pl_anchor }}">
+<h3 id="pl-team-{{ pl_anchor }}" class="pl-team-name">{% if pl_k == "" %}所属なし（チーム募集中など）{% else %}{% include team.html key=pl_k size="md" %}{% endif %}</h3>
+<div class="table-scroll pl-table" role="region" aria-label="{{ pl_tname | escape }}の選手一覧（横にスクロールできます）" tabindex="0">
+<table>
+<thead><tr><th scope="col">活動名</th><th scope="col">ロール・役割</th><th scope="col">状態</th><th scope="col">リンク</th><th scope="col">出典・確認日</th></tr></thead>
+<tbody>
+  {%- for p in pl_rows -%}
+    {%- if p.status == "left" and pl_show_left == false -%}{%- continue -%}{%- endif -%}
+    {%- case p.status -%}
+      {%- when "active" -%}{%- assign pl_st = "在籍" -%}
+      {%- when "sub" -%}{%- assign pl_st = "控え" -%}
+      {%- when "coach" -%}{%- assign pl_st = "スタッフ" -%}
+      {%- when "lft" -%}{%- assign pl_st = "チーム募集中（LFT）" -%}
+      {%- when "inactive" -%}{%- assign pl_st = "在籍（ロスター外）" -%}
+      {%- when "left" -%}{%- assign pl_st = "退団発表済み" -%}
+      {%- else -%}{%- assign pl_st = "—" -%}
+    {%- endcase -%}
+    {%- assign pl_has_link = false -%}
+    {%- capture pl_links -%}
+      {%- if p.links.x and p.links.x != "" -%}{%- assign pl_has_link = true -%}<a class="pl-link pl-link--x" href="{{ p.links.x }}" rel="noopener" target="_blank">X</a> {% endif -%}
+      {%- if p.links.twitch and p.links.twitch != "" -%}{%- assign pl_has_link = true -%}<a class="pl-link pl-link--twitch" href="{{ p.links.twitch }}" rel="noopener" target="_blank">Twitch</a> {% endif -%}
+      {%- if p.links.youtube and p.links.youtube != "" -%}{%- assign pl_has_link = true -%}<a class="pl-link pl-link--youtube" href="{{ p.links.youtube }}" rel="noopener" target="_blank">YouTube</a>{%- endif -%}
+    {%- endcapture -%}
+<tr id="pl-{{ p.id }}" class="pl-row pl-row--{{ p.status | default: 'other' }}">
+<td data-label="活動名"><strong class="pl-name">{{ p.name | escape }}</strong>{% if p.country and p.country != "" %}<br><span class="pl-country meta">{{ p.country | escape }}</span>{% endif %}</td>
+<td data-label="ロール・役割">{% if p.role and p.role != "" %}{{ p.role | escape }}{% else %}<span class="pl-unknown">公式の記載なし</span>{% endif %}</td>
+<td data-label="状態"><span class="pl-status pl-status--{{ p.status | default: 'other' }}">{{ pl_st }}</span>{% if p.note and p.note != "" %}<br><span class="pl-note meta">{{ p.note | escape }}</span>{% endif %}</td>
+<td data-label="リンク"><span class="pl-links">{% if pl_has_link %}{{ pl_links | strip }}{% else %}—{% endif %}</span></td>
+<td data-label="出典・確認日">{% if p.source.url and p.source.url != "" %}<a class="pl-src" href="{{ p.source.url }}" rel="noopener" target="_blank">{{ p.source.title | default: "出典" | escape }}</a>{% else %}{{ p.source.title | default: "—" | escape }}{% endif %}{% if p.checked %}<br><span class="meta">確認 <time datetime="{{ p.checked | date: '%Y-%m-%d' }}">{{ p.checked | date: '%Y/%-m/%-d' }}</time></span>{% endif %}</td>
+</tr>
+  {%- endfor -%}
+</tbody>
+</table>
+</div>
+</section>
+{%- endfor -%}
+<p class="table-note pl-foot">ロール・国は、チーム公式サイト・チームの発表に書いてあるときだけ載せています（推測で埋めません）。リンクはチーム公式のプロフィールや発表に載っているものだけです。顔写真・アバターは載せません。</p>
+{%- endif -%}
+</section>
+{%- endcapture -%}
+{{ pl_html | strip_newlines }}

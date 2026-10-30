@@ -52,7 +52,7 @@ items:
     type: hub
     status: 企画中
     doc: /hub/agent-history/
-  - title: 週まとめ #1（以後、毎週月曜）
+  - title: 週まとめ（毎週月曜）
     category: weekly
     type: post
     status: 企画中
@@ -71,7 +71,3 @@ items:
     type: hub
     status: 企画中
     doc: /hub/lft-board/
-  - title: 大会日程 今月（公式＋配信者）
-    category: tournaments
-    type: post
-    status: 企画中

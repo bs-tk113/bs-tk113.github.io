@@ -1,0 +1,72 @@
+{%- comment -%}
+  パッチ変更履歴（パッチ別）。データは docs/_data/patches.yml（項目の説明はそのファイルの先頭）。
+  使い方: {% include patch-list.html %}
+  - 新しいパッチが上。各パッチに id="p-13-09" のようなアンカーを付ける（エージェント別ページからリンクされる）
+  - 種類（kind）は色ではなく文字のラベルで出す。エージェント名は /hub/agent-history/ の該当エージェントへリンク
+  - changes が空のパッチは「競技に関わる変更なし」と出す（パッチの抜けと区別するため）
+  クラス名は ph- 接頭辞（見た目はデザイナーが style.css に追加予定）。表の外枠は既存の .table-scroll を使う。
+{%- endcomment -%}
+{%- assign ph_patches = site.data.patches | sort: "date" | reverse -%}
+{%- assign ph_agent_url = '/hub/agent-history/' | relative_url -%}
+{%- if ph_patches and ph_patches.size > 0 %}
+<nav class="ph-index" aria-label="パッチの一覧">
+  <ul class="ph-index-list">
+    {%- for p in ph_patches %}
+    <li><a href="#p-{{ p.version | replace: '.', '-' }}">{{ p.version }}</a></li>
+    {%- endfor %}
+  </ul>
+</nav>
+
+<div class="ph-list">
+  {%- for p in ph_patches %}
+  {%- assign ph_id = p.version | replace: '.', '-' | prepend: 'p-' %}
+  <section class="ph-patch" id="{{ ph_id }}" aria-labelledby="{{ ph_id }}-h">
+    <div class="prose">
+      <h2 class="ph-title" id="{{ ph_id }}-h">パッチ {{ p.version }}<span class="ph-date">（<time datetime="{{ p.date | date: '%Y-%m-%d' }}">{{ p.date | date: '%Y年%-m月%-d日' }}</time>）</span></h2>
+      <p class="ph-headline">{{ p.headline | escape }}</p>
+      <p class="meta ph-source"><a href="{{ p.url }}" rel="noopener" target="_blank">公式パッチノート {{ p.version }}（日本語）</a></p>
+    </div>
+    {%- if p.changes and p.changes.size > 0 %}
+    <div class="table-scroll ph-table" role="region" aria-label="パッチ {{ p.version }} の変更（横にスクロールできます）" tabindex="0">
+      <table>
+        <thead><tr><th scope="col">対象</th><th scope="col">名前</th><th scope="col">種類</th><th scope="col">変更内容</th></tr></thead>
+        <tbody>
+          {%- for c in p.changes %}
+          {%- case c.target -%}
+            {%- when "agent" -%}{%- assign ph_tg = "エージェント" -%}
+            {%- when "map" -%}{%- assign ph_tg = "マップ" -%}
+            {%- when "weapon" -%}{%- assign ph_tg = "武器" -%}
+            {%- when "mode" -%}{%- assign ph_tg = "モード" -%}
+            {%- when "system" -%}{%- assign ph_tg = "システム" -%}
+            {%- else -%}{%- assign ph_tg = "その他" -%}
+          {%- endcase -%}
+          {%- case c.kind -%}
+            {%- when "buff" -%}{%- assign ph_kd = "強化" -%}
+            {%- when "nerf" -%}{%- assign ph_kd = "弱体化" -%}
+            {%- when "adjust" -%}{%- assign ph_kd = "調整" -%}
+            {%- when "new" -%}{%- assign ph_kd = "新登場" -%}
+            {%- when "rework" -%}{%- assign ph_kd = "作り直し" -%}
+            {%- when "bugfix" -%}{%- assign ph_kd = "不具合修正" -%}
+            {%- when "pool_in" -%}{%- assign ph_kd = "プール入り" -%}
+            {%- when "pool_out" -%}{%- assign ph_kd = "プール外" -%}
+            {%- else -%}{%- assign ph_kd = "その他" -%}
+          {%- endcase %}
+          <tr class="ph-row ph-row--{{ c.target | default: 'other' }}">
+            <td data-label="対象">{{ ph_tg }}</td>
+            <td data-label="名前">{% if c.target == "agent" and c.key %}<a href="{{ ph_agent_url }}#a-{{ c.key }}">{{ c.name | escape }}</a>{% else %}{{ c.name | escape }}{% endif %}</td>
+            <td data-label="種類"><span class="status-tag ph-kind ph-kind--{{ c.kind | default: 'other' }}">{{ ph_kd }}</span></td>
+            <td data-label="変更内容">{{ c.summary | escape }}</td>
+          </tr>
+          {%- endfor %}
+        </tbody>
+      </table>
+    </div>
+    {%- else %}
+    <p class="empty ph-none">このパッチには、競技に関わるエージェント・武器・マップの変更はありません（公式パッチノートで確認）。</p>
+    {%- endif %}
+  </section>
+  {%- endfor %}
+</div>
+{%- else %}
+<p class="empty">まだ掲載していません。公式パッチノートで確認したものから載せます。</p>
+{%- endif %}

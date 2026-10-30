@@ -1,0 +1,11 @@
+{%- comment -%}
+  一覧ページの見出し帯（.cat-hero）の背景にマップ画像を敷く。紅林 2026-10-30
+  使い方: .cat-hero の直下（.wrap の前）に {% include hero-art.html map="lotus" %}
+  画像ファイルが docs/ に無ければ何も出さない。出したかどうかは {{ ha_ok }}（0 か 1 以上）に入る → © 表記を出すのに使う:
+    {% if ha_ok > 0 %}<p class="cat-hero-credit">画像 © Riot Games, Inc.</p>{% endif %}
+{%- endcomment -%}
+{%- assign ha_map = site.data.maps[include.map] -%}
+{%- assign ha_ok = 0 -%}{%- if ha_map.banner -%}{%- assign ha_ok = site.static_files | where: "path", ha_map.banner | size -%}{%- endif -%}
+{%- if ha_ok > 0 -%}
+<img class="cat-hero-bg" src="{{ ha_map.banner | relative_url }}" alt="" width="640" height="360" decoding="async" onerror="this.style.display='none'"><span class="cat-hero-shade" aria-hidden="true"></span>
+{%- endif -%}

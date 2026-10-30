@@ -38,7 +38,8 @@
     {%- if t.data -%}{%- assign t_dn = site.data[t.data].items | size -%}{%- if t_dn == 0 -%}{%- continue -%}{%- endif -%}{%- endif -%}
     {%- include resolve-link.html url=t.url doc=t.doc fallback=t.fallback label=t.label fallback_label=t.fallback_label -%}
     {%- if rl_url != "" %}
-    <a class="tab" href="{{ rl_url | relative_url }}" style="--c:var(--c-{{ t.cat | default: 'default' }})"{% if page.url == rl_url %} aria-current="page"{% endif %}><span class="dot" aria-hidden="true"></span>{{ rl_label }}</a>
+    {%- assign t_ic = t.icon | default: t.cat | default: "hub" -%}{%- if t_ic == "default" -%}{%- assign t_ic = "hub" -%}{%- endif %}
+    <a class="tab" href="{{ rl_url | relative_url }}" style="--c:var(--c-{{ t.cat | default: 'default' }})"{% if page.url == rl_url %} aria-current="page"{% endif %}>{% include icon.html name=t_ic %}{{ rl_label }}</a>
     {%- endif -%}
   {%- endfor %}
   </nav>
@@ -47,7 +48,7 @@
     <ul>
       {%- for c in site.data.categories %}
       {%- include cat-url.html catd=c %}
-      <li><a href="{{ cu_url | relative_url }}" style="--c:var(--c-{{ c.slug }})"><span class="dot" aria-hidden="true"></span>{{ c.name }}</a></li>
+      <li><a href="{{ cu_url | relative_url }}" style="--c:var(--c-{{ c.slug }})">{% include icon.html name=c.slug %}{{ c.name }}</a></li>
       {%- endfor %}
       <li class="drawer-sep" aria-hidden="true"></li>
       {%- for m in site.data.nav.menu %}

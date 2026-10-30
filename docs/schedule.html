@@ -12,10 +12,13 @@ noindex_if_empty: matches
 {%- endcomment -%}
 {%- assign sm = site.data.matches -%}
 <div class="cat-hero" style="--c:var(--c-tournaments)">
+  {% include hero-art.html map="ascent" %}
   <div class="wrap">
     {% include breadcrumb.html title=page.title %}
+    <span class="cat-hero-icon">{% include icon.html name="schedule" %}</span>
     <h1>大会カレンダー</h1>
     <p>公式大会と、配信者・コミュニティが主催する大会の日程と結果です。日時はすべて日本時間。結果は「結果を見る」を押すと開きます。</p>
+    {%- if ha_ok > 0 %}<p class="cat-hero-credit">画像 © Riot Games, Inc.</p>{% endif %}
   </div>
 </div>
 
@@ -33,7 +36,7 @@ noindex_if_empty: matches
   <p class="sched-jump" hidden><a href="#" data-sched-jump>今日の日程へ移動</a></p>
   {{ sm_list }}
   {%- else %}
-  <p class="empty">いまは掲載している日程がありません。主催者・公式の発表を確認したものから載せます。大会の仕組みは<a href="{{ '/category/tournaments/' | relative_url }}">大会ハブ</a>、配信者・コミュニティ大会は<a href="{{ '/category/community/' | relative_url }}">こちら</a>から。</p>
+  <p class="empty">いま掲載している日程はありません。大会の仕組みは<a href="{{ '/category/tournaments/' | relative_url }}">大会ハブ</a>、配信者・コミュニティ大会は<a href="{{ '/category/community/' | relative_url }}">こちら</a>から。</p>
   {%- endif %}
 
   <aside class="box" aria-labelledby="h-sched-legend">

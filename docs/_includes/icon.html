@@ -1,0 +1,16 @@
+{%- comment -%}
+  自作アイコン（SVG スプライト docs/assets/img/icons/icons.svg の1つ）を出す。紅林 2026-10-30
+  使い方: {% include icon.html name="duelist" %}
+  任意:   class="ic--lg"（大きさ・色の追加クラス）  label="デュエリスト"（意味のあるアイコンとして読み上げさせるとき。省略時は装飾＝読み上げない）
+  色は文字色（currentColor）。大きさは既定で 1.25em（style.css の .ic）。
+  name の一覧:
+    ロール: duelist initiator controller sentinel flex igl coach player agent
+    カテゴリ（categories.yml の slug と同じ）: tournaments community roster patch weekly tools glossary
+    ページ・ナビ: now schedule hub map arrow search external source
+    状態: live new updated lft closed clock buff nerf
+  無い name を書いても何も壊れない（空の四角が出るだけ）。カテゴリ slug を変数で渡すときは default を自分で用意する。
+{%- endcomment -%}
+{%- assign ic_name = include.name | default: "" | append: "" | strip -%}
+{%- if ic_name != "" -%}
+<svg class="ic ic--{{ ic_name }}{% if include.class %} {{ include.class }}{% endif %}"{% if include.label %} role="img" aria-label="{{ include.label | escape }}"{% else %} aria-hidden="true"{% endif %} focusable="false" width="24" height="24"><use href="{{ '/assets/img/icons/icons.svg' | relative_url }}#i-{{ ic_name }}"></use></svg>
+{%- endif -%}

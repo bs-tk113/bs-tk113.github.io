@@ -1,0 +1,139 @@
+---
+# 2026-10-30 作成（水瀬）。白石の必須修正（CS2 の m_yaw の書き方）を指定文面どおり反映して編集長が公開
+published: true
+title: 感度変換ツール（VALORANT ↔ CS2・DPI 変更・振り向き cm/360）
+short_title: 感度変換
+description: VALORANT と CS2 の感度を相互に変換します。DPI を変えたときに同じ振り向きを保つ感度や、振り向き（cm/360）も計算できます。計算式と、係数の出典・確かめ方はページ内に載せています。
+order: 10
+checked: 2026-10-30
+tool_script: sensitivity.js
+formula_short: "変換後の感度 = 元の感度 × 元のヨー値 × 元の DPI ÷ (先のヨー値 × 先の DPI)"
+formulas:
+  - name: 1カウントあたりの回転角
+    expr: "回転角（度） = ヨー値 × ゲーム内感度"
+    note: "マウスが 1 カウント（DPI の「ドット」1つ分）動いたときに、視点が横に何度回るかです。ヨー値はゲームごとに決まった倍率で、下の「計算に使う定数」に載せています。"
+  - name: 振り向き（cm/360）
+    expr: "cm/360 = 360 ÷ (ヨー値 × ゲーム内感度 × DPI) × 2.54"
+    note: "DPI は「1インチ動かしたときのカウント数」なので、360 度回るのに必要なカウント数を DPI で割るとインチになり、2.54 を掛けると cm になります。"
+  - name: 感度の変換（同じ振り向きを保つ）
+    expr: "変換後の感度 = (元のヨー値 × 元の感度 × 元の DPI) ÷ (先のヨー値 × 先の DPI)"
+    note: "左右の cm/360 が等しくなる感度です。同じゲームの中で DPI だけ変えるときは、ヨー値が消えて「元の感度 × 元の DPI ÷ 先の DPI」になります。同じ DPI で CS2 から VALORANT にするときは「CS2 の感度 × 0.022 ÷ 0.07」（およそ 3.18 で割る）です。"
+  - name: 振り向きから逆算
+    expr: "感度 = 360 × 2.54 ÷ (cm/360 × 先のヨー値 × 先の DPI)"
+    note: "変換元に載っていないゲームでも、そのゲームで振り向きを実際に測れば、この式で変換先の感度が出せます。"
+constants:
+  - name: VALORANT のヨー値
+    value: "0.07 度／カウント（感度 1 のとき）"
+    note: "Riot Games は公式に公表していません。下の「0.07（VALORANT）の確かめ方」の手順で誰でも実測して確かめられます。"
+  - name: CS2 のヨー値（m_yaw）
+    value: "0.022 度／カウント（感度 1 のとき）"
+    note: "Valve が公開している Source エンジン（CS2 の前の世代）のコードで、m_yaw の初期値が 0.022 と定義されています。CS2 のコードは公開されていないため、CS2 でも同じ値であることは Valve の公開資料では確かめられていません。このツールでは CS2 でも m_yaw を変えていない場合は 0.022 として計算しています。下の「0.07（VALORANT）の確かめ方」にある CS2 の手順（感度 1・800 DPI で約 52.0 cm）で実測して確かめられます。"
+  - name: 1 インチ
+    value: "2.54 cm（厳密値）"
+    note: "NIST（米国国立標準技術研究所）の換算表で厳密値とされています。"
+sources:
+  - title: "Valve「source-sdk-2013」in_mouse.cpp（Valve 公式の GitHub リポジトリ）"
+    url: https://github.com/ValveSoftware/source-sdk-2013/blob/master/src/game/client/in_mouse.cpp
+    note: m_yaw の初期値 0.022（Mouse yaw factor）と、視点の回転角 = m_yaw × マウスの移動量 × 感度 の処理。Source エンジン（CS2 の前の世代）のコードで、CS2 そのもののコードではありません
+  - title: "NIST Guide to the SI, Appendix B.8（単位の換算係数）"
+    url: https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8
+    note: 1 インチ = 2.54 cm。太字の係数は厳密値と明記
+  - title: "CORSAIR「eDPI 計算機」（マウスメーカーによる eDPI の解説）"
+    url: https://www.corsair.com/explorer/tools/edpi/edpi-calculator/
+    note: 結果欄の eDPI（DPI × ゲーム内感度）の式。eDPI はゲーム同士では直接比べられない
+  - title: "VALORANT のヨー値 0.07: 公式の出典はありません"
+    note: Riot Games の公式発表は見つかりませんでした。下の「0.07（VALORANT）の確かめ方」で実測して確かめられます
+usage: |
+  1. **変換元** を選びます。VALORANT か CS2 の感度を変換するときはそのゲームを、ほかのゲームから移るときは「振り向き（cm/360）を直接入れる」を選びます。
+  2. 今の **感度** と **DPI**（または測った振り向きの cm）を入れます。
+  3. **変換先** のゲームを選びます。DPI も変えるときは **変換先の DPI** を入れます（空欄なら今の DPI のまま）。
+  4. 変換後の感度、振り向き（cm/360）、変換先の eDPI が出ます。数字を変えるたびに計算し直します。
+  5. 「結果の URL をコピー」を押すと、入れた数字ごとリンクを共有できます（数字が入るのはコピーしたリンクだけで、表示中のページの URL は変わりません）。
+
+  #### 結果の丸め方
+  - 感度は **小数第3位まで** に丸めて大きく表示し、その下に丸める前の値（有効数字6桁）も出します。ゲームの入力欄で入れられる桁に合わせて、近い値にしてください。
+  - 振り向きは手で測る距離なので **小数第1位（0.1 cm）まで** です。丸めた感度で振り向きの表示（0.1 cm 単位）が変わるときは、その値も表示します。
+
+  #### 振り向き（cm/360）の測り方
+  1. マウスパッドの横に定規（またはメジャー）を置き、マウスの左端をどこか目盛りに合わせます。
+  2. ゲーム内で、照準を目印（柱の角など）に合わせます。
+  3. マウスをゆっくり真横に動かし、視点が 1 周して同じ目印に戻ったところで止めます。
+  4. 動かした距離が cm/360 です。手の動きでずれるので、2〜3 回測って平均をとると安定します。
+
+  #### 0.07（VALORANT）の確かめ方
+  VALORANT の感度を **1**、マウスを **400 DPI** にして上の方法で振り向きを測ります。式どおりなら 360 ÷ (0.07 × 1 × 400) × 2.54 = **約 32.7 cm** です。CS2 も同じように、感度 1・800 DPI なら 360 ÷ (0.022 × 1 × 800) × 2.54 = **約 52.0 cm**（感度 2.5 なら約 20.8 cm）になります。手で測るので数％のずれは出ます。
+
+  #### この計算が前提にしていること
+  - スコープやズームを使っていない、**ふだんの視点の横方向** の感度だけを変換します。ズーム時の感度倍率は別の設定です。
+  - マウスの加速（「ポインターの精度を高める」など）はオフ、ゲームが Windows のポインター速度の影響を受けない設定の場合です。
+  - 同じ cm/360 でも、視野角（FOV）や画面の比率が違うと、画面の上での動き方の感じは変わります。変換した値は出発点にして、少しずつ調整してください。
+
+  同じゲームの中で感度の重さを比べたいときは [eDPI 計算ツール](/tools/edpi/) も使えます。
+faq:
+  - q: Apex Legends・Overwatch 2・Fortnite などが選べないのはなぜですか？
+    a: "これらのゲームの係数（ヨー値）について、ゲーム会社の公式情報やだれでも確かめられる一次情報を、2026年10月30日の時点で編集部が確認できなかったためです。根拠を確かめられないまま数字を載せないことにしています。ほかのゲームから移るときは、そのゲームで振り向き（cm/360）を測り、変換元で「振り向き（cm/360）を直接入れる」を選んでください。"
+  - q: DPI を変えたら、ゲーム内感度はどう直せばいいですか？
+    a: "変換元と変換先に同じゲームを選び、「変換先の DPI」に新しい DPI を入れてください。今の感度 × 今の DPI ÷ 新しい DPI が、同じ振り向きになる感度です（例: VALORANT の感度 0.4・800 DPI から 1600 DPI にするなら 0.4 × 800 ÷ 1600 = 0.2）。"
+  - q: 変換した感度にしたのに、前のゲームと感覚が違います。
+    a: "このツールが合わせるのは、ふだんの視点で 1 周回るのに必要なマウスの距離（cm/360）です。視野角（FOV）や画面の比率、スコープ時の倍率、マウス加速の有無が違うと、同じ距離でも感じ方は変わります。変換した値を出発点にして、少しずつ調整してください。"
+  - q: VALORANT の 0.07 は公式の数字ですか？
+    a: "公式の数字ではありません。Riot Games の公式発表は見つからなかったので、実測で確かめられる値として使っています。確かめ方はこのページの「0.07（VALORANT）の確かめ方」に書いています。"
+  - q: 入れた数字はどこかに送られますか？
+    a: "計算はお使いのブラウザの中で行い、当サイトのサーバーに送ったり保存したりはしません。ただし「結果の URL をコピー」で作ったリンクには数値が入るため、そのリンクを開くとアクセス解析（Google アナリティクス）にページの URL として記録されることがあります。"
+tag: sensitivity
+history:
+  - date: 2026-10-30
+    note: 作成（非公開）
+---
+<form class="tool-form" id="sens-form" novalidate>
+<div class="field">
+<label for="sens-from">変換元</label>
+<select id="sens-from" name="from">
+<option value="cs2" selected>CS2</option>
+<option value="valorant">VALORANT</option>
+<option value="cm360">振り向き（cm/360）を直接入れる</option>
+</select>
+<p class="field-help">ほかのゲームからは「振り向き」を選びます</p>
+</div>
+<div class="field">
+<label for="sens-to">変換先</label>
+<select id="sens-to" name="to">
+<option value="valorant" selected>VALORANT</option>
+<option value="cs2">CS2</option>
+</select>
+<p class="field-help">DPI だけ変えるときは変換元と同じゲーム</p>
+</div>
+<div class="field" id="sens-field-sens">
+<label for="sens-sens" id="sens-sens-label">今の感度（CS2）</label>
+<input id="sens-sens" name="sens" type="number" inputmode="decimal" min="0.001" max="1000" step="any" value="1" required>
+<p class="field-help">例: 0.4 / 1.2 / 2</p>
+</div>
+<div class="field" id="sens-field-dpi">
+<label for="sens-dpi">今の DPI</label>
+<input id="sens-dpi" name="dpi" type="number" inputmode="decimal" min="1" max="100000" step="any" value="800" required>
+<p class="field-help">例: 400 / 800 / 1600</p>
+</div>
+<div class="field" id="sens-field-cm" hidden>
+<label for="sens-cm">今の振り向き（cm/360）</label>
+<input id="sens-cm" name="cm" type="number" inputmode="decimal" min="0.1" max="10000" step="any" value="40">
+<p class="field-help">測り方はページ下の「使い方と解説」</p>
+</div>
+<div class="field">
+<label for="sens-dpi2">変換先の DPI</label>
+<input id="sens-dpi2" name="dpi2" type="number" inputmode="decimal" min="1" max="100000" step="any" placeholder="空欄なら今と同じ">
+<p class="field-help" id="sens-dpi2-help">空欄なら今の DPI と同じとして計算します。DPI を変えるときだけ入れてください。</p>
+</div>
+</form>
+<div class="result" aria-live="polite">
+<p class="result-label" id="sens-label">変換後の感度（VALORANT・800 DPI）</p>
+<p class="result-value" id="sens-out">0.314</p>
+<p class="result-sub" id="sens-sub">丸める前の値: 0.314286（CS2 1・800 DPI から）</p>
+<p class="result-sub" id="sens-cm-out">振り向き: 52.0 cm/360（20.5 インチ）</p>
+<p class="result-sub" id="sens-edpi-out">変換先の eDPI: 251.43（VALORANT の中でだけ比べられる値）</p>
+</div>
+<p class="tool-error" id="sens-error" hidden></p>
+<div class="tool-actions">
+<button class="btn" type="button" id="sens-copy">結果の URL をコピー</button>
+<a class="btn btn--ghost" href="#formula">計算式と出典を見る</a>
+<a class="btn btn--ghost" href="{{ '/tools/edpi/' | relative_url }}">eDPI 計算ツールへ</a>
+</div>

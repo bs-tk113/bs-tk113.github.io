@@ -6,10 +6,13 @@ permalink: /hub/
 ---
 {%- assign hub_list = site.hubs | sort: "order", "last" -%}
 <div class="cat-hero" style="--c:var(--c-tournaments)">
+  {% include hero-art.html map="lotus" %}
   <div class="wrap">
     {% include breadcrumb.html title=page.title %}
+    <span class="cat-hero-icon">{% include icon.html name="hub" %}</span>
     <h1>まとめハブ一覧</h1>
-    <p>大会・移籍・パッチなど、公式発表に合わせて更新し続けるまとめページです。各ページの一番上に最終更新日時を出しています。</p>
+    <p>大会・移籍・パッチなどを、公式発表に合わせて更新し続けるまとめページ。どのページも一番上に最終更新日時があります。</p>
+    {%- if ha_ok > 0 %}<p class="cat-hero-credit">画像 © Riot Games, Inc.</p>{% endif %}
   </div>
 </div>
 <div class="wrap list-page">
@@ -21,14 +24,14 @@ permalink: /hub/
       {%- endfor %}
     </ul>
     {%- else %}
-    <p class="empty">まとめハブは準備中です。<a href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a>から記事を探せます。</p>
+    <p class="empty">まとめハブは、まだありません。<a href="{{ '/categories/' | relative_url }}">カテゴリ一覧</a>から記事を探せます。</p>
     {%- endif %}
   </section>
   {%- capture hb_rm %}{% include roadmap.html type="hub" %}{% endcapture -%}
   {%- assign hb_rm_s = hb_rm | strip -%}
   {%- if hb_rm_s != "" %}
   <section aria-labelledby="h-hub-rm">
-    <div class="sec-head"><h2 id="h-hub-rm">公開予定のまとめハブ</h2></div>
+    <div class="sec-head"><h2 id="h-hub-rm">近日公開のまとめハブ</h2></div>
     {{ hb_rm }}
   </section>
   {%- endif %}

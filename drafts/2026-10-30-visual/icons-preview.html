@@ -1,0 +1,81 @@
+﻿<!doctype html><meta charset='utf-8'><title>icons</title><style>body{font:14px sans-serif;background:#14123a;color:#fff;display:flex;flex-wrap:wrap;gap:12px;padding:12px}div{width:90px;text-align:center}svg{width:48px;height:48px;color:#ffb020}</style><div style='display:none'><svg xmlns="http://www.w3.org/2000/svg">
+<!--
+  アイコンセット（自作 / 紅林アヤ 2026-10-30）。24px グリッドの線画、色は currentColor。
+  使い方: {% include icon.html name="duelist" %}（_includes/icon.html）
+  公式のロールアイコン・他サイトのアイコンの形は参照していない（自作の記号）。
+  追加するときは <symbol id="i-<名前>" viewBox="0 0 24 24"> を足し、_includes/icon.html の一覧コメントにも書く。
+-->
+<defs>
+<!-- ===== ロール ===== -->
+<!-- デュエリスト: 突撃（二重の山形＋先頭のくさび） -->
+<symbol id="i-duelist" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l5 6-5 6"/><path d="M9 6l5 6-5 6"/><path d="M15 6l6 6-6 6z" fill="currentColor"/></g></symbol>
+<!-- イニシエーター: 索敵（発信点と波紋） -->
+<symbol id="i-initiator" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2" fill="currentColor"/><path d="M6 11.5a6.5 6.5 0 0 1 6.5 6.5"/><path d="M6 5a13 13 0 0 1 13 13"/><path d="M17 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1z" fill="currentColor" stroke-width="1"/></g></symbol>
+<!-- コントローラー: 区域（外の六角と塗りの六角） -->
+<symbol id="i-controller" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5z" stroke-dasharray="3 2.2"/><path d="M12 7.5l3.9 2.25v4.5L12 16.5l-3.9-2.25v-4.5z" fill="currentColor"/></g></symbol>
+<!-- センチネル: 見張り（菱形と張り線） -->
+<symbol id="i-sentinel" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l7 8.5-7 8.5-7-8.5z"/><path d="M1.5 12h3.5M19 12h3.5"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/></g></symbol>
+<!-- フレックス: 複数ロール（2×2 の升目） -->
+<symbol id="i-flex" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5"/><rect x="13.5" y="4" width="6.5" height="6.5" fill="currentColor"/><rect x="4" y="13.5" width="6.5" height="6.5" fill="currentColor"/><rect x="13.5" y="13.5" width="6.5" height="6.5"/></g></symbol>
+<!-- IGL: 指揮（旗） -->
+<symbol id="i-igl" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V3.5"/><path d="M5 4h13l-3 4 3 4H5" fill="currentColor" fill-opacity=".35"/></g></symbol>
+<!-- コーチ: 作戦ボード（X・O と矢印） -->
+<symbol id="i-coach" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M7.5 7.5l3 3M10.5 7.5l-3 3"/><circle cx="15.5" cy="16" r="1.8"/><path d="M9 17c2 0 3.5-1.5 4.2-3.5M13.2 13.5l-.2 2.2M13.2 13.5l-2 .6"/></g></symbol>
+<!-- 選手 -->
+<symbol id="i-player" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-3.9 4.4-6 8-6s6.6 2.1 8 6"/></g></symbol>
+<!-- エージェント（バイザーの横顔） -->
+<symbol id="i-agent" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10.5a6 6 0 0 1 12 0V14a6 6 0 0 1-12 0z"/><path d="M6.5 11.5h11l-1 2.5h-9z" fill="currentColor"/></g></symbol>
+
+<!-- ===== カテゴリ（name は categories.yml の slug と同じ） ===== -->
+<!-- 大会ハブ: トロフィー -->
+<symbol id="i-tournaments" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3.5h8V9a4 4 0 0 1-8 0z"/><path d="M8 5.5H4.5A3.5 3.5 0 0 0 8 10M16 5.5h3.5A3.5 3.5 0 0 1 16 10"/><path d="M12 13v4M8 21h8M9.5 17h5"/></g></symbol>
+<!-- 配信者・コミュニティ大会: 配信画面 -->
+<symbol id="i-community" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12.5" rx="1.5"/><path d="M10.2 8.5v5.5l4.6-2.75z" fill="currentColor"/><path d="M8 21h8M12 17.5V21"/></g></symbol>
+<!-- ロスター・移籍: 入れ替え -->
+<symbol id="i-roster" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h15l-4-4"/><path d="M20 16H5l4 4"/></g></symbol>
+<!-- パッチ履歴: ± の書類 -->
+<symbol id="i-patch" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 11.5h5M11.5 9v5"/><path d="M9 17.5h6"/></g></symbol>
+<!-- 週まとめ: 7 の暦 -->
+<symbol id="i-weekly" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M10 13.5h4.5l-2.8 5"/></g></symbol>
+<!-- ツール: 照準 -->
+<symbol id="i-tools" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></g></symbol>
+<!-- 用語・仕組み解説: 本 -->
+<symbol id="i-glossary" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19.5V5a2 2 0 0 1 2-2h12v15H7a2 2 0 0 0-2 2 2 2 0 0 0 2 2h12v-4"/><path d="M9 7.5h6M9 11h4"/></g></symbol>
+
+<!-- ===== ページ・ナビ ===== -->
+<!-- いまの話題: 脈 -->
+<symbol id="i-now" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-6 4 12 3-8 1.5 2H22"/></g></symbol>
+<!-- 大会カレンダー -->
+<symbol id="i-schedule" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M7.5 14h2M11 14h2M14.5 14h2M7.5 17.5h2M11 17.5h2"/></g></symbol>
+<!-- まとめハブ: 重なった層 -->
+<symbol id="i-hub" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 4.5-9 4.5-9-4.5z"/><path d="M3 12l9 4.5 9-4.5"/><path d="M3 16.5L12 21l9-4.5"/></g></symbol>
+<!-- マップ -->
+<symbol id="i-map" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></g></symbol>
+<!-- 矢印（もっと見る） -->
+<symbol id="i-arrow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></g></symbol>
+<!-- 検索 -->
+<symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></g></symbol>
+<!-- 外部リンク -->
+<symbol id="i-external" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></g></symbol>
+<!-- 出典 -->
+<symbol id="i-source" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></g></symbol>
+
+<!-- ===== 状態 ===== -->
+<!-- LIVE: 発信 -->
+<symbol id="i-live" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2"/></g></symbol>
+<!-- NEW: きらめき -->
+<symbol id="i-new" viewBox="0 0 24 24"><g fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M12 2.5l2.3 6.7 6.7 2.3-6.7 2.3L12 20.5l-2.3-6.7L3 11.5l6.7-2.3z"/><path d="M19 17l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></g></symbol>
+<!-- 更新: 回る矢印 -->
+<symbol id="i-updated" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 10.5A8 8 0 0 0 5.6 7"/><path d="M5 3v4.5h4.5"/><path d="M4.5 13.5A8 8 0 0 0 18.4 17"/><path d="M19 21v-4.5h-4.5"/></g></symbol>
+<!-- LFT: チーム募集中（虫めがねと人） -->
+<symbol id="i-lft" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M15.2 15.2L21 21"/><circle cx="10" cy="8.4" r="2.1"/><path d="M6.6 14c.8-1.6 2-2.3 3.4-2.3s2.6.7 3.4 2.3"/></g></symbol>
+<!-- 中止・終了 -->
+<symbol id="i-closed" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M6 18L18 6"/></g></symbol>
+<!-- 予定（時計） -->
+<symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></g></symbol>
+<!-- 強化・弱化（パッチの変更。必ず文字と一緒に使う） -->
+<symbol id="i-buff" viewBox="0 0 24 24"><g fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 4l8 10H4z"/><path d="M8 18h8" fill="none" stroke-linecap="round"/></g></symbol>
+<symbol id="i-nerf" viewBox="0 0 24 24"><g fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20L4 10h16z"/><path d="M8 6h8" fill="none" stroke-linecap="round"/></g></symbol>
+</defs>
+</svg>
+</div><div><svg><use href='#i-duelist'/></svg><br>duelist</div><div><svg><use href='#i-initiator'/></svg><br>initiator</div><div><svg><use href='#i-controller'/></svg><br>controller</div><div><svg><use href='#i-sentinel'/></svg><br>sentinel</div><div><svg><use href='#i-flex'/></svg><br>flex</div><div><svg><use href='#i-igl'/></svg><br>igl</div><div><svg><use href='#i-coach'/></svg><br>coach</div><div><svg><use href='#i-player'/></svg><br>player</div><div><svg><use href='#i-agent'/></svg><br>agent</div><div><svg><use href='#i-tournaments'/></svg><br>tournaments</div><div><svg><use href='#i-community'/></svg><br>community</div><div><svg><use href='#i-roster'/></svg><br>roster</div><div><svg><use href='#i-patch'/></svg><br>patch</div><div><svg><use href='#i-weekly'/></svg><br>weekly</div><div><svg><use href='#i-tools'/></svg><br>tools</div><div><svg><use href='#i-glossary'/></svg><br>glossary</div><div><svg><use href='#i-now'/></svg><br>now</div><div><svg><use href='#i-schedule'/></svg><br>schedule</div><div><svg><use href='#i-hub'/></svg><br>hub</div><div><svg><use href='#i-map'/></svg><br>map</div><div><svg><use href='#i-arrow'/></svg><br>arrow</div><div><svg><use href='#i-search'/></svg><br>search</div><div><svg><use href='#i-external'/></svg><br>external</div><div><svg><use href='#i-source'/></svg><br>source</div><div><svg><use href='#i-live'/></svg><br>live</div><div><svg><use href='#i-new'/></svg><br>new</div><div><svg><use href='#i-updated'/></svg><br>updated</div><div><svg><use href='#i-lft'/></svg><br>lft</div><div><svg><use href='#i-closed'/></svg><br>closed</div><div><svg><use href='#i-clock'/></svg><br>clock</div><div><svg><use href='#i-buff'/></svg><br>buff</div><div><svg><use href='#i-nerf'/></svg><br>nerf</div>

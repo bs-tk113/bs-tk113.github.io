@@ -54,4 +54,9 @@ history:
 <div class="tool-actions">
 <button class="btn" type="button" id="edpi-copy">結果の URL をコピー</button>
 <a class="btn btn--ghost" href="#formula">計算式と出典を見る</a>
+{%- comment -%} 感度変換ツールが公開（published: true）になったときだけ出す。非公開のあいだは site.tools に入らないので 404 リンクにならない {%- endcomment -%}
+{%- assign sens_tool = site.tools | where: "url", "/tools/sensitivity/" | first -%}
+{%- if sens_tool %}
+<a class="btn btn--ghost" href="{{ sens_tool.url | relative_url }}">DPI 変更・ほかのゲームから変換</a>
+{%- endif %}
 </div>

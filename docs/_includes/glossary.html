@@ -1,0 +1,62 @@
+{%- comment -%}
+  競技シーン用語集（/hub/glossary/）。データは docs/_data/glossary.yml（項目の説明はそのファイルの先頭）。
+  呼び方: ハブ本文の Markdown から {% include glossary.html %}（前後に空行を入れる）
+  出すもの:
+    - 分類へのジャンプリンク（.gl-jump。各分類の語数つき）
+    - 分類ごとの見出し（h2#gl-<cat id>。hub の目次にも出る）と、用語の <dl>
+    - 各用語の dt に id（/hub/glossary/#<term id> で直接飛べる）、関連用語（ページ内リンク）、サイト内の関連ページ
+  関連ページ（link）は、そのページが公開されていれば short_title でリンク、未公開なら「詳しく：」の行ごと出さない（2026-10-31 変更）。
+  クラス名は gl- 接頭辞。インライン style は使わない（見た目は style.css 側で付ける）。
+  Markdown の中に出力するので、行頭に空白を入れず、空行を作らない（kramdown にコードブロック扱いされないように）。
+{%- endcomment -%}
+{%- assign gl = site.data.glossary -%}
+{%- assign gl_terms = gl.terms -%}
+<div class="gl" data-glossary>
+<nav class="gl-jump" aria-label="用語集の分類へジャンプ">
+<p class="gl-jump-title">分類から探す（全{{ gl_terms.size }}語）</p>
+<ul class="gl-jump-list">
+{%- for c in gl.cats -%}
+{%- assign c_terms = gl_terms | where: "cat", c.id %}
+<li><a href="#gl-{{ c.id }}">{{ c.name | escape }}<span class="gl-count">{{ c_terms.size }}語</span></a></li>
+{%- endfor %}
+</ul>
+</nav>
+{%- for c in gl.cats -%}
+{%- assign c_terms = gl_terms | where: "cat", c.id -%}
+{%- if c_terms.size == 0 %}{% continue %}{% endif %}
+<section class="gl-cat" aria-labelledby="gl-{{ c.id }}">
+<h2 class="gl-cat-title" id="gl-{{ c.id }}">{{ c.name | escape }}</h2>
+{%- if c.lead and c.lead != "" %}
+<p class="gl-cat-lead">{{ c.lead | escape }}</p>
+{%- endif %}
+<dl class="gl-list">
+{%- for t in c_terms %}
+<div class="gl-item">
+<dt class="gl-term" id="{{ t.id }}"><span class="gl-term-name">{{ t.term | escape }}</span>{% if t.reading and t.reading != "" and t.reading != t.term %}<span class="gl-reading">{{ t.reading | escape }}</span>{% endif %}</dt>
+<dd class="gl-desc">{{ t.desc | escape }}</dd>
+{%- if t.related and t.related.size > 0 -%}
+{%- capture t_rel -%}
+{%- for rid in t.related -%}
+{%- assign rt = gl_terms | where: "id", rid | first -%}
+{%- if rt -%}<a class="gl-rel" href="#{{ rt.id }}">{{ rt.term | escape }}</a>{%- unless forloop.last -%}<span class="gl-sep">、</span>{%- endunless -%}{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- if t_rel != "" %}
+<dd class="gl-related"><span class="gl-label">関連：</span>{{ t_rel }}</dd>
+{%- endif -%}
+{%- endif -%}
+{%- if t.link and t.link != "" -%}
+{%- assign ld = site.hubs | where: "url", t.link | first -%}
+{%- unless ld -%}{%- assign ld = site.tools | where: "url", t.link | first -%}{%- endunless -%}
+{%- assign lp = gl.pages | where: "url", t.link | first -%}
+{%- if ld %}
+<dd class="gl-page"><span class="gl-label">詳しく：</span><a href="{{ ld.url | relative_url }}">{{ ld.short_title | default: ld.title | escape }}</a></dd>
+{%- comment -%} 未公開のページは「詳しく：」の行ごと出さない（2026-10-31 日向レビュー。読者に「準備中」を見せない） {%- endcomment -%}
+{%- endif -%}
+{%- endif %}
+</div>
+{%- endfor %}
+</dl>
+</section>
+{%- endfor %}
+</div>

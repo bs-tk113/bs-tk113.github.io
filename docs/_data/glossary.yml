@@ -1,0 +1,730 @@
+# 競技シーン用語集のデータ（/hub/glossary/ の本体。_includes/glossary.html が読む）
+# 2026-10-30 初版（柚木）
+#
+# cats:  分類。並び順＝ページでの並び順。id は見出しのアンカー（#gl-<id>）になる
+# pages: サイト内リンク先の表示名。リンク先のページが公開されていなければ「（準備中）」として文字だけ出す
+# terms: 用語。分類の中では書いた順に並ぶ
+#   term:    表記（見出しになる文字）
+#   reading: よみ（カタカナ等）
+#   id:      アンカー（/hub/glossary/#<id>）。英小文字・数字・ハイフンだけ。ページ内の他の id（toc, h-summary, t-*, gl-*）と重ねない
+#   cat:     cats の id
+#   desc:    2〜3文。編集部の言葉で書く（他サイトの用語集の文章・並び・選定を写さない）。定義があいまいな俗語は「一般に〜」と書く
+#   related: 関連用語の id（このファイルにあるものだけ）
+#   link:    サイト内の関連ページの URL（任意）
+#   各用語の上の「# 出典:」は白石の確認用（ページには出ない）。出典コメントがない用語は、一般的な意味の説明だけで事実・数字を含まない
+# VCT 2027 の大会形式に関わる用語は docs/_hubs/vct-2027.md と矛盾させないこと（日付・枠数を変えるときは両方を直す）
+
+cats:
+  - id: tournament
+    name: 大会・仕組み
+    lead: VCT の大会の名前と、2027年の勝ち上がりの仕組みに出てくる言葉です。日付や枠の数は VCT 公式の発表（2026年10月30日確認）に合わせています。
+  - id: team
+    name: チーム・移籍
+    lead: オフシーズンの移籍のニュースやロスター発表を読むときに出てくる言葉です。
+  - id: role
+    name: ロール・ポジション
+    lead: エージェントの公式の分類（4つ）と、チームの中での担当を表す言葉です。
+  - id: match
+    name: 試合用語
+    lead: 配信の実況・解説でよく聞く、ラウンドの進め方やお金の使い方の言葉です。
+  - id: community
+    name: 配信・コミュニティ
+    lead: 大会の外側、配信や SNS、練習の場面で使われる言葉です。
+  - id: stats
+    name: 数値（スタッツ）
+    lead: スコアボードや統計サイトで見る数字の意味です。計算方法が場所によって違うものは、そう書いています。
+
+pages:
+  - url: /hub/vct-2027/
+    label: VCT 2027 日程・形式まとめ
+  - url: /hub/lft-board/
+    label: LFT・FA ボード
+  - url: /hub/players/
+    label: 選手一覧
+  - url: /hub/roster-tracker/
+    label: ロスター・移籍トラッカー
+  - url: /tools/edpi/
+    label: eDPI 計算ツール
+
+terms:
+  # ===== 大会・仕組み =====
+  # 出典: https://valorantesports.com/en-US/news/vct-2027-the-global-tour （50以上の大会）
+  - term: "VCT（VALORANT Champions Tour）"
+    reading: "ブイシーティー"
+    id: vct
+    cat: tournament
+    desc: "Riot Games が運営する、VALORANT の公式の競技シーン全体の呼び名です。地域ごとの大会から世界大会の Masters・Champions までが、1年を通した1つの流れでつながっています。2027年はシーズン全体で50以上の大会が予定されています。"
+    related: [region, masters, champions]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/en-US/news/introducing-the-vct-2027-partner-teams
+  - term: "リージョン"
+    reading: "リージョン"
+    id: region
+    cat: tournament
+    desc: "VCT を地域で分けた単位で、Americas・EMEA・Pacific・China の4つがあります。各リージョンにパートナーチームが8つずつ所属していて、日本は Pacific に入ります。"
+    related: [pacific, partner]
+
+  # 出典: https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer
+  - term: "Pacific（パシフィック）"
+    reading: "パシフィック"
+    id: pacific
+    cat: tournament
+    desc: "日本・韓国・東南アジア・南アジア・オセアニアのチームが属するリージョンです。2027年は Kickoff をバンコク、Cup 1 をマニラ、Cup 2 を東京で開きます。日本のチームが国際大会を目指すときの、最初の舞台です。"
+    related: [region, kickoff, cups]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/en-US/news/introducing-the-vct-2027-partner-teams
+  - term: "パートナーチーム"
+    reading: "パートナーチーム"
+    id: partner
+    cat: tournament
+    desc: "Riot と契約して VCT に参加しているチームです。2027年からは各リージョン8チーム（計32）で、契約は2年ごとの更新。保証されるのは Kickoff への出場だけで、その先の大会には成績で勝ち上がる必要があります。"
+    related: [kickoff, opens, region]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/en-US/news/the-new-valorant-champions-tour （Ascension に代わる・1年に何度か機会がある）
+  # 出典: https://valorantesports.com/ja-jp/news/get-ready-for-vct-2027-open-qualifiers （5人中3人以上が地域の選手、など）
+  - term: "オープン予選（Opens）"
+    reading: "オープンよせん"
+    id: opens
+    cat: tournament
+    desc: "パートナー以外のチームが、VCT の大会を目指して参加する予選です。2026年までの Ascension に代わる仕組みで、1年に何度か挑戦の機会があります。多くのリージョンで「5人中3人以上がその地域の選手」などの参加条件があります。"
+    related: [partner, kickoff, ascension, import, ranked]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer
+  # 出典: https://valorantesports.com/ja-JP/news/vct-2027-the-global-tour （日程画像: 1月14日〜2月7日）
+  - term: "Kickoff（キックオフ）"
+    reading: "キックオフ"
+    id: kickoff
+    cat: tournament
+    desc: "シーズン最初の大会です。2027年の Pacific はバンコクで開かれ、パートナー8チームとオープン予選を抜けた4チームの計12チームが出場します。上位3チームが Masters Seoul に進みます。"
+    related: [partner, opens, masters]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/en-US/news/the-new-valorant-champions-tour （リーグ戦に代わる・各リージョン年2回・LAN）
+  # 出典: https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer （日本枠3、Cup 1 マニラ、Cup 2 東京）
+  - term: "Cups（カップ）"
+    reading: "カップ"
+    id: cups
+    cat: tournament
+    desc: "2027年から、それまでのリーグ戦に代わって各リージョンで年2回開かれるトーナメントです。会場に集まって戦うオフライン大会で、結果が Masters や Champions につながります。Pacific の日本枠は3つで、Cup 2 は東京で開かれます。"
+    related: [play-in, playoff, lcq, stage]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer
+  - term: "プレイイン"
+    reading: "プレイイン"
+    id: play-in
+    cat: tournament
+    desc: "2027年の VCT Pacific で、Cups の前に日本などの国・地域ごとに行う予選の段階です。ここで成績の良いチームが、次の Playoff で有利な位置（シード）をもらえます。"
+    related: [playoff, seed, cups]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer （上位8チームで Cups の枠を争う）
+  - term: "プレイオフ（Playoff）"
+    reading: "プレイオフ"
+    id: playoff
+    cat: tournament
+    desc: "一般には、リーグ戦や予選のあとに行う勝ち抜きの決勝トーナメントのことです。2027年の VCT Pacific では、国・地域ごとの上位8チームが Cups の出場枠をかけて戦う段階を指します。"
+    related: [play-in, cups, double-elimination]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer
+  - term: "LCQ（Last Chance Qualifier）"
+    reading: "エルシーキュー"
+    id: lcq
+    cat: tournament
+    desc: "名前のとおり「最後のチャンス」の予選です。2027年の Pacific には Kickoff 用と Cups 用の2つがあり、南アジアやオセアニアのチームなどがここから Kickoff・Cups を目指します。"
+    related: [kickoff, cups, pacific]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/ja-JP/news/vct-2027-the-global-tour （日程画像）
+  # 出典: https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer （Seoul は Kickoff 上位3、Valencia は Cup 1 の結果）
+  - term: "Masters（マスターズ）"
+    reading: "マスターズ"
+    id: masters
+    cat: tournament
+    desc: "リージョンをまたいでチームが集まる国際大会です。2027年は Masters Seoul（2月20日〜3月3日）と Masters Valencia（6月5日〜20日）の2回。Seoul には Kickoff の上位3チームが進み、Valencia は Cup 1 の結果で出場が決まります。"
+    related: [kickoff, cups, champions]
+    link: /hub/vct-2027/
+
+  # 出典: https://valorantesports.com/ja-JP/news/vct-2027-the-global-tour （日程画像: 9月16日〜10月10日、Game Changers Championship とまとめた期間）
+  # 出典: https://valorantesports.com/en-US/news/the-new-valorant-champions-tour （Cups から Masters・Champions へ直接出場）
+  - term: "Champions（チャンピオンズ）"
+    reading: "チャンピオンズ"
+    id: champions
+    cat: tournament
+    desc: "1年の最後に開かれる VCT の世界大会で、その年の世界一を決めます。2027年はアメリカのオースティンで、9月16日〜10月10日の期間に Game Changers Championship とあわせて開かれます。出場は Cups の成績で決まります。"
+    related: [masters, cups, game-changers]
+    link: /hub/vct-2027/
+
+  # 出典: https://playvalorant.com/en-us/news/esports/vct-game-changers/ （2021年2月の発表。対象は "women and other marginalized genders"）
+  # 出典: https://valorantesports.com/en-US/news/valorant-game-changers-championship-2026-everything-you-need-to-know （2026年はサンパウロ、最後の単独開催）
+  # 出典: https://valorantesports.com/ja-JP/news/vct-2027-the-global-tour （2027年は Champions Austin と同じ期間）
+  - term: "Game Changers（ゲームチェンジャーズ）"
+    reading: "ゲームチェンジャーズ"
+    id: game-changers
+    cat: tournament
+    desc: "女性をはじめ、これまで VALORANT の競技シーンで活躍の場を得にくかった性別の選手に向けた VCT のプログラムで、2021年に発表されました。世界大会の Game Changers Championship は、2026年10月22日〜11月1日のサンパウロ大会が「単独開催としては最後」と案内されていて、2027年は Champions Austin と同じ期間に開かれます。"
+    related: [champions, vct]
+
+  # 出典: https://valorantesports.com/en-US/news/the-new-valorant-champions-tour
+  - term: "Ascension（アセンション）"
+    reading: "アセンション"
+    id: ascension
+    cat: tournament
+    desc: "2026年までの、パートナー以外のチームが上の舞台へ上がるための昇格の仕組みです。1シーズン戦って、昇格できるのは1チームだけという形でした。2027年からはオープン予選に置き換わります。"
+    related: [opens, stage]
+
+  # 出典: https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer （Cups が Stage 1・Stage 2 に代わる）
+  - term: "Stage（ステージ）"
+    reading: "ステージ"
+    id: stage
+    cat: tournament
+    desc: "2026年までの VCT で、リージョンのリーグ戦の区切り（Stage 1・Stage 2）を指す言葉です。2027年は Stage がなくなり、Cups に置き換わります。過去の試合の録画や記録を見るときに出てきます。"
+    related: [cups, ascension]
+
+  # 出典: https://valorantesports.com/ja-JP/news/vct-pacific-2027-primer （Masters 出場チームはオープン予選・プレイインを免除）
+  - term: "シード"
+    reading: "シード"
+    id: seed
+    cat: tournament
+    desc: "大会の組み合わせで、それまでの成績をもとに有利な位置や、後の段階からの出場を与えることです。VCT 2027 では、Masters に出たチームが次のオープン予選とプレイインを免除されるなど、勝ったチームほど先の段階から出られます。"
+    related: [play-in, playoff]
+    link: /hub/vct-2027/
+
+  - term: "ダブルエリミネーション"
+    reading: "ダブルエリミネーション"
+    id: double-elimination
+    cat: tournament
+    desc: "2回負けると敗退するトーナメントの方式です。負けなしで進む山を「アッパー（勝者側）」、1回負けたチームが回る山を「ロワー（敗者側）」と呼び、最後はアッパーとロワーをそれぞれ勝ち上がったチームどうしが決勝（グランドファイナル）で戦います。"
+    related: [bo3, playoff]
+
+  - term: "BO1・BO3・BO5"
+    reading: "ビーオーワン・ビーオースリー・ビーオーファイブ"
+    id: bo3
+    cat: tournament
+    desc: "Best of（ベストオブ）の略で、何マップ制の試合かを表します。BO3 なら3マップのうち先に2マップ、BO5 なら5マップのうち先に3マップを取った側の勝ちです。一般に、決勝など大事な試合ほどマップ数が多くなります。"
+    related: [map-veto, double-elimination]
+
+  # 出典: https://valorantesports.com/en-US/news/the-new-valorant-champions-tour （Cups は LAN-based）
+  - term: "LAN・オフライン"
+    reading: "ラン・オフライン"
+    id: lan
+    cat: tournament
+    desc: "選手が同じ会場に集まって戦う大会のことです。それぞれの場所からネットでつないで戦う大会は「オンライン」と呼ばれます。2027年の Cups は、会場に集まるオフライン大会として開かれます。"
+    related: [cups]
+
+  # ===== チーム・移籍 =====
+  - term: "オーガニゼーション（組織）"
+    reading: "オーガニゼーション"
+    id: org
+    cat: team
+    desc: "プロチームを運営する会社や団体のことで、配信やニュースでは単に「組織」とも呼ばれます。1つの組織が、VALORANT 以外のゲームの部門をあわせて持っていることもあります。"
+    related: [roster, partner]
+
+  - term: "ロスター"
+    reading: "ロスター"
+    id: roster
+    cat: team
+    desc: "チームに登録されている選手（とコーチなどのスタッフ）の顔ぶれのことです。「ロスター発表」は、新しいシーズンのメンバーをチームが公式に発表することを指します。"
+    related: [starter, sub, transfer]
+    link: /hub/roster-tracker/
+
+  - term: "スタメン（スターティングメンバー）"
+    reading: "スタメン"
+    id: starter
+    cat: team
+    desc: "試合に出る5人のことです。VALORANT は5対5で戦うので、ロスターに6人以上いるチームでは、誰が5人に入るかが注目されます。"
+    related: [sub, roster]
+
+  - term: "サブ・6人目"
+    reading: "サブ・ろくにんめ"
+    id: sub
+    cat: team
+    desc: "スタメンの5人とは別に登録されている控えの選手です。一般に、マップや相手に合わせて入れ替えたり、体調不良の選手の代わりに出たりします。英語で「6th（シックスマン）」と呼ばれることもあります。"
+    related: [starter, bench]
+
+  - term: "ベンチ（ベンチ入り）"
+    reading: "ベンチ"
+    id: bench
+    cat: team
+    desc: "一般に、チームに所属したまま、試合に出るメンバーから外れた状態を指します。チームによっては、契約を残したまま移籍先を探す段階の意味で使うこともあり、発表の文面をよく読む必要があります。"
+    related: [sub, fa, lft]
+    link: /hub/lft-board/
+
+  - term: "コーチ"
+    reading: "コーチ"
+    id: coach
+    cat: team
+    desc: "練習の組み立てや作戦づくり、試合中のタイムアウトでの声かけなどでチームを支える役割です。ヘッドコーチ（HC）とアシスタントコーチを分けて置くチームもあります。"
+    related: [analyst, igl]
+
+  # 出典: https://team-detonation.net/news/52622 （DFM が選手・コーチ・アナリストを募集）
+  - term: "アナリスト"
+    reading: "アナリスト"
+    id: analyst
+    cat: team
+    desc: "対戦相手の試合の録画や数字を調べて、作戦づくりの材料を集める役割です。DFM が VCT 2027 に向けて選手・コーチとあわせてアナリストを募集したように、スタッフの動きも移籍のニュースになります。"
+    related: [coach, vod]
+
+  - term: "FA（フリーエージェント）"
+    reading: "エフエー"
+    id: fa
+    cat: team
+    desc: "どのチームとも契約していない選手のことです。契約が終わった選手や、チームを離れた選手がこう呼ばれます。次のチームを探すときは、自分から LFT を告知することが多いです。"
+    related: [lft, transfer, bench]
+    link: /hub/lft-board/
+
+  - term: "加入・脱退（移籍）"
+    reading: "かにゅう・だったい"
+    id: transfer
+    cat: team
+    desc: "選手がチームに入ること、離れることです。噂の段階の話も多いので、このサイトでは本人の発表とチームの公式発表の両方がそろってから「加入決定」と書いています。"
+    related: [fa, buyout, roster]
+    link: /hub/roster-tracker/
+
+  - term: "バイアウト（移籍金）"
+    reading: "バイアウト"
+    id: buyout
+    cat: team
+    desc: "一般に、契約期間が残っている選手を別のチームが獲得するとき、元のチームに支払うお金のことを指します。金額は公表されないことも多いです。"
+    related: [transfer]
+
+  # 出典: https://valorantesports.com/ja-jp/news/get-ready-for-vct-2027-open-qualifiers （5人中3人以上がその地域の選手）
+  - term: "インポート（海外選手）"
+    reading: "インポート"
+    id: import
+    cat: team
+    desc: "一般に、チームが属する地域の外から来た選手を指す言葉です。2027年のオープン予選では、多くのリージョンで「5人中3人以上がその地域の選手」という条件があり、海外選手を何人入れられるかに関わります。"
+    related: [opens, roster]
+
+  # ===== ロール・ポジション =====
+  # 出典: https://playvalorant.com/ja-jp/agents/jett/ ほか各エージェントのページ（ロールの表記）
+  - term: "ロール"
+    reading: "ロール"
+    id: role
+    cat: role
+    desc: "エージェント（キャラクター）の役割の分類です。公式の分類はデュエリスト・イニシエーター・コントローラー・センチネルの4つ。チームの中の担当（IGL やエントリーなど）を「ロール」と呼ぶこともあります。"
+    related: [duelist, initiator, controller, sentinel, igl]
+    link: /hub/players/
+
+  # 出典: https://playvalorant.com/ja-jp/agents/jett/
+  - term: "デュエリスト"
+    reading: "デュエリスト"
+    id: duelist
+    cat: role
+    desc: "公式のロールの1つで、自分から撃ち合いに入って敵を倒すのが得意なエージェントです。ジェットなどがここに入ります。"
+    related: [entry, role]
+
+  # 出典: https://playvalorant.com/ja-jp/agents/sova/
+  - term: "イニシエーター"
+    reading: "イニシエーター"
+    id: initiator
+    cat: role
+    desc: "公式のロールの1つで、敵の位置を探ったり、敵の動きを止めたりして、味方が攻めるきっかけを作るエージェントです。ソーヴァなどがここに入ります。"
+    related: [execute, role]
+
+  # 出典: https://playvalorant.com/ja-jp/agents/omen/
+  - term: "コントローラー"
+    reading: "コントローラー"
+    id: controller
+    cat: role
+    desc: "公式のロールの1つで、スモーク（煙）などで視界をさえぎり、戦う場所を区切るエージェントです。オーメンなどがここに入ります。"
+    related: [utility, role]
+
+  # 出典: https://playvalorant.com/ja-jp/agents/killjoy/
+  - term: "センチネル"
+    reading: "センチネル"
+    id: sentinel
+    cat: role
+    desc: "公式のロールの1つで、罠などで陣地を守ったり、裏から来る敵を見張ったりするのが得意なエージェントです。キルジョイなどがここに入ります。"
+    related: [anchor, role]
+
+  - term: "フレックス"
+    reading: "フレックス"
+    id: flex
+    cat: role
+    desc: "一般に、マップや構成に合わせて複数のロールを使い分ける選手を指します。チームに足りない役割を埋められるので、ロスター発表で担当を「フレックス」と書くチームもあります。"
+    related: [role, comp]
+
+  - term: "IGL（インゲームリーダー）"
+    reading: "アイジーエル"
+    id: igl
+    cat: role
+    desc: "試合中に作戦を決めて、味方に指示を出す選手です。どこを攻めるかだけでなく、そのラウンドでお金を使うか貯めるか（エコにするか）も、IGL が判断することが多いです。"
+    related: [coach, eco, role]
+    link: /hub/players/
+
+  - term: "エントリー"
+    reading: "エントリー"
+    id: entry
+    cat: role
+    desc: "攻めるとき、最初にサイトへ飛び込んで道を開ける役割です。一般にデュエリストが担当し、倒されてもすぐ味方が倒し返せる（トレードできる）形で入るのが理想とされます。"
+    related: [duelist, trade, first-blood]
+
+  - term: "ラーカー（ラーク）"
+    reading: "ラーカー"
+    id: lurker
+    cat: role
+    desc: "一般に、味方とは別の場所から、ひとりで敵の裏や横を狙う動き、またはそれが得意な選手を指します。敵の守りを散らしたり、助けに移動する敵を待ち伏せたりします。"
+    related: [rotate, anchor]
+
+  - term: "アンカー"
+    reading: "アンカー"
+    id: anchor
+    cat: role
+    desc: "一般に、守る側で1つのサイトを最後まで守る担当を指します。味方が助けに来るまで時間を稼ぐ役割で、罠などで守りやすいセンチネルが任されることが多いです。"
+    related: [sentinel, rotate, retake]
+
+  - term: "OP担当（オペレーター）"
+    reading: "オーピーたんとう"
+    id: operator
+    cat: role
+    desc: "高価な狙撃銃「オペレーター（OP）」を主に持つ選手のことです。当たれば一撃で倒しやすい強い武器ですが値段が高いので、チームのお金の使い方にも影響します。"
+    related: [credits, full-buy]
+
+  # ===== 試合用語 =====
+  # 出典: https://playvalorant.com/en-us/news/dev/valorant-data-breach-9-3-curse/ （「13ラウンド目の勝利」「12-12 で延長」の記述）
+  - term: "ラウンド"
+    reading: "ラウンド"
+    id: round
+    cat: match
+    desc: "試合の中の1回分の攻防です。先に13ラウンドを取ったチームが、そのマップの勝ちになります。1ラウンドは、スパイクの爆発か解除、またはどちらかの全滅などで終わります。"
+    related: [half, overtime, side]
+
+  # 出典: https://playvalorant.com/en-us/news/dev/valorant-data-breach-9-3-curse/ （ハーフでのお金の大きなリセット、ハーフ最初のピストルラウンド）
+  - term: "前半・後半（ハーフ）"
+    reading: "ぜんはん・こうはん"
+    id: half
+    cat: match
+    desc: "12ラウンドで前半が終わり、攻める側と守る側が入れ替わります（サイドチェンジ）。後半の最初にはお金がリセットされ、もう一度ピストルラウンドから始まります。"
+    related: [side, pistol, round]
+
+  - term: "アタッカー・ディフェンダー"
+    reading: "アタッカー・ディフェンダー"
+    id: side
+    cat: match
+    desc: "攻める側（アタッカー）はスパイクを設置して爆発させるか、敵を全滅させればラウンドの勝ち。守る側（ディフェンダー）は設置を防ぐか、設置されたスパイクを解除すれば勝ちです。どちらが有利かはマップによって変わります。"
+    related: [spike, plant, defuse]
+
+  - term: "スパイク"
+    reading: "スパイク"
+    id: spike
+    cat: match
+    desc: "アタッカーがサイトに設置する爆弾のことです。設置されたあと、時間内に解除されなければ爆発し、アタッカーがそのラウンドを取ります。"
+    related: [plant, defuse, site]
+
+  - term: "設置（プラント）"
+    reading: "せっち"
+    id: plant
+    cat: match
+    desc: "アタッカーがスパイクをサイトに置くことです。設置したあとは、守る側が解除しに来るのを迎え撃つ戦い（ポストプラント）に変わります。"
+    related: [post-plant, spike]
+
+  - term: "解除（ディフューズ）"
+    reading: "かいじょ"
+    id: defuse
+    cat: match
+    desc: "ディフェンダーが、設置されたスパイクを止めることです。解除には時間がかかるので、敵が残っているうちは周りの敵を倒してから解除に入るのが基本です。"
+    related: [retake, spike]
+
+  - term: "サイト（A・B・C）"
+    reading: "サイト"
+    id: site
+    cat: match
+    desc: "スパイクを設置できる場所です。多くのマップには A と B の2か所、一部のマップには C を加えた3か所があります。実況の「A に寄った」「B を捨てた」は、守る側の人数の置き方の話です。"
+    related: [spike, rotate]
+
+  # 出典: https://playvalorant.com/en-us/news/dev/valorant-data-breach-9-3-curse/ （各ハーフの最初のピストルラウンド）
+  - term: "ピストルラウンド"
+    reading: "ピストルラウンド"
+    id: pistol
+    cat: match
+    desc: "前半と後半それぞれの最初のラウンドです。全員が少ないお金から始めるので、ピストルと軽い装備だけで戦います。勝つと次のラウンド以降のお金で有利になるので、大事なラウンドとされます。"
+    related: [bonus, eco, half]
+
+  - term: "クレジット（エコノミー）"
+    reading: "クレジット"
+    id: credits
+    cat: match
+    desc: "武器・アーマー・スキルを買うための、ゲーム内のお金です。ラウンドの勝ち負けや倒した数でもらえる量が変わります。チーム全体のお金のやりくりを「エコノミー」と呼び、試合の流れを読むカギになります。"
+    related: [eco, force, full-buy, save]
+
+  - term: "エコ（エコラウンド）"
+    reading: "エコ"
+    id: eco
+    cat: match
+    desc: "お金を貯めるために、安い武器だけ、またはほとんど買わずに戦うラウンドです。次のラウンドでしっかり買うための選択ですが、エコで勝つと相手のお金の計画が大きく崩れます。"
+    related: [force, save, credits]
+
+  - term: "フォース（フォースバイ）"
+    reading: "フォース"
+    id: force
+    cat: match
+    desc: "お金が十分でないのに、手持ちで買えるだけ買って戦うことです。負けると次のラウンドも苦しくなるので、流れを変えたい場面での賭けになります。"
+    related: [eco, full-buy, credits]
+
+  - term: "フルバイ"
+    reading: "フルバイ"
+    id: full-buy
+    cat: match
+    desc: "ライフルやアーマー、スキルまでしっかり買いそろえて戦うラウンドです。両チームがフルバイのラウンドは、装備の差がない分、作戦と撃ち合いの勝負になります。"
+    related: [credits, force]
+
+  # 出典: https://playvalorant.com/en-us/news/dev/valorant-data-breach-9-3-curse/ （P.E.B.＝ハーフ最初のピストル、続くエコ、ボーナスのラウンド）
+  - term: "ボーナスラウンド"
+    reading: "ボーナスラウンド"
+    id: bonus
+    cat: match
+    desc: "一般に、ピストルラウンドと次のラウンドを続けて取ったチームが、買い直さずに前のラウンドの武器を持ち越して戦う、そのハーフの3ラウンド目を指します。相手はこのころ初めて装備をしっかり買えることが多いので、勝った側にとっては出費を抑えたまま有利を広げられるかの勝負になります。"
+    related: [pistol, eco]
+
+  - term: "セーブ"
+    reading: "セーブ"
+    id: save
+    cat: match
+    desc: "一般に、2つの意味で使われます。1つは、勝ち目が薄いラウンドで撃ち合わずに隠れて生き残り、武器を次のラウンドに持ち越すこと。もう1つは、そのラウンドで買い物をせず、お金を使わずに残すことです。どちらもお金を守る判断ですが、そのラウンドは相手に渡しやすくなります。"
+    related: [eco, credits]
+
+  - term: "アルティメット（ウルト）"
+    reading: "アルティメット"
+    id: ult
+    cat: match
+    desc: "エージェントごとに1つある、いちばん強力なスキルです。敵を倒すなどしてポイントを貯めると使えます。大事なラウンドで両チームがウルトをいくつ持っているかも、試合の見どころです。"
+    related: [utility]
+
+  - term: "ユーティリティ（スキル）"
+    reading: "ユーティリティ"
+    id: utility
+    cat: match
+    desc: "銃以外の、スモークやフラッシュ、索敵などのスキルのことです。配信では「ユーティリティを合わせる」のように、スキルを使う順番やタイミングの話でよく出てきます。"
+    related: [ult, execute, comp]
+
+  - term: "デフォルト"
+    reading: "デフォルト"
+    id: default
+    cat: match
+    desc: "一般に、ラウンドの序盤に5人がマップに散らばって敵の配置を探り、それから攻める場所を決める進め方を指します。すぐに1か所へ攻め込むラッシュとは反対の考え方です。"
+    related: [rush, execute]
+
+  - term: "ラッシュ"
+    reading: "ラッシュ"
+    id: rush
+    cat: match
+    desc: "ラウンドが始まってすぐ、5人でまとまって1つのサイトに一気に攻め込むことです。守る側の準備が整う前に、人数で押し切るのがねらいです。"
+    related: [default, execute]
+
+  - term: "セットプレー（エグゼキュート）"
+    reading: "セットプレー"
+    id: execute
+    cat: match
+    desc: "練習で決めておいたスキルの順番どおりに、チームで一斉にサイトへ攻め込むことです。スモークで視界を切り、フラッシュで目をくらませ、エントリーが入る、といった流れを作り込みます。"
+    related: [entry, utility, default]
+
+  - term: "ローテート（ローテーション）"
+    reading: "ローテート"
+    id: rotate
+    cat: match
+    desc: "人数を別の場所へ移すことです。守る側が、攻められていないサイトから攻められているサイトへ助けに行く動きを指すことが多く、その速さが勝敗を分けます。"
+    related: [retake, anchor, lurker]
+
+  - term: "リテイク"
+    reading: "リテイク"
+    id: retake
+    cat: match
+    desc: "スパイクを設置されたあと、守る側が人数を集めてサイトを取り返し、解除を目指すことです。待ち構えている相手の中へ入っていくので、スキルを合わせて一緒に入れるかがカギです。"
+    related: [post-plant, defuse, rotate]
+
+  - term: "ポストプラント"
+    reading: "ポストプラント"
+    id: post-plant
+    cat: match
+    desc: "スパイクを設置したあとの時間帯、またはその場面での守り方のことです。設置した側は解除しに来る敵を迎え撃てる位置に移り、スキルで解除の邪魔をします。"
+    related: [retake, plant]
+
+  - term: "クラッチ"
+    reading: "クラッチ"
+    id: clutch
+    cat: match
+    desc: "一般に、味方がやられて自分が最後の1人になり、人数で不利な状況からラウンドを取り切ることを指します。「1v2 のクラッチ」のように、自分（1人）と残った敵の人数を並べて言います。"
+    related: [ace]
+
+  - term: "エース"
+    reading: "エース"
+    id: ace
+    cat: match
+    desc: "1人の選手が、1つのラウンドで敵5人を全員倒すことです。試合のハイライトとして、配信のリプレイや切り抜きでよく取り上げられます。"
+    related: [clutch]
+
+  - term: "トレード"
+    reading: "トレード"
+    id: trade
+    cat: match
+    desc: "味方が倒された直後に、その敵を倒し返すことです。人数の差を広げないための基本の動きで、KAST という数値の計算にも入っています。"
+    related: [entry, kast]
+
+  - term: "ファーストブラッド（FB）"
+    reading: "ファーストブラッド"
+    id: first-blood
+    cat: match
+    desc: "ラウンドで最初に敵を倒すことです。5対4の有利を作れるので、エントリーの選手の活躍を見るときによく注目されます。数値では FK（ファーストキル）と書かれることもあります。"
+    related: [entry, fk-fd]
+
+  # 出典: https://playvalorant.com/en-us/news/dev/valorant-data-breach-9-3-curse/ （12-12 で延長）
+  - term: "オーバータイム（延長戦）"
+    reading: "オーバータイム"
+    id: overtime
+    cat: match
+    desc: "両チームが12ラウンドずつ取って並んだときに入る延長戦です。延長戦の細かな進め方（何ラウンド差で決着するか、など）は、ゲームのモードや大会のルールによって違います。"
+    related: [round]
+
+  - term: "マップピック・BAN"
+    reading: "マップピック・バン"
+    id: map-veto
+    cat: match
+    desc: "試合の前に、両チームが交互にマップを選んだり（ピック）外したり（BAN）して、戦うマップを決める手順です。最後に残って決着をつけるマップは「ディサイダー」と呼ばれることがあります。手順は大会ごとのルールで決まります。"
+    related: [bo3, comp]
+
+  - term: "構成（コンプ）"
+    reading: "こうせい"
+    id: comp
+    cat: match
+    desc: "そのマップで使う5人のエージェントの組み合わせのことです。マップの形やチームの作戦で変わり、多くのチームが同じ構成を選ぶようになると、それが「メタ（流行りの型）」と呼ばれます。"
+    related: [role, flex, map-veto]
+
+  # ===== 配信・コミュニティ =====
+  - term: "LFT（Looking For Team）"
+    reading: "エルエフティー"
+    id: lft
+    cat: community
+    desc: "選手が「所属するチームを探しています」と知らせることです。一般に本人の X（旧 Twitter）などで告知され、希望するロールや活動地域を一緒に書く人もいます。"
+    related: [fa, lfp, bench]
+    link: /hub/lft-board/
+
+  - term: "LFP（Looking For Players）"
+    reading: "エルエフピー"
+    id: lfp
+    cat: community
+    desc: "一般に、チームの側が「選手を探しています」と知らせることを指します。選手の LFT と対になる言葉で、コーチやアナリストの募集とまとめて出されることもあります。"
+    related: [lft, analyst]
+
+  - term: "スクリム"
+    reading: "スクリム"
+    id: scrim
+    cat: community
+    desc: "チーム同士で行う練習試合です。多くの場合は結果を公表せず、大会前に調子を確かめたり、新しい作戦を試したりする場として使われます。"
+    related: [vod, execute]
+
+  - term: "ストリーマー大会（配信者大会）"
+    reading: "ストリーマーたいかい"
+    id: streamer-tournament
+    cat: community
+    desc: "配信者やコミュニティが主催する大会で、Riot の公式大会（VCT）とは別のものです。配信者とプロ選手が同じチームで出ることもあり、競技シーンを見始めるきっかけになる人もいます。"
+    related: [caster, watch-party, vct]
+
+  # 出典: https://playvalorant.com/en-gb/news/game-updates/premier-launch-faq/ （2023年の開始時の案内: 5〜7人、ディビジョン、毎週の試合）
+  # 出典: https://valorantesports.com/en-US/news/the-new-valorant-champions-tour （予選への道筋は地域ごとに違い、Premier が含まれる場合もある）
+  - term: "プレミア（Premier）"
+    reading: "プレミア"
+    id: premier
+    cat: community
+    desc: "ゲームの中にある、チームで参加する大会形式のモードです。2023年の開始時の案内では、5〜7人でチームを作り、実力の近いグループ（ディビジョン）に分かれて毎週試合をする仕組みでした。公式は、2027年からの予選への道筋は地域ごとに違い、Premier が含まれる場合もあると説明しています。"
+    related: [opens, ranked]
+
+  # 出典: https://valorantesports.com/ja-jp/news/get-ready-for-vct-2027-open-qualifiers （アセンダント以上）
+  - term: "ランク（コンペティティブ）"
+    reading: "ランク"
+    id: ranked
+    cat: community
+    desc: "ゲーム内のランクマッチと、そこで決まる実力の段階のことです。2027年のオープン予選では、「アセンダント以上」と不正対策（Vanguard）の確認が参加条件に挙げられています。年齢や必要な MMR などの細かな条件は、地域ごとの案内で確認するよう公式は書いています。"
+    related: [opens, premier]
+
+  - term: "キャスター（実況・解説）"
+    reading: "キャスター"
+    id: caster
+    cat: community
+    desc: "大会の配信で、試合の様子を声で伝える人です。一般に、目の前で起きていることを伝える「実況」と、作戦や選手のねらいを説明する「解説」に分かれます。"
+    related: [watch-party, vod]
+
+  - term: "ウォッチパーティー（同時視聴）"
+    reading: "ウォッチパーティー"
+    id: watch-party
+    cat: community
+    desc: "一般に、配信者が大会の試合を視聴者と一緒に見ながら、感想や解説を話す配信を指します。同時視聴の配信をしてよいかどうかや、そのやり方は大会ごとのルールで決まります。"
+    related: [caster, streamer-tournament]
+
+  - term: "VOD"
+    reading: "ブイオーディー"
+    id: vod
+    cat: community
+    desc: "あとから見られる試合の録画（Video On Demand）のことです。選手やチームは相手の VOD を見て作戦を研究し、ファンは見逃した試合を VOD で追いかけます。"
+    related: [analyst, scrim]
+
+  # ===== 数値（スタッツ） =====
+  - term: "K/D/A"
+    reading: "ケーディーエー"
+    id: kda
+    cat: stats
+    desc: "キル（倒した数）・デス（倒された数）・アシスト（味方が倒すのを手伝った数）を並べた記録です。スコアボードでいちばんよく見る数字ですが、ロールによって伸びやすさが違います。"
+    related: [kd, acs]
+
+  - term: "K/D（キルレ）"
+    reading: "ケーディー"
+    id: kd
+    cat: stats
+    desc: "キル数をデス数で割った値です。1.0 を超えていれば、倒された数より倒した数のほうが多いことを表します。日本では「キルレ（キルレート）」とも呼ばれます。"
+    related: [kda]
+
+  - term: "ACS（Average Combat Score）"
+    reading: "エーシーエス"
+    id: acs
+    cat: stats
+    desc: "1ラウンドあたりの平均の戦闘スコアで、ゲーム内のスコアボードにも出る数字です。ダメージやキルなどから計算されるので撃ち合いの多い選手ほど高くなりやすく、守りやサポートの働きは数字に出にくいことがあります。"
+    related: [adr, kda, rating]
+
+  - term: "ADR（Average Damage per Round）"
+    reading: "エーディーアール"
+    id: adr
+    cat: stats
+    desc: "1ラウンドあたりに敵へ与えたダメージの平均です。倒し切れなかった撃ち合いでのダメージも数字に残るので、キル数だけでは見えない働きが分かります。"
+    related: [acs]
+
+  - term: "KAST"
+    reading: "キャスト"
+    id: kast
+    cat: stats
+    desc: "一般に、キル（K）・アシスト（A）・生き残り（S）・倒されたあと味方が倒し返した（T＝トレード）のどれかを満たしたラウンドの割合を指します。高いほど、毎ラウンド何らかの形でチームの役に立っていると読めます。"
+    related: [trade, rating]
+
+  - term: "HS%（ヘッドショット率）"
+    reading: "エイチエスパーセント"
+    id: hs
+    cat: stats
+    desc: "一般に、当たった弾のうち頭に当たった割合を指します。ただし何を数えるか（弾ごとか、キルごとか）は表示する画面や統計サイトによって違うことがあるので、比べるときは同じ場所の数字どうしで比べます。"
+    related: [kda]
+
+  - term: "FK・FD（ファーストキル・ファーストデス）"
+    reading: "エフケー・エフディー"
+    id: fk-fd
+    cat: stats
+    desc: "ラウンドで最初に敵を倒した回数（FK）と、最初に倒された回数（FD）です。エントリーの選手はどちらも多くなりやすいので、2つを並べて見るのが一般的です。"
+    related: [first-blood, entry]
+
+  - term: "Rating（レーティング）"
+    reading: "レーティング"
+    id: rating
+    cat: stats
+    desc: "統計サイトなどが、いくつかの数字を組み合わせて選手の活躍を1つの値にまとめたものです。計算方法はサイトごとに違うので、別のサイトの Rating どうしをそのまま比べることはできません（同じサイトでも、計算方法の版が変わることがあります）。"
+    related: [acs, kast]
+
+  # 出典: https://www.corsair.com/explorer/tools/edpi/edpi-calculator/ （eDPI = DPI × ゲーム内感度。同じゲームの中だけで比べられる）
+  - term: "eDPI"
+    reading: "イーディーピーアイ"
+    id: edpi
+    cat: stats
+    desc: "マウスの DPI とゲーム内の感度を掛け合わせた値で、振り向きの速さを比べる目安です。ゲーム会社の公式の用語ではなく、比べられるのは同じゲームの中だけ。プロ選手の設定を比べるときによく使われます。"
+    related: []
+    link: /tools/edpi/

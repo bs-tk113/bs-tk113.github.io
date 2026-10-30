@@ -2,22 +2,28 @@
 # agent は agents.yml のキー（portrait: があるもの）、map は maps.yml のキー。
 agent: jett
 map: ascent
-kicker: 非公式ファンサイト
+kicker: VALORANT 非公式ファンサイト
 title: "日本の競技シーンを、<br>5分で把握する。"
-lead: 大会の形式、日本チームの道筋、移籍、パッチの数値変更を「表」と「まとめ」で。すべて公式発表を出典に、更新日つきで。
+lead: VALORANT の大会・移籍・パッチの数値変更を、表とまとめで。公式発表が出典、更新日つき。
 
 # よく使う導線（3つまで）。doc のページが公開済みならそこへ、未公開なら fallback へ。
 # どちらも無ければ表示しない（リンク切れを作らない）。fallback に飛ぶ間は fallback_label を表示する。
+# icon: 先頭に付けるアイコン（_includes/icon.html の name。任意）
 quick:
   - label: VCT 2027 とは？
+    icon: tournaments
     doc: /hub/vct-2027/
     fallback: /category/tournaments/
     fallback_label: 大会ハブ
-  - label: 移籍トラッカー
-    doc: /hub/roster-tracker/
-    fallback: /category/roster/
-    fallback_label: ロスター・移籍
+  # 2026-10-31 日向レビューで「移籍トラッカー」から差し替え。選手名鑑（/hub/players/）を公開したら、
+  # 下の行を label: 選手名鑑 / icon: player / doc: /hub/players/ に書き換える（fallback はこのままでよい）。
+  - label: パッチ・調整履歴
+    icon: patch
+    doc: /hub/patch-history/
+    fallback: /category/patch/
+    fallback_label: パッチ履歴
   - label: eDPI 計算
+    icon: tools
     doc: /tools/edpi/
     fallback: /tools/
     fallback_label: ツール一覧

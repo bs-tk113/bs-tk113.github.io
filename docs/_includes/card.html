@@ -28,7 +28,9 @@
 {%- if cd_desc != "" -%}<span class="card-desc">{{ cd_desc }}</span>{%- endif -%}
 {%- endif -%}
 <span class="meta">
-{%- if cd_badge != "" -%}<span class="fresh">{{ cd_badge }}</span>{%- endif -%}
+{%- if cd_badge == "新着" -%}<span class="fresh flag flag--new">{% include icon.html name="new" %}{{ cd_badge }}</span>
+{%- elsif cd_badge == "更新" -%}<span class="fresh flag flag--updated">{% include icon.html name="updated" %}{{ cd_badge }}</span>
+{%- endif -%}
 {%- if cd.last_modified_at -%}
 <time datetime="{{ cd.last_modified_at | date_to_xmlschema }}">{{ cd.last_modified_at | date: '%Y年%-m月%-d日' }}</time> 更新
 {%- elsif cd.collection == "posts" -%}

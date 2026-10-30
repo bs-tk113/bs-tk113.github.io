@@ -1,0 +1,557 @@
+# 選手名鑑のデータ（/hub/players/ の選手一覧、/hub/vct-pacific-japan-teams/ の所属選手）。表示は _includes/players.html と _includes/team-cards.html。
+# 2026-10-30 初版（柚木）。チーム公式サイトの選手ページ・チーム公式の発表で確認できた人だけを載せる。
+#
+# 1人の書き方:
+#   - id: sugarz3ro          # 英小文字・数字・ハイフン。ページ内アンカー（#pl-<id>）に使う。重複させない
+#     name: "SugarZ3ro"      # 活動名（本名は載せない）
+#     team: zeta             # _data/teams.yml のキー。無所属は ""
+#     status: active         # active（在籍）/ sub（控え）/ coach（コーチ・アナリストなどのスタッフ）/ lft（本人がチーム募集を告知）
+#                            #   / inactive（在籍しているがロスター外）/ left（退団の発表あり）
+#     role: ""               # 公式（チームサイト・チームの発表・VCT 公式）に書いてあるときだけ。推測しない。不明は ""
+#     role_keys: []          # duelist / initiator / controller / sentinel / flex / igl / coach / analyst（公式に書いてある範囲だけ）
+#     country: ""            # 公式に書いてあるときだけ
+#     links: {x: "", twitch: "", youtube: ""}   # チーム公式のプロフィール・発表に載っているリンクだけ
+#     source: {title: "...", url: "https://..."} # この行の根拠（チーム公式の選手ページ、退団などは発表）
+#     note: ""               # 任意。状態の補足（事実だけ）
+#     checked: 2026-10-30    # 編集部が出典で確かめた日
+#
+# 載せないもの: 顔写真・アバター（RED）、使用エージェントなど公式に書いていない情報、本名、噂・報道だけの移籍。
+
+# ---------- ZETA DIVISION（出典: https://zetadivision.com/team/valorant の選手一覧と各選手ページ） ----------
+- id: sugarz3ro
+  name: "SugarZ3ro"
+  team: zeta
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/SugarZ3roVL", twitch: "https://www.twitch.tv/sugarz3ro", youtube: "https://www.youtube.com/@SugarZ3ro"}
+  source: {title: "ZETA DIVISION 公式 選手ページ（SugarZ3ro）", url: "https://zetadivision.com/players/sugarz3ro"}
+  checked: 2026-10-30
+- id: xdll
+  name: "Xdll"
+  team: zeta
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/XdllVL", twitch: "https://www.twitch.tv/xdll_vl", youtube: "https://www.youtube.com/@xdll3988"}
+  source: {title: "ZETA DIVISION 公式 選手ページ（Xdll）", url: "https://zetadivision.com/players/xdll"}
+  checked: 2026-10-30
+- id: eko
+  name: "eKo"
+  team: zeta
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/eKoVLRT", twitch: "https://www.twitch.tv/ekokr", youtube: "https://www.youtube.com/@eKo0212"}
+  source: {title: "ZETA DIVISION 公式 選手ページ（eKo）", url: "https://zetadivision.com/players/eko"}
+  checked: 2026-10-30
+- id: absol
+  name: "Absol"
+  team: zeta
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/Absol_s", twitch: "https://www.twitch.tv/absol_dayo", youtube: ""}
+  source: {title: "ZETA DIVISION 公式 選手ページ（Absol）", url: "https://zetadivision.com/players/absol"}
+  checked: 2026-10-30
+- id: syouta
+  name: "SyouTa"
+  team: zeta
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/SyouTa_fps", twitch: "https://www.twitch.tv/syouta_fps", youtube: "https://www.youtube.com/channel/UC48GLxNJsjPRPWNv0LmGYNA"}
+  source: {title: "ZETA DIVISION 公式 選手ページ（SyouTa）", url: "https://zetadivision.com/players/syouta"}
+  checked: 2026-10-30
+- id: xqq
+  name: "XQQ"
+  team: zeta
+  status: coach
+  role: "コーチ"
+  role_keys: [coach]
+  country: ""
+  links: {x: "https://x.com/IAMXQ", twitch: "https://www.twitch.tv/iam_xq", youtube: "https://www.youtube.com/@XQQChannel"}
+  source: {title: "ZETA DIVISION 公式 選手ページ（XQQ）", url: "https://zetadivision.com/players/xqq"}
+  checked: 2026-10-30
+- id: ryota
+  name: "ryota-"
+  team: zeta
+  status: coach
+  role: "コーチ"
+  role_keys: [coach]
+  country: ""
+  links: {x: "https://x.com/ryotavlt", twitch: "https://www.twitch.tv/fps_ryota", youtube: ""}
+  source: {title: "ZETA DIVISION 公式 選手ページ（ryota-）", url: "https://zetadivision.com/players/ryota"}
+  checked: 2026-10-30
+- id: gya9
+  name: "gya9"
+  team: zeta
+  status: coach
+  role: "アナリスト"
+  role_keys: [analyst]
+  country: ""
+  links: {x: "https://x.com/gya9_", twitch: "", youtube: ""}
+  source: {title: "ZETA DIVISION 公式 選手ページ（gya9）", url: "https://zetadivision.com/players/gya9"}
+  checked: 2026-10-30
+- id: mini
+  name: "mini"
+  team: zeta
+  status: coach
+  role: "コーチングアドバイザー"
+  role_keys: [coach]
+  country: ""
+  links: {x: "https://x.com/minijake_", twitch: "https://www.twitch.tv/coachmini", youtube: "https://www.youtube.com/@coachmini"}
+  source: {title: "ZETA DIVISION 公式 選手ページ（mini）", url: "https://zetadivision.com/players/mini"}
+  checked: 2026-10-30
+
+# ---------- DetonatioN FocusMe（出典: https://team-detonation.net/teams の VALORANT 欄と各メンバーページ。役割の表記は無い） ----------
+- id: meiy
+  name: "Meiy"
+  team: dfm
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://twitter.com/meiyfps", twitch: "", youtube: ""}
+  source: {title: "DFM 公式 メンバーページ（Meiy）", url: "https://team-detonation.net/team/member/meiy"}
+  checked: 2026-10-30
+- id: akame
+  name: "Akame"
+  team: dfm
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/Akame_o3", twitch: "", youtube: ""}
+  source: {title: "DFM 公式 メンバーページ（Akame）", url: "https://team-detonation.net/team/member/akame"}
+  checked: 2026-10-30
+- id: ssees
+  name: "SSeeS"
+  team: dfm
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://twitter.com/SSeeS_S_S", twitch: "", youtube: "https://www.youtube.com/channel/UCk_B0SdhfHAvLbSgSDJBU-Q"}
+  source: {title: "DFM 公式 メンバーページ（SSeeS）", url: "https://team-detonation.net/team/member/ssees"}
+  checked: 2026-10-30
+- id: yatsuka
+  name: "yatsuka"
+  team: dfm
+  status: lft
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/yatsuka_07", twitch: "", youtube: ""}
+  source: {title: "DFM 公式 メンバーページ（yatsuka）", url: "https://team-detonation.net/team/member/yatsuka"}
+  note: "10月22日に本人が X でチーム募集（LFT）を告知。10月30日時点でチーム公式サイトの VALORANT 欄には掲載が続いている"
+  checked: 2026-10-30
+- id: caedye
+  name: "Caedye"
+  team: dfm
+  status: lft
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/CaedyeuS", twitch: "", youtube: "https://www.youtube.com/@Caedyefps"}
+  source: {title: "DFM 公式 メンバーページ（Caedye）", url: "https://team-detonation.net/team/member/caedye"}
+  note: "10月25日に本人が X でチーム募集（LFT）を告知。10月30日時点でチーム公式サイトの VALORANT 欄には掲載が続いている"
+  checked: 2026-10-30
+- id: vorz
+  name: "Vorz"
+  team: dfm
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/v6rzu", twitch: "", youtube: ""}
+  source: {title: "DFM 公式 メンバーページ（Vorz）", url: "https://team-detonation.net/team/member/vorz"}
+  checked: 2026-10-30
+- id: melofovia
+  name: "Melofovia"
+  team: dfm
+  status: coach
+  role: "コーチ"
+  role_keys: [coach]
+  country: ""
+  links: {x: "", twitch: "", youtube: ""}
+  source: {title: "DFM 公式 メンバーページ（Melofovia）", url: "https://team-detonation.net/team/member/melofovia"}
+  checked: 2026-10-30
+- id: northernlights
+  name: "NorthernLights"
+  team: dfm
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://twitter.com/Lights_vl", twitch: "", youtube: ""}
+  source: {title: "DFM 公式 メンバーページ（NorthernLights）", url: "https://team-detonation.net/team/member/northernlights"}
+  note: "公式のメンバーページの表記は「TEAM MEMBER」で、選手かスタッフかの記載はない"
+  checked: 2026-10-30
+
+# ---------- VARREL（出典: https://varrel.jp/team/valorant。マネージャー・スタッフは載せない） ----------
+- id: foxy9
+  name: "Foxy9"
+  team: varrel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/Foxy9fps", twitch: "", youtube: ""}
+  source: {title: "VARREL 公式 VALORANT チームページ", url: "https://varrel.jp/team/valorant"}
+  checked: 2026-10-30
+- id: c1nder
+  name: "C1ndeR"
+  team: varrel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/C1ndeR_vlrt", twitch: "", youtube: ""}
+  source: {title: "VARREL 公式 VALORANT チームページ", url: "https://varrel.jp/team/valorant"}
+  checked: 2026-10-30
+- id: klaus
+  name: "Klaus"
+  team: varrel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/KlausVLRT", twitch: "", youtube: ""}
+  source: {title: "VARREL 公式 VALORANT チームページ", url: "https://varrel.jp/team/valorant"}
+  checked: 2026-10-30
+- id: oonzmlp
+  name: "oonzmlp"
+  team: varrel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/sinsangbeom06", twitch: "", youtube: ""}
+  source: {title: "VARREL 公式 VALORANT チームページ", url: "https://varrel.jp/team/valorant"}
+  checked: 2026-10-30
+- id: zexy
+  name: "ZEXY"
+  team: varrel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/zexyzin", twitch: "", youtube: ""}
+  source: {title: "VARREL 公式 VALORANT チームページ", url: "https://varrel.jp/team/valorant"}
+  checked: 2026-10-30
+- id: xuna
+  name: "XuNa"
+  team: varrel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/XuNavlrt", twitch: "", youtube: ""}
+  source: {title: "VARREL 公式 VALORANT チームページ", url: "https://varrel.jp/team/valorant"}
+  checked: 2026-10-30
+- id: tk9
+  name: "TK9"
+  team: varrel
+  status: coach
+  role: "ヘッドコーチ"
+  role_keys: [coach]
+  country: ""
+  links: {x: "https://x.com/TK9_wn", twitch: "", youtube: ""}
+  source: {title: "VARREL 公式 VALORANT チームページ", url: "https://varrel.jp/team/valorant"}
+  checked: 2026-10-30
+- id: r3thme
+  name: "R3THME"
+  team: varrel
+  status: coach
+  role: "アナリスト"
+  role_keys: [analyst]
+  country: ""
+  links: {x: "https://x.com/R3THME_", twitch: "", youtube: ""}
+  source: {title: "VARREL 公式 VALORANT チームページ", url: "https://varrel.jp/team/valorant"}
+  checked: 2026-10-30
+
+# ---------- REJECT（出典: 株式会社REJECT のプレスリリース。チーム公式サイトに選手ページが無いため。X は発表に書かれたアカウント） ----------
+- id: dep
+  name: "Dep"
+  team: reject
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/Dep_ow", twitch: "", youtube: ""}
+  source: {title: "REJECT プレスリリース「VCJ 2026 Season Finals に出場」（2026年7月24日）", url: "https://prtimes.jp/main/html/rd/p/000000596.000050979.html"}
+  checked: 2026-10-30
+- id: yoshiii
+  name: "Yoshiii"
+  team: reject
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/YoshiiVLR", twitch: "", youtube: ""}
+  source: {title: "REJECT プレスリリース「VCJ 2026 Season Finals に出場」（2026年7月24日）", url: "https://prtimes.jp/main/html/rd/p/000000596.000050979.html"}
+  checked: 2026-10-30
+- id: jremy
+  name: "Jremy"
+  team: reject
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/Jremyvlr", twitch: "", youtube: ""}
+  source: {title: "REJECT プレスリリース「VCJ 2026 Season Finals に出場」（2026年7月24日）", url: "https://prtimes.jp/main/html/rd/p/000000596.000050979.html"}
+  checked: 2026-10-30
+- id: brian
+  name: "BRIAN"
+  team: reject
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/BRIANvlrt", twitch: "", youtube: ""}
+  source: {title: "REJECT プレスリリース「VCJ 2026 Season Finals に出場」（2026年7月24日）", url: "https://prtimes.jp/main/html/rd/p/000000596.000050979.html"}
+  note: "2026年5月に約1年ぶりに REJECT へ復帰（REJECT のプレスリリース、2026年5月10日）"
+  checked: 2026-10-30
+- id: persia
+  name: "Persia"
+  team: reject
+  status: active
+  role: "コントローラー（主に担当）"
+  role_keys: [controller]
+  country: "韓国出身"
+  links: {x: "https://x.com/Persia0_0b", twitch: "", youtube: ""}
+  source: {title: "REJECT プレスリリース「Split 2 Advance Stage に新ロスターで出場」（2026年5月10日）", url: "https://prtimes.jp/main/html/rd/p/000000528.000050979.html"}
+  checked: 2026-10-30
+- id: hiroronn
+  name: "hiroronn"
+  team: reject
+  status: inactive
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "", twitch: "", youtube: ""}
+  source: {title: "REJECT プレスリリース「Split 2 Advance Stage に新ロスターで出場」（2026年5月10日）", url: "https://prtimes.jp/main/html/rd/p/000000528.000050979.html"}
+  note: "2026年5月の発表で、ロスターには入らずチームに在籍を続けると案内された（7月24日のロスター発表には名前なし）"
+  checked: 2026-10-30
+- id: egi
+  name: "Egi"
+  team: reject
+  status: coach
+  role: "ヘッドコーチ"
+  role_keys: [coach]
+  country: ""
+  links: {x: "https://x.com/eg_valo", twitch: "", youtube: ""}
+  source: {title: "REJECT プレスリリース「VCJ 2026 Season Finals に出場」（2026年7月24日）", url: "https://prtimes.jp/main/html/rd/p/000000596.000050979.html"}
+  checked: 2026-10-30
+- id: bullco
+  name: "Bullco"
+  team: reject
+  status: coach
+  role: "コーチ"
+  role_keys: [coach]
+  country: ""
+  links: {x: "https://x.com/Bullco2", twitch: "", youtube: ""}
+  source: {title: "REJECT プレスリリース「VCJ 2026 Season Finals に出場」（2026年7月24日）", url: "https://prtimes.jp/main/html/rd/p/000000596.000050979.html"}
+  checked: 2026-10-30
+- id: metasla
+  name: "Metasla"
+  team: reject
+  status: coach
+  role: "アナリスト"
+  role_keys: [analyst]
+  country: ""
+  links: {x: "", twitch: "", youtube: ""}
+  source: {title: "REJECT プレスリリース「VCJ 2026 Season Finals に出場」（2026年7月24日）", url: "https://prtimes.jp/main/html/rd/p/000000596.000050979.html"}
+  checked: 2026-10-30
+
+# ---------- FENNEL（出典: https://fennel-esports.com/members/valorant/ と各メンバーページ。役割の表記は無い） ----------
+- id: aace
+  name: "Aace"
+  team: fennel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/Aaceful", twitch: "https://twitch.tv/aaceful", youtube: "https://www.youtube.com/@Aaceful"}
+  source: {title: "FENNEL 公式 メンバーページ（Aace）", url: "https://fennel-esports.com/members/valorant/2797/"}
+  checked: 2026-10-30
+- id: anthem
+  name: "Anthem"
+  team: fennel
+  status: lft
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/AnthemFps", twitch: "https://www.twitch.tv/anthemfps", youtube: "https://www.youtube.com/channel/UCUqc3k_06TyiYH9yvq99Jxg"}
+  source: {title: "FENNEL 公式 メンバーページ（Anthem）", url: "https://fennel-esports.com/members/valorant/3129/"}
+  note: "10月25日に本人が X でチーム募集（LFT）を告知。10月30日時点でチーム公式サイトのメンバー一覧には掲載が続いている"
+  checked: 2026-10-30
+- id: gangpin
+  name: "GangPin"
+  team: fennel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/GangpinFPS", twitch: "https://www.twitch.tv/gangpin_", youtube: "https://www.youtube.com/c/GangPin"}
+  source: {title: "FENNEL 公式 メンバーページ（GangPin）", url: "https://fennel-esports.com/members/valorant/3131/"}
+  checked: 2026-10-30
+- id: hals
+  name: "Hals"
+  team: fennel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/Halsvlrt", twitch: "https://www.twitch.tv/halsblue666", youtube: ""}
+  source: {title: "FENNEL 公式 メンバーページ（Hals）", url: "https://fennel-esports.com/members/valorant/2793/"}
+  checked: 2026-10-30
+- id: euler
+  name: "Euler"
+  team: fennel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/Ev_Euler", twitch: "https://www.twitch.tv/ev_euler", youtube: "https://www.youtube.com/@eveuler9405"}
+  source: {title: "FENNEL 公式 メンバーページ（Euler）", url: "https://fennel-esports.com/members/valorant/2787/"}
+  checked: 2026-10-30
+- id: sieg
+  name: "sieg"
+  team: fennel
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/siegmore", twitch: "", youtube: ""}
+  source: {title: "FENNEL 公式 メンバーページ（sieg）", url: "https://fennel-esports.com/members/valorant/3132/"}
+  checked: 2026-10-30
+
+# ---------- IGZIST（出典: https://igzist-gg.com/team/valorant/ と退団の発表） ----------
+- id: oitan
+  name: "oitaN"
+  team: igzist
+  status: active
+  role: "チームリーダー（公式プロフィールの表記）"
+  role_keys: []
+  country: ""
+  links: {x: "https://twitter.com/oitaN_vl", twitch: "https://www.twitch.tv/oitan_", youtube: "https://www.youtube.com/channel/UCUORLpOQ5bNkZMBB_NOFJ8w"}
+  source: {title: "IGZIST 公式 メンバーページ（oitaN）", url: "https://igzist-gg.com/member/oitan/"}
+  note: "10月26日の契約満了の発表（4選手）には含まれていない"
+  checked: 2026-10-30
+- id: popogachi
+  name: "popogachi"
+  team: igzist
+  status: left
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "", twitch: "", youtube: ""}
+  source: {title: "IGZIST 公式 X（2026年10月26日の契約満了の発表・2件の投稿のうち1件目）", url: "https://x.com/IGZIST_GG/status/2114658298687627501"}
+  note: "契約満了による退団（チーム公式 X の発表。発表は2件の投稿に分かれていて、どちらの投稿に名前があるかは区別していません。2件目の投稿はロスター・移籍トラッカーに出典として載せています）。10月30日時点でチーム公式サイトのメンバー一覧には掲載が続いている"
+  checked: 2026-10-30
+- id: frxeez
+  name: "Frxeez"
+  team: igzist
+  status: left
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "", twitch: "", youtube: ""}
+  source: {title: "IGZIST 公式 X（2026年10月26日の契約満了の発表・2件の投稿のうち1件目）", url: "https://x.com/IGZIST_GG/status/2114658298687627501"}
+  note: "契約満了による退団（チーム公式 X の発表。発表は2件の投稿に分かれていて、どちらの投稿に名前があるかは区別していません。2件目の投稿はロスター・移籍トラッカーに出典として載せています）。10月30日時点でチーム公式サイトのメンバー一覧には掲載が続いている"
+  checked: 2026-10-30
+- id: kayle
+  name: "kAyle"
+  team: igzist
+  status: left
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "", twitch: "", youtube: ""}
+  source: {title: "IGZIST 公式 X（2026年10月26日の契約満了の発表・2件の投稿のうち1件目）", url: "https://x.com/IGZIST_GG/status/2114658298687627501"}
+  note: "契約満了による退団（チーム公式 X の発表。発表は2件の投稿に分かれていて、どちらの投稿に名前があるかは区別していません。2件目の投稿はロスター・移籍トラッカーに出典として載せています）。10月30日時点でチーム公式サイトのメンバー一覧には掲載が続いている"
+  checked: 2026-10-30
+- id: sid
+  name: "SID"
+  team: igzist
+  status: left
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "", twitch: "", youtube: ""}
+  source: {title: "IGZIST 公式 X（2026年10月26日の契約満了の発表・2件の投稿のうち1件目）", url: "https://x.com/IGZIST_GG/status/2114658298687627501"}
+  note: "契約満了による退団（チーム公式 X の発表。発表は2件の投稿に分かれていて、どちらの投稿に名前があるかは区別していません。2件目の投稿はロスター・移籍トラッカーに出典として載せています）。10月30日時点でチーム公式サイトのメンバー一覧には掲載が続いている"
+  checked: 2026-10-30
+
+# ---------- MURASH GAMING（出典: https://murashgaming.co.jp/members/ の「VALORANT / Player」などの表記。マネージャー・GM は載せない） ----------
+- id: honeybunny
+  name: "HoneyBunny"
+  team: murash
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/honeybunnytt", twitch: "https://www.twitch.tv/honey_bunnytt", youtube: "https://www.youtube.com/@honeybunnytt"}
+  source: {title: "MURASH GAMING 公式 メンバー一覧", url: "https://murashgaming.co.jp/members/"}
+  checked: 2026-10-30
+- id: mrtenzouez
+  name: "MrTenzouEz"
+  team: murash
+  status: active
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "https://x.com/MrTenzouEz", twitch: "https://www.twitch.tv/mrtenzouez", youtube: "https://www.youtube.com/@MrTenzouEz"}
+  source: {title: "MURASH GAMING 公式 メンバー一覧", url: "https://murashgaming.co.jp/members/"}
+  checked: 2026-10-30
+- id: reita
+  name: "Reita"
+  team: murash
+  status: coach
+  role: "コーチ"
+  role_keys: [coach]
+  country: ""
+  links: {x: "https://x.com/ReitathefpS", twitch: "https://www.twitch.tv/reitathefps", youtube: "https://www.youtube.com/@reitafps3711"}
+  source: {title: "MURASH GAMING 公式 メンバー一覧", url: "https://murashgaming.co.jp/members/"}
+  checked: 2026-10-30
+- id: lefiedot
+  name: "Lefiedot"
+  team: murash
+  status: coach
+  role: "アナリスト"
+  role_keys: [analyst]
+  country: ""
+  links: {x: "https://x.com/lefiedot", twitch: "https://www.twitch.tv/lefiedot", youtube: ""}
+  source: {title: "MURASH GAMING 公式 メンバー一覧", url: "https://murashgaming.co.jp/members/"}
+  checked: 2026-10-30
+- id: tenten
+  name: "TenTen"
+  team: murash
+  status: left
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "", twitch: "", youtube: ""}
+  source: {title: "MURASH GAMING 公式「TenTen 脱退のお知らせ」（2026年9月1日）", url: "https://murashgaming.co.jp/news/valorant_006/"}
+  note: "双方合意のうえで2026年8月31日付で脱退（チーム公式の発表）"
+  checked: 2026-10-30
+
+# ---------- 所属なし ----------
+- id: tennn
+  name: "TENNN"
+  team: ""
+  status: lft
+  role: ""
+  role_keys: []
+  country: ""
+  links: {x: "", twitch: "", youtube: ""}
+  source: {title: "MURASH GAMING 公式「TENNN・Ask 脱退のお知らせ」（2026年6月30日）", url: "https://murashgaming.co.jp/news/valorant_003/"}
+  note: "2026年6月30日に契約満了で MURASH GAMING を脱退。10月26日に本人が X でチーム募集（LFT）を告知"
+  checked: 2026-10-30

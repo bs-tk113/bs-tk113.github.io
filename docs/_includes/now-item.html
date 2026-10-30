@@ -46,7 +46,7 @@
 {%- capture ni_src %}{% include source-list.html sources=ni.sources skip_x=true %}{% endcapture -%}
 {%- assign ni_src_s = ni_src | strip -%}
 {%- if ni_src_s != "" %}<p class="tl-sources"><span class="tl-sources-label">出典</span>{{ ni_src }}</p>{% endif %}
-<p class="meta">{% if ni.checked %}編集部の確認 {{ ni.checked | escape }}{% endif %}{% if ni.url and ni.url != "" %} ・ <a class="tl-more" href="{{ ni.url | relative_url }}">詳しく</a>{% endif %}</p>
+<p class="meta">{% if ni.checked %}確認 {{ ni.checked | escape }}{% endif %}{% if ni.url and ni.url != "" %} ・ <a class="tl-more" href="{{ ni.url | relative_url }}">詳しく</a>{% endif %}</p>
 {%- endif %}
 </li>
 {%- endif -%}
