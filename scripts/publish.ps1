@@ -1,4 +1,4 @@
-# 変更をまとめて commit して GitHub に push する（GitHub Pages が自動で作り直す）。
+﻿# 変更をまとめて commit して GitHub に push する（GitHub Pages が自動で作り直す）。
 # 使い方: powershell -NoProfile -ExecutionPolicy Bypass -File scripts\publish.ps1 -Message "データ更新 2026-11-01"
 # - git は GitHub Desktop に入っているものを使う（この PC には別の git が入っていないため）
 # - 認証は Git Credential Manager に保存された GitHub のサインインを使う。保存されていなければ止まらずに失敗する（対話の入力は出さない）
@@ -6,7 +6,8 @@
 param([string]$Message = "")
 
 $ErrorActionPreference = 'Continue'   # git が標準エラーに出す案内で止まらないように（成否は $LASTEXITCODE で見る）
-$root = Split-Path -Parent $PSScriptRoot
+$here = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
+$root = Split-Path -Parent $here
 Set-Location $root
 
 $cfg = Get-Content (Join-Path $root 'system\config.md') -Encoding UTF8 -Raw
