@@ -3,7 +3,7 @@
 編集長（`/daily-post`）は毎回最初にこのファイルを読む。
 
 ```yaml
-blog_name: "観戦帖（KANSENCHO・かんせんちょう）"   # 2026-10-31 改名（旧「クラッチノート」は VALORANT の iPhone アプリ「Clutch Note」と名前がかぶるため。鳴海の推奨）
+blog_name: "ROUND LOG（ラウンドログ）"   # 2026-10-31 改名（旧「クラッチノート」は VALORANT の iPhone アプリ「Clutch Note」と名前がかぶるため。一度「観戦帖」にしたが運営者の判断で ROUND LOG に）
 topic_status: decided          # undecided の間は /daily-post はテーマ決めから始める（2026-10-22 決定）
 auto_publish: true             # true にすると記事作成・データ更新の後に scripts/publish.ps1 で commit & push まで行う（2026-10-31 運営者の依頼で true に）
 target_length: 3000-5000       # 本文の文字数目安
